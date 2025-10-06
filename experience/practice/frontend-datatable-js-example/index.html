@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Datatables是一款jquery表格插件。它是一个高度灵活的工具，可以将任何HTML表格添加高级的交互功能。  Datatables 灵活易用，具有如下特性：   自动分页  即时搜索  多种排序规则，可自定义任意列排序，也可以多列排序  可对分页样式、搜索框等自定义 CSS  国际化，支持多种语言  ……">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DataTable.js 使用笔记">
+<meta property="og:url" content="https://0x400.com/experience/practice/frontend-datatable-js-example/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="Datatables是一款jquery表格插件。它是一个高度灵活的工具，可以将任何HTML表格添加高级的交互功能。  Datatables 灵活易用，具有如下特性：   自动分页  即时搜索  多种排序规则，可自定义任意列排序，也可以多列排序  可对分页样式、搜索框等自定义 CSS  国际化，支持多种语言  ……">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-08-10T02:44:55.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.136Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="jQuery">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/frontend-datatable-js-example/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/frontend-datatable-js-example/","path":"experience/practice/frontend-datatable-js-example/","title":"DataTable.js 使用笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>DataTable.js 使用笔记 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">一、如何使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="nav-number">1.1.</span> <span class="nav-text">实例化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E7%A7%8D%E6%95%B0%E6%8D%AE%E6%BA%90"><span class="nav-number">1.2.</span> <span class="nav-text">四种数据源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Server-Side-%E6%A1%88%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">二、Server-Side 案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/frontend-datatable-js-example/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="DataTable.js 使用笔记 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DataTable.js 使用笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2018-08-10 10:44:55" itemprop="dateCreated datePublished" datetime="2018-08-10T10:44:55+08:00">2018-08-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>Datatables是一款jquery表格插件。它是一个高度灵活的工具，可以将任何HTML表格添加高级的交互功能。</p>
+</blockquote>
+<p>Datatables 灵活易用，具有如下特性：</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 自动分页</li>
+<li><input checked="" disabled="" type="checkbox"> 即时搜索</li>
+<li><input checked="" disabled="" type="checkbox"> 多种排序规则，可自定义任意列排序，也可以多列排序</li>
+<li><input checked="" disabled="" type="checkbox"> 可对分页样式、搜索框等自定义 CSS</li>
+<li><input checked="" disabled="" type="checkbox"> 国际化，支持多种语言</li>
+</ul>
+<p>……</p>
+<span id="more"></span>
+
+<h2 id="一、如何使用"><a href="#一、如何使用" class="headerlink" title="一、如何使用"></a>一、如何使用</h2><h3 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h3><p>Datatable 的初始化很简单，引入<code>jquery.dataTables.css </code>、 <code>jquery.dataTables.js</code> 和 <code>jquery.js</code> 后使用</p>
+<p><code>$(&lt;selector&gt;).DataTable()</code>  实例化一个表格，完整案例如下，</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--引入css--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--引入JavaScript--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">language</span>=<span class="string">&quot;javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;//code.jquery.com/jquery-1.12.4.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">language</span>=<span class="string">&quot;javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--定义DOM--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">table</span> <span class="attr">id</span>=<span class="string">&quot;example&quot;</span> <span class="attr">class</span>=<span class="string">&quot;display&quot;</span> <span class="attr">style</span>=<span class="string">&quot;width:100%&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--初始化代码--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">     $(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">           <span class="keyword">let</span> exampleTable = $(<span class="string">&#x27;#example&#x27;</span>).<span class="title class_">DataTable</span>();</span></span><br><span class="line"><span class="language-javascript">      &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>值得注意的在 1.10.x 之前是使用 <code>let exampleTable = $(&#39;#example&#39;).dataTable();</code> 初始化，dataTable 是一个jQuery 对象，1.10.x 后虽然也对该对象做了兼容但不建议使用，具体的差别可以参见 <a href="https://stackoverflow.com/questions/25207147/datatable-vs-datatable-why-is-there-a-difference-and-how-do-i-make-them-w">here</a>。</p>
+<h3 id="四种数据源"><a href="#四种数据源" class="headerlink" title="四种数据源"></a>四种数据源</h3><p>DataTable 的数据源一般可以从如下四种渠道中获得，</p>
+<ol>
+<li><p>如果表格中已经有数据则 DataTable 的数据源从 DOM 中获取，这是最简单的获取数据的方式；</p>
+</li>
+<li><p>可以从 JavaScript 数组或对象中获得，如下案例，</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> dataSet = [</span><br><span class="line">    [<span class="string">&#x27;Trident&#x27;</span>,<span class="string">&#x27;Internet Explorer 4.0&#x27;</span>,<span class="string">&#x27;Win 95+&#x27;</span>,<span class="string">&#x27;4&#x27;</span>,<span class="string">&#x27;X&#x27;</span>],</span><br><span class="line">    [<span class="string">&#x27;Trident&#x27;</span>,<span class="string">&#x27;Internet Explorer 5.0&#x27;</span>,<span class="string">&#x27;Win 95+&#x27;</span>,<span class="string">&#x27;5&#x27;</span>,<span class="string">&#x27;C&#x27;</span>],</span><br><span class="line">    [<span class="string">&#x27;Gecko&#x27;</span>,<span class="string">&#x27;Firefox 1.0&#x27;</span>,<span class="string">&#x27;Win 98+ / OSX.2+&#x27;</span>,<span class="string">&#x27;1.7&#x27;</span>,<span class="string">&#x27;A&#x27;</span>],</span><br><span class="line">    [<span class="string">&#x27;Gecko&#x27;</span>,<span class="string">&#x27;Firefox 1.5&#x27;</span>,<span class="string">&#x27;Win 98+ / OSX.2+&#x27;</span>,<span class="string">&#x27;1.8&#x27;</span>,<span class="string">&#x27;A&#x27;</span>],</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">$(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    $(<span class="string">&#x27;#demo&#x27;</span>).<span class="title function_">html</span>( <span class="string">&#x27;&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; class=&quot;display&quot; id=&quot;example&quot;&gt;&lt;/table&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    $(<span class="string">&#x27;#example&#x27;</span>).<span class="title function_">dataTable</span>( &#123;</span><br><span class="line">        <span class="string">&quot;data&quot;</span>: dataSet,</span><br><span class="line">        <span class="string">&quot;columns&quot;</span>: [</span><br><span class="line">            &#123; <span class="string">&quot;title&quot;</span>: <span class="string">&quot;Engine&quot;</span> &#125;,</span><br><span class="line">            &#123; <span class="string">&quot;title&quot;</span>: <span class="string">&quot;Browser&quot;</span> &#125;,</span><br><span class="line">            &#123; <span class="string">&quot;title&quot;</span>: <span class="string">&quot;Platform&quot;</span> &#125;,</span><br><span class="line">            &#123; <span class="string">&quot;title&quot;</span>: <span class="string">&quot;Version&quot;</span>, <span class="string">&quot;class&quot;</span>: <span class="string">&quot;center&quot;</span> &#125;,</span><br><span class="line">            &#123; <span class="string">&quot;title&quot;</span>: <span class="string">&quot;Grade&quot;</span>, <span class="string">&quot;class&quot;</span>: <span class="string">&quot;center&quot;</span> &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125; );</span><br><span class="line">&#125; );</span><br></pre></td></tr></table></figure>
+
+<p> 从 JavaScript 数组中获取是通过配置选项中的 <code>data</code> 参数指定，同时需要用 <code>columns</code> 指定表头。</p>
+</li>
+<li><p>通过 AJAX 获得，</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    $(<span class="string">&#x27;#example&#x27;</span>).<span class="title class_">DataTable</span>( &#123;</span><br><span class="line">        <span class="string">&quot;ajax&quot;</span>: <span class="string">&#x27;path/to/dataList.txt&#x27;</span></span><br><span class="line">    &#125; );</span><br><span class="line">&#125; );</span><br></pre></td></tr></table></figure>
+
+<p> 其中 dataList.txt 是一个如下格式 JSON 对象，</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;data&quot;</span>: [</span><br><span class="line">        [</span><br><span class="line">            <span class="string">&quot;Tiger Nixon&quot;</span>,</span><br><span class="line">            <span class="string">&quot;System Architect&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Edinburgh&quot;</span>,</span><br><span class="line">            <span class="string">&quot;5421&quot;</span>,</span><br><span class="line">            <span class="string">&quot;2011/04/25&quot;</span>,</span><br><span class="line">            <span class="string">&quot;$320,800&quot;</span></span><br><span class="line">        ],</span><br><span class="line">        [</span><br><span class="line">            <span class="string">&quot;Garrett Winters&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Accountant&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Tokyo&quot;</span>,</span><br><span class="line">            <span class="string">&quot;8422&quot;</span>,</span><br><span class="line">            <span class="string">&quot;2011/07/25&quot;</span>,</span><br><span class="line">            <span class="string">&quot;$170,750&quot;</span></span><br><span class="line">        ],</span><br><span class="line">        [</span><br><span class="line">            <span class="string">&quot;Ashton Cox&quot;</span>,</span><br><span class="line">            <span class="string">&quot;Junior Technical Author&quot;</span>,</span><br><span class="line">            <span class="string">&quot;San Francisco&quot;</span>,</span><br><span class="line">            <span class="string">&quot;1562&quot;</span>,</span><br><span class="line">            <span class="string">&quot;2009/01/12&quot;</span>,</span><br><span class="line">            <span class="string">&quot;$86,000&quot;</span></span><br><span class="line">        ]</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>除了以上几种方法外，如果数据量比较大，这个时候就需要使用服务器模式（Server-Side）动态获取数据。</p>
+<p> 在服务器模式下，所有的分页、搜索、排序等操作，Datatables 都会交给服务器去处理。所以每次绘制Datatables， 都会请求一次服务器获取需要的数据，详细案例请见下文。</p>
+</li>
+</ol>
+<h2 id="二、Server-Side-案例"><a href="#二、Server-Side-案例" class="headerlink" title="二、Server-Side 案例"></a>二、Server-Side 案例</h2><p>使用 Server-Side 模式加载数据时，要先使用 <code>serverSide</code> 配置项打开 Server-Side 模式，同时开启 <code>processing</code> 在动态加载数据时会提示用户“数据正在加载，请稍等……”，使用 <code>ajax</code> 选项配置后端处理脚本的路径，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    $(<span class="string">&#x27;#example&#x27;</span>).<span class="title function_">dataTable</span>( &#123;</span><br><span class="line">        <span class="string">&quot;processing&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;serverSide&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">&quot;ajax&quot;</span>: <span class="string">&quot;path/to/handleAjax.php&quot;</span></span><br><span class="line">    &#125; );</span><br><span class="line">&#125; );</span><br></pre></td></tr></table></figure>
+
+<p>分页、搜索、排序等操作都会再次请求服务器获得新的数据源，发送 AJAX 请求时除了手动添加的参数外，DataTable 还会自动添加如下参数，</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用于标记请求</span></span><br><span class="line">draw<span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line"><span class="comment">// 表头信息</span></span><br><span class="line">columns<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span><span class="punctuation">[</span>data<span class="punctuation">]</span><span class="punctuation">:</span> id</span><br><span class="line">columns<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span><span class="punctuation">[</span>name<span class="punctuation">]</span><span class="punctuation">:</span></span><br><span class="line">columns<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span><span class="punctuation">[</span>searchable<span class="punctuation">]</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">columns<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span><span class="punctuation">[</span>orderable<span class="punctuation">]</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">columns<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span><span class="punctuation">[</span>search<span class="punctuation">]</span><span class="punctuation">[</span>value<span class="punctuation">]</span><span class="punctuation">:</span></span><br><span class="line">columns<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span><span class="punctuation">[</span>search<span class="punctuation">]</span><span class="punctuation">[</span>regex<span class="punctuation">]</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">...</span><br><span class="line">columns<span class="punctuation">[</span>n<span class="punctuation">]</span><span class="punctuation">[</span>search<span class="punctuation">]</span><span class="punctuation">[</span>regex<span class="punctuation">]</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"><span class="comment">// 排序规则，如下表示第一个排序规则是：按照第三列（从 0 开始）降序排列</span></span><br><span class="line">order<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span><span class="punctuation">[</span>column<span class="punctuation">]</span><span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line">order<span class="punctuation">[</span><span class="number">0</span><span class="punctuation">]</span><span class="punctuation">[</span>dir<span class="punctuation">]</span><span class="punctuation">:</span> desc</span><br><span class="line"><span class="comment">// 分页参数</span></span><br><span class="line">start<span class="punctuation">:</span> <span class="number">10</span></span><br><span class="line">length<span class="punctuation">:</span> <span class="number">10</span></span><br><span class="line"><span class="comment">// 筛选参数</span></span><br><span class="line">search<span class="punctuation">[</span>value<span class="punctuation">]</span><span class="punctuation">:</span></span><br><span class="line">search<span class="punctuation">[</span>regex<span class="punctuation">]</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br></pre></td></tr></table></figure>
+
+<p>AJAX 响应的数据包中，至少应该包括以下字段，</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">draw<span class="punctuation">:</span> <span class="number">2</span>  <span class="comment">// 标记请求，从请求参数中获取即可</span></span><br><span class="line">data<span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span>id<span class="punctuation">:</span> <span class="string">&quot;13155030&quot;</span><span class="punctuation">,</span> date<span class="punctuation">:</span> <span class="string">&quot;2018-07-27&quot;</span><span class="punctuation">,</span> parent_id<span class="punctuation">:</span> <span class="string">&quot;76958474430&quot;</span><span class="punctuation">,</span>…<span class="punctuation">&#125;</span><span class="punctuation">,</span>…<span class="punctuation">]</span>  <span class="comment">// 表格数据</span></span><br><span class="line">recordsFiltered<span class="punctuation">:</span> <span class="number">3236</span>  <span class="comment">// 符合筛选条件的总条数</span></span><br><span class="line">recordsTotal<span class="punctuation">:</span> <span class="number">3236</span>     <span class="comment">// 总条目数</span></span><br></pre></td></tr></table></figure>
+
+<p>如果服务端处理错误，可以使用 <code>error</code> 返回错误信息，错误信息将在实例化表格时弹窗显示。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="http://datatables.club/manual/server-side.html">Server-Side</a></li>
+<li><a href="http://datatables.club/reference/option/">配置选项</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/jquery/" rel="tag"># jQuery</a>
+              <a href="/tags/web/" rel="tag"># Web</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/programming-language/php/php-namespace/" rel="prev" title="PHP 命名空间">
+                  <i class="fa fa-angle-left"></i> PHP 命名空间
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/storage/mysql-store-tree-using-closure-table/" rel="next" title="树在 MySQL 中的存储方式">
+                  树在 MySQL 中的存储方式 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一面2017 年 9 月 23 日上午 11:00 左右，小雨，在上海瀚海明玉大酒店，面试官是个女的，面试过程大概经历了 40 多分钟，其中大部分时间都由我在讲，全程问题都是围绕我的自我介绍和项目经验展开，我很主动。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="京东 PHP 一面、二面总结">
+<meta property="og:url" content="https://0x400.com/episode/jd-php-interview/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="一面2017 年 9 月 23 日上午 11:00 左右，小雨，在上海瀚海明玉大酒店，面试官是个女的，面试过程大概经历了 40 多分钟，其中大部分时间都由我在讲，全程问题都是围绕我的自我介绍和项目经验展开，我很主动。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-09-25T09:30:32.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.117Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="HTTP">
+<meta property="article:tag" content="优化">
+<meta property="article:tag" content="缓存">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://0x400.com/episode/jd-php-interview/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/episode/jd-php-interview/","path":"episode/jd-php-interview/","title":"京东 PHP 一面、二面总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>京东 PHP 一面、二面总结 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">一面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E9%9D%A2%EF%BC%88%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">二面（项目经验）</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/episode/jd-php-interview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="京东 PHP 一面、二面总结 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          京东 PHP 一面、二面总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2017-09-25 17:30:32" itemprop="dateCreated datePublished" datetime="2017-09-25T17:30:32+08:00">2017-09-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/episode/" itemprop="url" rel="index"><span itemprop="name">Episode</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="一面"><a href="#一面" class="headerlink" title="一面"></a>一面</h2><p>2017 年 9 月 23 日上午 11:00 左右，小雨，在上海瀚海明玉大酒店，面试官是个女的，面试过程大概经历了 40 多分钟，其中大部分时间都由我在讲，全程问题都是围绕我的自我介绍和项目经验展开，我很主动。</p>
+<span id="more"></span>
+
+<ul>
+<li><p>自我介绍</p>
+<p>毕业，我虽非计算机相关专业，但我较为系统的学习过计算机相关知识 ……</p>
+<p>（以时间为线索）</p>
+<p>2014 年 ……</p>
+<p>2015 年 ……</p>
+<p>2016 年 ……</p>
+<p>2017 年 ……</p>
+</li>
+<li><p>项目介绍</p>
+<p>自我介绍中有讲在腾讯大连实习，参与了 PC QQ 看点和 TIM 消息漫游等项目的开发，因此对项目做了简单的介绍 ……</p>
+</li>
+<li><p>安全处理</p>
+<p>因为自我介绍中提到了 WEB 安全升级，问了我做了哪些安全防范，从前端到后端都答了，因为之前有总结过。</p>
+</li>
+<li><p>WEB 性能优化</p>
+<p>项目中提到了性能优化，然后问我做了哪些优化，这些问题都是比较广，比较开放，还好之前总结过，按照总结的思路逐一说，从前端到后端都有做优化，从如何减少 HTTP 请求(webpack js&#x2F;css 打包) –&gt; 减少 TCP 连接(keep-alive) –&gt; 压缩(gzip&#x2F;deflate) –&gt; 缓存等，大到传输、计算、存储，小到 HTTP 各种版本之间的区别，我会的都说了，面试官一直在耐心的听，偶尔打断一下我，偶尔补充一下。最后一句是对 MySQL 做优化，所以面试官又问下一个问题了……</p>
+</li>
+<li><p>数据库优化</p>
+<p>面试官问了我对 MySQL 做了哪些优化，因为这些问题我都已经写好答案了，所以直接按照之前的总结来回答，从建表建库到引擎选择，索引选择，到 SQL 优化到分表分库，读写分离、主从复制等。从原理到实现，反正我会的都讲了，一直滔滔不绝，看得出面试官很满意 ……</p>
+</li>
+<li><p>数组去重复</p>
+<p>数组去重实际上是因为我项目中遇到了，从面经中也看到京东会问数组去重，所以就故意说项目中的业务有去重，所以自然就问我怎么去重复了，当然我的答案是结合项目回答的。待我详细说说</p>
+<p>QQ 看点的项目中，QQ 客户端 —–&gt; 中间件 ——-&gt; QQ 后台。从客户端到后台拉取新闻时，需要由中间件对数据处理，其中业务之一就是如果返回的文章中已经在前端页面中展示了，那么该文章属于重复，应该去重。去重的常规方式一般有 PHP 系统函数 array_unique() 或 array_flip() 键值反转函数，然而查阅 PHP 源码不难发现，array_unique 是使用 zend_qsort （zend 引擎的快速排序） 先排序再实现的，平均复杂度是 O(nlogn)， 而 array_flip 是 hash 结构的键值反转，因此需要遍历数组，复杂度为 O(n)。我的项目中自然就使用 hash 结构去重，如果单纯判断一篇文章是否重复的话仅需要 O(1) 的复杂度。</p>
+</li>
+<li><p>跨域问题</p>
+<p>跨域问题也是我总结好的，常用两种跨域方式 CORS 和 JSONP ，CORS 之前有详细总结过，而 JSONP 跨域的原理按照 jQuery.js 源码实现方式说，就是动态创建 script 结点，使用 script 标签中 src 属性不受浏览器同源策略影响的特点实现跨域， 面试官显然也满意。</p>
+<p>以上几个问题以后，时间就过了 40 多分钟了，期间我有两次强调自己虽然是非计算机相关专业，但<strong>从大一开始就系统的</strong>学习计算机相关知识，为了不让面试官鄙视为半路出家、强行转行等。最后面试官也两次和我强调，她说不用担心自己是非计算机相关专业，她们更看重实力，然后问我有什么问题，我说我从外地来，如果有二面的话希望早一点，她说：“好的，我给你标注一下，安排你早一点面试”。</p>
+</li>
+</ul>
+<p>一面完。</p>
+<h2 id="二面（项目经验）"><a href="#二面（项目经验）" class="headerlink" title="二面（项目经验）"></a>二面（项目经验）</h2><ul>
+<li><p>自我介绍</p>
+</li>
+<li><p>讲其中一个项目经验</p>
+</li>
+<li><p>项目的架构图</p>
+</li>
+<li><p>跨域</p>
+<ol>
+<li>jsonp 跨域</li>
+<li>cors 跨域：简单请求和非简单请求，如果设置请求头信息以实现跨域请求</li>
+</ol>
+</li>
+<li><p>讲了数组去重复， Hash 冲突解决方案</p>
+<p>array_unique() 函数和 array_flip() 函数，HashTable 数组去重</p>
+<p>拉链法、链接法解决 Hash 冲突</p>
+</li>
+<li><p>问了另一个项目</p>
+</li>
+<li><p>问了为什么用 Node.js 为什么用 MongoDB</p>
+<p>事件驱动，异步 IO 、非阻塞</p>
+<p>key-value 存储，文档存储</p>
+</li>
+<li><p>问了 Promise</p>
+<p>回掉处理： callback –&gt; genarator –&gt; promise –&gt; async 函数（ES 7）</p>
+</li>
+<li><p>项目中 Token 延时机制</p>
+<p>像 SESSION 一样缓存，设置缓存过期时间</p>
+</li>
+<li><p>项目中文件状态锁</p>
+<p>MongoDB 实现事务而已</p>
+</li>
+<li><p>问了如何获取来访 IP</p>
+<p><code>$_SERVER[&#39;REMOTE_ADDR&#39;] || $_SERVER[&#39;HTTP_CLIENT_IP&#39;] || $_SERVER[&#39;HTTP_X_FORWARDED_FOR&#39;] </code>&lt;&#x3D;&#x3D;&gt; Apache || IIS || 代理服务器</p>
+</li>
+</ul>
+<p>二面完。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%93%E5%AD%98/" rel="tag"># 缓存</a>
+              <a href="/tags/%E4%BC%98%E5%8C%96/" rel="tag"># 优化</a>
+              <a href="/tags/http/" rel="tag"># HTTP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/practice/linux-web-security/" rel="prev" title="WEB 安全实战">
+                  <i class="fa fa-angle-left"></i> WEB 安全实战
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/guide/linux-configure-ssh-no-password-to-login/" rel="next" title="使用 SSH public key 免密码登录">
+                  使用 SSH public key 免密码登录 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

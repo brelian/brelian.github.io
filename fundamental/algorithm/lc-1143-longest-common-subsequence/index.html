@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="DescriptionGiven two strings text1 and text2, return the length of their longest common subsequence. A subsequence of a string is a new string generated from the original string with some characters(c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode-1143 Longest Common Subsequence">
+<meta property="og:url" content="https://0x400.com/fundamental/algorithm/lc-1143-longest-common-subsequence/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="DescriptionGiven two strings text1 and text2, return the length of their longest common subsequence. A subsequence of a string is a new string generated from the original string with some characters(c">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2019-08/lc-1143-01.gif">
+<meta property="article:published_time" content="2019-08-02T08:31:23.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.154Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="DP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2019-08/lc-1143-01.gif">
+
+
+<link rel="canonical" href="https://0x400.com/fundamental/algorithm/lc-1143-longest-common-subsequence/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/fundamental/algorithm/lc-1143-longest-common-subsequence/","path":"fundamental/algorithm/lc-1143-longest-common-subsequence/","title":"Leetcode-1143 Longest Common Subsequence"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Leetcode-1143 Longest Common Subsequence | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Description"><span class="nav-number">1.</span> <span class="nav-text">Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41%EF%BC%9A%E5%88%BB%E7%94%BB%E6%9C%80%E4%BC%98%E8%A7%A3%E7%9A%84%E7%BB%93%E6%9E%84%E7%89%B9%E5%BE%81"><span class="nav-number">3.</span> <span class="nav-text">步骤1：刻画最优解的结构特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42%EF%BC%9A%E9%80%92%E5%BD%92%E5%AE%9A%E4%B9%89%E6%9C%80%E4%BC%98%E8%A7%A3%E7%9A%84%E5%80%BC"><span class="nav-number">4.</span> <span class="nav-text">步骤2：递归定义最优解的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A43%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%80%E4%BC%98%E8%A7%A3%E7%9A%84%E5%80%BC"><span class="nav-number">5.</span> <span class="nav-text">步骤3：计算最优解的值</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/fundamental/algorithm/lc-1143-longest-common-subsequence/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Leetcode-1143 Longest Common Subsequence | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Leetcode-1143 Longest Common Subsequence
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2019-08-02 16:31:23" itemprop="dateCreated datePublished" datetime="2019-08-02T16:31:23+08:00">2019-08-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/" itemprop="url" rel="index"><span itemprop="name">Fundamental</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><p>Given two strings <code>text1</code> and <code>text2</code>, return the length of their longest common subsequence.</p>
+<p>A <em>subsequence</em> of a string is a new string generated from the original string with some characters(can be none) deleted without changing the relative order of the remaining characters. (eg, “ace” is a subsequence of “abcde” while “aec” is not). A <em>common subsequence</em> of two strings is a subsequence that is common to both strings.</p>
+<p>If there is no common subsequence, return 0.</p>
+ <span id="more"></span>
+
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: text1 = &quot;abcde&quot;, text2 = &quot;ace&quot; </span><br><span class="line">Output: 3  </span><br><span class="line">Explanation: The longest common subsequence is &quot;ace&quot; and its length is 3.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: text1 = &quot;abc&quot;, text2 = &quot;abc&quot;</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: The longest common subsequence is &quot;abc&quot; and its length is 3.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: text1 = &quot;abc&quot;, text2 = &quot;def&quot;</span><br><span class="line">Output: 0</span><br><span class="line">Explanation: There is no such common subsequence, so the result is 0.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= text1.length &lt;= 1000</code></li>
+<li><code>1 &lt;= text2.length &lt;= 1000</code></li>
+<li>The input strings consist of lowercase English characters only.</li>
+</ul>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这是经典的最长公共字串(LCS)问题，给定两个字符串，求他们的最长字串的长度。显然，这是一个动态规划问题，这类问题可以有很多可行解，每个解都对应一个值，本例中我们只需要找最优值即可，并不需要刻画最优解。如下案例，X 和 Y 的最长公共子串有 4 个（最优解有 4 个），</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X = <span class="string">&quot;abcde&quot;</span></span><br><span class="line">Y = <span class="string">&quot;acbed&quot;</span></span><br><span class="line">LCS = [<span class="string">&quot;ace&quot;</span>,<span class="string">&quot;abd&quot;</span>,<span class="string">&quot;abe&quot;</span>, <span class="string">&quot;acd&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>我们通常按照如下 4 个步骤来设计一个动态规划算法：</p>
+<ol>
+<li>刻画<strong>最优解</strong>的结构特征</li>
+<li>递归定义<strong>最优解的值</strong></li>
+<li>计算最优解的值，通常采用<strong>自底向上</strong>的方法</li>
+<li>利用计算出的信息构造一个最优解</li>
+</ol>
+<h2 id="步骤1：刻画最优解的结构特征"><a href="#步骤1：刻画最优解的结构特征" class="headerlink" title="步骤1：刻画最优解的结构特征"></a>步骤1：刻画最优解的结构特征</h2><p>按照动态如上给出的求解步骤，我们首先刻画最优解的结构特征，</p>
+<p>设 $ X &#x3D; &lt;x_1, x_2, …, x_m&gt;, Y &#x3D; &lt;y_1, y_2, …, y_n&gt; $，其中$Z &#x3D; &lt;z_1, z_2, …, z_k&gt; $ 是 X 和 Y 的一个最长公共字串，记为 $LCS(X, Y) &#x3D; Z$。</p>
+<p>那么 Z 的最后一位$z_k$ 至少于 X 和 Y 中的最后一位的其中之一相等（也可以都相等），参考如下案例便于理解：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">    X = <span class="string">&quot;abcde&quot;</span></span><br><span class="line">    Y = <span class="string">&quot;acbed&quot;</span></span><br><span class="line">    Z = <span class="string">&quot;ace&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">    X = <span class="string">&quot;abcde&quot;</span></span><br><span class="line">    Y = <span class="string">&quot;acbed&quot;</span></span><br><span class="line">    Z = <span class="string">&quot;acd&quot;</span>  </span><br><span class="line"><span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">    X = <span class="string">&quot;abcde&quot;</span></span><br><span class="line">    Y = <span class="string">&quot;acbe&quot;</span></span><br><span class="line">    Z = <span class="string">&quot;ace&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>基于以上情况，</p>
+<ol>
+<li>如果 X 和 Y 最后一位相等，则 $z_k &#x3D; x_m &#x3D; y_n 且 z_{k-1} \in LCS(X, Y)$</li>
+<li>如果 X 和 Y 的最后一位不等，当  $z_k \neq  x_m$ 时，$ z \in LCS(X_{m-1}, Y)$</li>
+<li>如果 X 和 Y 的最后一位不等，当  $z_k \neq  y_n$ 时，$ z \in LCS(Y_{n-1}, X)$</li>
+</ol>
+<h2 id="步骤2：递归定义最优解的值"><a href="#步骤2：递归定义最优解的值" class="headerlink" title="步骤2：递归定义最优解的值"></a>步骤2：递归定义最优解的值</h2><p>分治是将问题化为互不相交的子问题，然后递归的求解子问题，最后将子问题的解组合起来，求出原问题的解。而动态规划适用于子问题重叠的情况，原问题的最优解是由子问题最优解组合而成，求解原问题的解只需要求解部分子问题的解。</p>
+<p>按照动态规划的求解步骤，第二步是递归定义最优解的值，在本例中，最优解的值即为最长公共字串的长度。定义 $c[i, j] &#x3D; lcslen(X_i, Y_j)$ 表示 X 的前 i 个元素和 Y 的前 j 个元素构成的最优解的值，则</p>
+<p><img src="/images/2019-08/lc-1143-01.gif"></p>
+<h2 id="步骤3：计算最优解的值"><a href="#步骤3：计算最优解的值" class="headerlink" title="步骤3：计算最优解的值"></a>步骤3：计算最优解的值</h2><p>有了前两步的分析，计算最优解的值就已经看到曙光了，使用自底向上的方法，递推式的从问题最小规模开始计算，递推到原问题规模时结束。本例中，如果 i 或 j 等于0 (可理解为空字符串与任何字符串的最大公共字串长度为0)时，<code>c[i, 0] = 0, c[0, j] = 0</code>，所以可以如下初始化 c:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">m = <span class="built_in">len</span>(x)</span><br><span class="line">n = <span class="built_in">len</span>(y)</span><br><span class="line">// 问题从规模 <span class="number">0</span> 开始到规模 m 需要 m + <span class="number">1</span> 个存储空间</span><br><span class="line">c = [[<span class="number">0</span>] * (m + <span class="number">1</span>) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">1</span>)]</span><br></pre></td></tr></table></figure>
+
+<p>然后如下递推计算各个状态下的最优解：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, m+<span class="number">1</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span> x[i-<span class="number">1</span>] == y[j-<span class="number">1</span>]:</span><br><span class="line">            c[i][j] = c[i-<span class="number">1</span>][j-<span class="number">1</span>] + <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">        	c[i][j] = <span class="built_in">max</span>(c[i-<span class="number">1</span>][j], c[i][j-<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+<p>其中 x[i-1] 代表的是第 i 号元素，计数从 1 开始，元素下标从 0 开始</p>
+<p>完整代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestCommonSubsequence</span>(<span class="params">self, x: <span class="built_in">str</span>, y: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        m = <span class="built_in">len</span>(x)</span><br><span class="line">        n = <span class="built_in">len</span>(y)</span><br><span class="line">        c = [[<span class="number">0</span>] * (n + <span class="number">1</span>) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m + <span class="number">1</span>)]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, m+<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> x[i-<span class="number">1</span>] == y[j-<span class="number">1</span>]:</span><br><span class="line">                    c[i][j] = c[i-<span class="number">1</span>][j-<span class="number">1</span>] + <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    c[i][j] = <span class="built_in">max</span>(c[i-<span class="number">1</span>][j], c[i][j-<span class="number">1</span>])</span><br><span class="line">                    </span><br><span class="line">        <span class="keyword">return</span> c[m][n]</span><br></pre></td></tr></table></figure>
+
+<p>提交后，成功 AC。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/dp/" rel="tag"># DP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/algorithm/lc-202-happy-number/" rel="prev" title="Leetcode-202 Happy Number">
+                  <i class="fa fa-angle-left"></i> Leetcode-202 Happy Number
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/algorithm/lc-739-daily-temperatures/" rel="next" title="Leetcode-739 Daily Temperatures">
+                  Leetcode-739 Daily Temperatures <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="上一篇文章介绍了 Docker 的基本使用，本文将介绍 Dockerfile 定制容器镜像和使用 Docker-compose 工具编排、管理 Docker。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 学习笔记（2）">
+<meta property="og:url" content="https://0x400.com/experience/practice/linux-learning-docker-II/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="上一篇文章介绍了 Docker 的基本使用，本文将介绍 Dockerfile 定制容器镜像和使用 Docker-compose 工具编排、管理 Docker。">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/20180717/docker-sheeting.jpg">
+<meta property="article:published_time" content="2018-07-17T09:45:19.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.141Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/20180717/docker-sheeting.jpg">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/linux-learning-docker-II/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/linux-learning-docker-II/","path":"experience/practice/linux-learning-docker-II/","title":"Docker 学习笔记（2）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Docker 学习笔记（2） | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Dockerfile-%E5%AE%9A%E5%88%B6%E9%95%9C%E5%83%8F"><span class="nav-number">1.</span> <span class="nav-text">一、Dockerfile 定制镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%88%86%E5%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">容器分层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E5%88%B6%E5%AE%B9%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">定制容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8-Docker-compose"><span class="nav-number">2.</span> <span class="nav-text">二、使用 Docker-compose</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%AE%9A%E4%B9%89-docker-compose-yml"><span class="nav-number">2.1.</span> <span class="nav-text">4.1 定义 docker-compose.yml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-docker-compose-%E5%91%BD%E4%BB%A4"><span class="nav-number">2.2.</span> <span class="nav-text">4.2 docker-compose 命令</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/linux-learning-docker-II/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Docker 学习笔记（2） | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker 学习笔记（2）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2018-07-17 17:45:19" itemprop="dateCreated datePublished" datetime="2018-07-17T17:45:19+08:00">2018-07-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上一篇文章介绍了 Docker 的基本使用，本文将介绍 Dockerfile 定制容器镜像和使用 Docker-compose 工具编排、管理 Docker。</p>
+<span id="more"></span>
+<h2 id="一、Dockerfile-定制镜像"><a href="#一、Dockerfile-定制镜像" class="headerlink" title="一、Dockerfile 定制镜像"></a>一、Dockerfile 定制镜像</h2><h3 id="容器分层"><a href="#容器分层" class="headerlink" title="容器分层"></a>容器分层</h3><p>Docker 镜像位于 bootfs 之上，镜像分层，每一层镜像的下面一层成为其父镜像，镜像启动之后称为容器， 容器在镜像之上堆叠新的一层，所有的镜像层都是 readonly，所以容器层的改变不会影响其父镜像。</p>
+<p>如图，一个 Apache 镜像有 Debian 基础镜像堆叠 emacs 等工具镜像后打包而成，镜像启动后成为容器。</p>
+<p><img src="/images/20180717/docker-sheeting.jpg"></p>
+<h3 id="定制容器"><a href="#定制容器" class="headerlink" title="定制容器"></a>定制容器</h3><p>使用 <code>docker commit</code> 可以保存容器的改变，但不建议以此方式定制容器，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker image <span class="built_in">ls</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker image <span class="built_in">rm</span> xxx</span></span><br><span class="line">Error response from daemon: conflict: unable to delete 920e5c5c8bed (cannot be forced) - image has dependent child images</span><br></pre></td></tr></table></figure>
+
+<p>这种方式定制的容器是基于上一个父容器存储层的改变，因此存在相互依赖关系，使得镜像管理更加繁琐。</p>
+<p>可以使用 Dockerfile 定制容器，如下定制自己的 <code>nginx</code> 容器，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">mkdir</span> mynginx</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cd</span> mynginx</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">touch</span> Dockerfile</span></span><br></pre></td></tr></table></figure>
+
+<p>编辑 <code>Dockerfile</code>文件，添加以下内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx</span><br><span class="line">RUN echo &#x27;&lt;h1&gt;Hello, Docker!&lt;/h1&gt;&#x27; &gt; /usr/share/nginx/html/index.html</span><br></pre></td></tr></table></figure>
+
+<p>构建容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker build -t ngxin:mynginx .</span></span><br></pre></td></tr></table></figure>
+
+<p>更多 <code>Dockerfile</code>  相关命令如下，</p>
+<ul>
+<li>FROM</li>
+<li>RUN</li>
+<li>COPY 本地文件拷贝到新一层的镜像内，新镜像存储路径可以用相对路径也可以用绝对路径，相对路径用 WORKDIR 命令指定</li>
+<li>ADD</li>
+<li>CMD</li>
+<li>ENTRYPOINT</li>
+<li>ENV  设置环境变量</li>
+<li>VOLUME 定义匿名卷</li>
+<li>EXPOSE 暴露端口</li>
+<li>WORKDIR</li>
+<li>USER</li>
+</ul>
+<h2 id="二、使用-Docker-compose"><a href="#二、使用-Docker-compose" class="headerlink" title="二、使用 Docker-compose"></a>二、使用 Docker-compose</h2><p><a href="https://github.com/docker/compose">Docker-compose</a> 是官方开源的项目，用于编排、部署 Docker 项目(Define and run multi-container applications with Docker)。</p>
+<h3 id="4-1-定义-docker-compose-yml"><a href="#4-1-定义-docker-compose-yml" class="headerlink" title="4.1 定义 docker-compose.yml"></a>4.1 定义 <code>docker-compose.yml</code></h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;2&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">    <span class="attr">web:</span></span><br><span class="line">        <span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">         <span class="bullet">-</span> <span class="string">&quot;5000:5000&quot;</span></span><br><span class="line">        <span class="attr">volumes:</span></span><br><span class="line">         <span class="bullet">-</span> <span class="string">.:/code</span></span><br><span class="line">    <span class="attr">redis:</span></span><br><span class="line">        <span class="attr">image:</span> <span class="string">redis</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="4-2-docker-compose-命令"><a href="#4-2-docker-compose-命令" class="headerlink" title="4.2 docker-compose 命令"></a>4.2 docker-compose 命令</h3><ul>
+<li><p><code>build</code></p>
+<p>  格式为 <code>docker-compose build [options] [SERVICE...]</code>。</p>
+<p>  构建（重新构建）项目中的服务容器。</p>
+<p>  服务容器一旦构建后，将会带上一个标记名，例如对于 web 项目中的一个 db 容器，可能是 web_db。</p>
+<p>  可以随时在项目目录下运行 <code>docker-compose build</code> 来重新构建服务。</p>
+<p>  选项包括：</p>
+<ul>
+<li><code>--force-rm</code> 删除构建过程中的临时容器。</li>
+<li><code>--no-cache</code> 构建镜像过程中不使用 cache（这将加长构建过程）。</li>
+<li><code>--pull</code> 始终尝试通过 pull 来获取更新版本的镜像。</li>
+</ul>
+<p>  ​</p>
+</li>
+<li><p><code>config</code></p>
+<p>  验证 Compose 文件格式是否正确，若正确则显示配置，若格式错误显示错误原因。</p>
+</li>
+<li><p><code>down</code></p>
+<p>  此命令将会停止 <code>up</code> 命令所启动的容器，并移除网络 ​</p>
+</li>
+<li><p><code>exec</code></p>
+<p>  进入指定的容器。</p>
+</li>
+<li><p><code>help</code></p>
+<p>  获得一个命令的帮助。</p>
+</li>
+<li><p><code>images</code></p>
+<p>  列出 Compose 文件中包含的镜像。</p>
+</li>
+<li><p><code>kill</code></p>
+<p>  格式为 <code>docker-compose kill [options] [SERVICE...]</code>。</p>
+<p>  通过发送 <code>SIGKILL</code> 信号来强制停止服务容器。</p>
+<p>  支持通过 <code>-s</code> 参数来指定发送的信号，例如通过如下指令发送 <code>SIGINT</code> 信号。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose kill -s SIGINT</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>logs</code></p>
+<p>  格式为 <code>docker-compose logs [options] [SERVICE...]</code>。</p>
+<p>  查看服务容器的输出。默认情况下，docker-compose 将对不同的服务输出使用不同的颜色来区分。可以通过 <code>--no-color</code> 来关闭颜色。</p>
+<p>  该命令在调试问题的时候十分有用。</p>
+</li>
+<li><p><code>pause</code></p>
+<p>  格式为 <code>docker-compose pause [SERVICE...]</code>。</p>
+<p>  暂停一个服务容器。</p>
+</li>
+<li><p><code>port</code></p>
+<p>  格式为 <code>docker-compose port [options] SERVICE PRIVATE_PORT</code>。</p>
+<p>  打印某个容器端口所映射的公共端口。</p>
+<p>  选项：</p>
+<ul>
+<li><code>--protocol=proto</code> 指定端口协议，tcp（默认值）或者 udp。</li>
+<li><code>--index=index</code> 如果同一服务存在多个容器，指定命令对象容器的序号（默认为 1）。</li>
+</ul>
+</li>
+<li><p><code>ps</code></p>
+<p>  格式为 <code>docker-compose ps [options] [SERVICE...]</code>。</p>
+<p>  列出项目中目前的所有容器。</p>
+<p>  选项：</p>
+<ul>
+<li><code>-q</code> 只打印容器的 ID 信息。</li>
+</ul>
+</li>
+<li><p><code>pull</code></p>
+<p>  格式为 <code>docker-compose pull [options] [SERVICE...]</code>。</p>
+<p>  拉取服务依赖的镜像。</p>
+<p>  选项：</p>
+<ul>
+<li><code>--ignore-pull-failures</code> 忽略拉取镜像过程中的错误。</li>
+</ul>
+</li>
+<li><p><code>push</code></p>
+<p>  推送服务依赖的镜像到 Docker 镜像仓库。</p>
+</li>
+<li><p><code>restart</code></p>
+<p>  格式为 <code>docker-compose restart [options] [SERVICE...]</code>。</p>
+<p>  重启项目中的服务。</p>
+<p>  选项：</p>
+<ul>
+<li><code>-t, --timeout TIMEOUT</code> 指定重启前停止容器的超时（默认为 10 秒）。</li>
+</ul>
+</li>
+<li><p><code>rm</code></p>
+<p>  格式为 <code>docker-compose rm [options] [SERVICE...]</code>。</p>
+<p>  删除所有（停止状态的）服务容器。推荐先执行 <code>docker-compose stop</code> 命令来停止容器。</p>
+<p>  选项：</p>
+<ul>
+<li><code>-f, --force</code> 强制直接删除，包括非停止状态的容器。一般尽量不要使用该选项。</li>
+<li><code>-v</code> 删除容器所挂载的数据卷。</li>
+</ul>
+</li>
+<li><p><code>run</code></p>
+<p>  格式为 <code>docker-compose run [options] [-p PORT...] [-e KEY=VAL...] SERVICE [COMMAND] [ARGS...]</code>。</p>
+<p>  在指定服务上执行一个命令。</p>
+<p>  例如：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose run ubuntu ping docker.com</span><br></pre></td></tr></table></figure>
+
+<p>  将会启动一个 ubuntu 服务容器，并执行 <code>ping docker.com</code> 命令。</p>
+<p>  默认情况下，如果存在关联，则所有关联的服务将会自动被启动，除非这些服务已经在运行中。</p>
+<p>  该命令类似启动容器后运行指定的命令，相关卷、链接等等都将会按照配置自动创建。</p>
+<p>  两个不同点：</p>
+<ul>
+<li>给定命令将会覆盖原有的自动运行命令；</li>
+<li>不会自动创建端口，以避免冲突。</li>
+</ul>
+<p>  如果不希望自动启动关联的容器，可以使用 <code>--no-deps</code> 选项，例如</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose run --no-deps web python manage.py shell</span><br></pre></td></tr></table></figure>
+
+<p>  将不会启动 web 容器所关联的其它容器。</p>
+<p>  选项：</p>
+<ul>
+<li><code>-d</code> 后台运行容器。</li>
+<li><code>--name NAME</code> 为容器指定一个名字。</li>
+<li><code>--entrypoint CMD</code> 覆盖默认的容器启动指令。</li>
+<li><code>-e KEY=VAL</code> 设置环境变量值，可多次使用选项来设置多个环境变量。</li>
+<li><code>-u, --user=&quot;&quot;</code> 指定运行容器的用户名或者 uid。</li>
+<li><code>--no-deps</code> 不自动启动关联的服务容器。</li>
+<li><code>--rm</code> 运行命令后自动删除容器，<code>d</code> 模式下将忽略。</li>
+<li><code>-p, --publish=[]</code> 映射容器端口到本地主机。</li>
+<li><code>--service-ports</code> 配置服务端口并映射到本地主机。</li>
+<li><code>-T</code> 不分配伪 tty，意味着依赖 tty 的指令将无法运行。</li>
+</ul>
+</li>
+<li><p><code>scale</code></p>
+<p>  格式为 <code>docker-compose scale [options] [SERVICE=NUM...]</code>。</p>
+<p>  设置指定服务运行的容器个数。</p>
+<p>  通过 <code>service=num</code> 的参数来设置数量。例如：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose scale web=3 db=2</span><br></pre></td></tr></table></figure>
+
+<p>  将启动 3 个容器运行 web 服务，2 个容器运行 db 服务。</p>
+<p>  一般的，当指定数目多于该服务当前实际运行容器，将新创建并启动容器；反之，将停止容器。</p>
+<p>  选项：</p>
+<ul>
+<li><code>-t, --timeout TIMEOUT</code> 停止容器时候的超时（默认为 10 秒）。<br>​</li>
+</ul>
+</li>
+<li><p><code>start</code></p>
+<p>  格式为 <code>docker-compose start [SERVICE...]</code>。</p>
+<p>  启动已经存在的服务容器。</p>
+</li>
+<li><p><code>stop</code></p>
+<p>  格式为 <code>docker-compose stop [options] [SERVICE...]</code>。</p>
+<p>  停止已经处于运行状态的容器，但不删除它。通过 <code>docker-compose start</code> 可以再次启动这些容器。</p>
+<p>  选项：</p>
+<ul>
+<li><p><code>-t, --timeout TIMEOUT</code> 停止容器时候的超时（默认为 10 秒）。</p>
+</li>
+<li><p><code>top</code></p>
+</li>
+</ul>
+<p>  查看各个服务容器内运行的进程。</p>
+</li>
+<li><p><code>unpause</code></p>
+<p>  格式为 <code>docker-compose unpause [SERVICE...]</code>。</p>
+<p>  恢复处于暂停状态中的服务。</p>
+</li>
+<li><p><code>up</code></p>
+<p>  格式为 <code>docker-compose up [options] [SERVICE...]</code>。</p>
+<p>  该命令十分强大，它将尝试自动完成包括构建镜像，（重新）创建服务，启动服务，并关联服务相关容器的一系列操作。</p>
+<p>  链接的服务都将会被自动启动，除非已经处于运行状态。</p>
+<p>  可以说，大部分时候都可以直接通过该命令来启动一个项目。</p>
+<p>  默认情况，<code>docker-compose up</code> 启动的容器都在前台，控制台将会同时打印所有容器的输出信息，可以很方便进行调试。</p>
+<p>  当通过 <code>Ctrl-C</code> 停止命令时，所有容器将会停止。</p>
+<p>  如果使用 <code>docker-compose up -d</code>，将会在后台启动并运行所有的容器。一般推荐生产环境下使用该选项。</p>
+<p>  默认情况，如果服务容器已经存在，<code>docker-compose up</code> 将会尝试停止容器，然后重新创建（保持使用 <code>volumes-from</code> 挂载的卷），以保证新启动的服务匹配 <code>docker-compose.yml</code> 文件的最新内容。如果用户不希望容器被停止并重新创建，可以使用 <code>docker-compose up --no-recreate</code>。这样将只会启动处于停止状态的容器，而忽略已经运行的服务。如果用户只想重新部署某个服务，可以使用 <code>docker-compose up --no-deps -d &lt;SERVICE_NAME&gt;</code> 来重新创建服务并后台停止旧服务，启动新服务，并不会影响到其所依赖的服务。</p>
+<p>  选项：</p>
+<ul>
+<li><code>-d</code> 在后台运行服务容器。</li>
+<li><code>--no-color</code> 不使用颜色来区分不同的服务的控制台输出。</li>
+<li><code>--no-deps</code> 不启动服务所链接的容器。</li>
+<li><code>--force-recreate</code> 强制重新创建容器，不能与 <code>--no-recreate</code> 同时使用。</li>
+<li><code>--no-recreate</code> 如果容器已经存在了，则不重新创建，不能与 <code>--force-recreate</code> 同时使用。</li>
+<li><code>--no-build</code> 不自动构建缺失的服务镜像。</li>
+<li><code>-t, --timeout TIMEOUT</code> 停止容器时候的超时（默认为 10 秒）。<br>​</li>
+</ul>
+</li>
+<li><p><code>version</code></p>
+<p>  格式为 <code>docker-compose version</code>。</p>
+<p>  打印版本信息。</p>
+</li>
+</ul>
+<p>更多关于 docker-compose 的使用请参考<a href="https://docs.docker.com/compose/">官方文档</a>。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># Linux</a>
+              <a href="/tags/docker/" rel="tag"># Docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/practice/linux-learning-docker-I/" rel="prev" title="Docker 学习笔记（1）">
+                  <i class="fa fa-angle-left"></i> Docker 学习笔记（1）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/programming-language/php/php-namespace/" rel="next" title="PHP 命名空间">
+                  PHP 命名空间 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

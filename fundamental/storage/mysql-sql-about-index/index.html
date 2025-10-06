@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="创建索引1．ALTER TABLEALTER TABLE用来创建普通索引、UNIQUE索引或PRIMARY KEY索引。  123456ALTER TABLE table_name ADD INDEX IDX_ABC (a,b,c) USEING BTREEALTER TABLE table_name ADD UNIQUE (column_list)ALTER TABLE table_name A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 索引相关 SQL">
+<meta property="og:url" content="https://0x400.com/fundamental/storage/mysql-sql-about-index/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="创建索引1．ALTER TABLEALTER TABLE用来创建普通索引、UNIQUE索引或PRIMARY KEY索引。  123456ALTER TABLE table_name ADD INDEX IDX_ABC (a,b,c) USEING BTREEALTER TABLE table_name ADD UNIQUE (column_list)ALTER TABLE table_name A">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/20180119/show_index.png">
+<meta property="article:published_time" content="2018-01-19T08:41:35.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.183Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/20180119/show_index.png">
+
+
+<link rel="canonical" href="https://0x400.com/fundamental/storage/mysql-sql-about-index/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/fundamental/storage/mysql-sql-about-index/","path":"fundamental/storage/mysql-sql-about-index/","title":"MySQL 索引相关 SQL"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MySQL 索引相关 SQL | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="nav-number">1.</span> <span class="nav-text">创建索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%EF%BC%8EALTER-TABLE"><span class="nav-number">1.0.1.</span> <span class="nav-text">1．ALTER TABLE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%EF%BC%8ECREATE-INDEX"><span class="nav-number">1.0.2.</span> <span class="nav-text">2．CREATE INDEX</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%B4%A2%E5%BC%95"><span class="nav-number">2.</span> <span class="nav-text">查看索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95"><span class="nav-number">3.</span> <span class="nav-text">删除索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/fundamental/storage/mysql-sql-about-index/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MySQL 索引相关 SQL | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL 索引相关 SQL
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2018-01-19 16:41:35" itemprop="dateCreated datePublished" datetime="2018-01-19T16:41:35+08:00">2018-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/" itemprop="url" rel="index"><span itemprop="name">Fundamental</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/storage/" itemprop="url" rel="index"><span itemprop="name">Storage</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h2><h4 id="1．ALTER-TABLE"><a href="#1．ALTER-TABLE" class="headerlink" title="1．ALTER TABLE"></a>1．ALTER TABLE</h4><p>ALTER TABLE用来创建普通索引、UNIQUE索引或PRIMARY KEY索引。</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">ALTER TABLE</span> table_name <span class="keyword">ADD</span> INDEX IDX_ABC (a,b,c) USEING BTREE</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER TABLE</span> table_name <span class="keyword">ADD</span> <span class="keyword">UNIQUE</span> (column_list)</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER TABLE</span> table_name <span class="keyword">ADD</span> <span class="keyword">PRIMARY KEY</span> (column_list)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>其中 <code>table_name</code> 是要增加索引的表名，<code>column_list</code>指出对哪些列进行索引，多列时各列之间用逗号分隔。索引名<code>index_name</code>可选，缺省时，MySQL 将根据第一个索引列赋一个名称。另外，<code>ALTER TABLE</code> 允许在单个语句中更改多个表，因此可以在同时创建多个索引。<code>USEING BTREE </code> 表示索引使用的数据结构为 B 树。</p>
+<span id="more"></span>
+
+<h4 id="2．CREATE-INDEX"><a href="#2．CREATE-INDEX" class="headerlink" title="2．CREATE INDEX"></a>2．CREATE INDEX</h4><p>CREATE INDEX 可对表增加普通索引或 UNIQUE 索引。</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX index_name <span class="keyword">ON</span> table_name (column_list)</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX index_name <span class="keyword">ON</span> table_name (column_list)</span><br></pre></td></tr></table></figure>
+
+<p>table_name、index_name 和column_list 具有与ALTER TABLE语句中相同的含义，索引名不可选。另外，不能用CREATE INDEX语句创建PRIMARY KEY索引。</p>
+<h2 id="查看索引"><a href="#查看索引" class="headerlink" title="查看索引"></a>查看索引</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> INDEX <span class="keyword">FROM</span> tblname;</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span>  KEYS <span class="keyword">FROM</span> tblname;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/20180119/show_index.png"></p>
+<p>　　</p>
+<table>
+<thead>
+<tr>
+<th align="center">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Table</td>
+<td align="left">表的名称</td>
+</tr>
+<tr>
+<td align="center">Non_unique</td>
+<td align="left">如果索引不能包括重复词，则为0。如果可以，则为1。</td>
+</tr>
+<tr>
+<td align="center">Key_name</td>
+<td align="left">索引的名称</td>
+</tr>
+<tr>
+<td align="center">Seq_in_index</td>
+<td align="left">索引中的列序列号，从1开始。</td>
+</tr>
+<tr>
+<td align="center">Column_name</td>
+<td align="left">建索引的列名称</td>
+</tr>
+<tr>
+<td align="center">Collation</td>
+<td align="left">列以什么方式存储在索引中。在 MySQL 中，有值  A 升序）或 NULL（无分类）。</td>
+</tr>
+<tr>
+<td align="center">Cardinality</td>
+<td align="left">索引中唯一值的数目的估计值。通过运行ANALYZE TABLE或 myisamchk -a 可以更新。基数根据被存储为整数的统计数据来计数，所以即使对于小型表，该值也没有必要是精确的。基数越大，当进行联合时，MySQL使用该索引的机会就越大。</td>
+</tr>
+<tr>
+<td align="center">Sub_part</td>
+<td align="left">如果列只是被部分地编入索引，则为被编入索引的字符的数目。如果整列被编入索引，则为NULL</td>
+</tr>
+<tr>
+<td align="center">Packed</td>
+<td align="left">指示关键字如何被压缩。如果没有被压缩，则为NULL。</td>
+</tr>
+<tr>
+<td align="center">Null</td>
+<td align="left">如果列含有NULL，则含有YES。如果没有，则该列含有NO。</td>
+</tr>
+<tr>
+<td align="center">Index_type</td>
+<td align="left">过的索引方法（BTREE, FULLTEXT, HASH, RTREE）</td>
+</tr>
+<tr>
+<td align="center">Comment</td>
+<td align="left">注释</td>
+</tr>
+</tbody></table>
+<h2 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h2><p>可利用 ALTER TABLE 或 DROP INDEX 语句来删除索引。类似于 CREATE INDEX 语句，DROP INDEX可以在ALTER TABLE内部作为一条语句处理，语法如下。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX index_name <span class="keyword">ON</span> talbe_name</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER TABLE</span> table_name <span class="keyword">DROP</span> INDEX index_name</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER TABLE</span> table_name <span class="keyword">DROP</span> <span class="keyword">PRIMARY KEY</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>其中，前两条语句是等价的，删除掉table_name中的索引index_name。</p>
+<p>第3条语句只在删除PRIMARY KEY索引时使用，因为一个表只可能有一个PRIMARY KEY索引，因此不需要指定索引名。如果没有创建PRIMARY KEY索引，但表具有一个或多个UNIQUE索引，则MySQL将删除第一个UNIQUE索引。如果从表中删除了某列，则索引会受到影响。对于多列组合的索引，如果删除其中的某列，则该列也会从索引中删除。如果删除组成索引的所有列，则整个索引将被删除。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://stackoverflow.com/questions/10259504/delimiters-in-mysql">https://stackoverflow.com/questions/10259504/delimiters-in-mysql</a></li>
+<li><a href="https://stackoverflow.com/questions/4205181/insert-into-a-mysql-table-or-update-if-exists">https://stackoverflow.com/questions/4205181/insert-into-a-mysql-table-or-update-if-exists</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/mysql/" rel="tag"># MySQL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/guide/dev-sublime-text-3-preference/" rel="prev" title="Sublime Text 3 配置">
+                  <i class="fa fa-angle-left"></i> Sublime Text 3 配置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/guide/dev-sublime-text-3-build-node/" rel="next" title="Build Node.js developed environment on Windows 7">
+                  Build Node.js developed environment on Windows 7 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="命名空间抽样模型编程的本质是抽象，命名空间是一种编程抽象模型，它表示了一个标识符的可见范围。生活中我们会经常遇到两个人完全重名的情况，但是他们是不会被混淆的，因为他们来自不同的家庭，如果两人都来自同一个家庭，那么哥哥叫“小明”，弟弟绝对就不会再起名为“小明”了，我们可以认为每一个家庭都是一个命名空间。这种抽象模型在计算机中也被广泛应用，如计算机操作系统中同一个目录下是不允许有两个相同文件名的文件的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP 命名空间">
+<meta property="og:url" content="https://0x400.com/fundamental/programming-language/php/php-namespace/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="命名空间抽样模型编程的本质是抽象，命名空间是一种编程抽象模型，它表示了一个标识符的可见范围。生活中我们会经常遇到两个人完全重名的情况，但是他们是不会被混淆的，因为他们来自不同的家庭，如果两人都来自同一个家庭，那么哥哥叫“小明”，弟弟绝对就不会再起名为“小明”了，我们可以认为每一个家庭都是一个命名空间。这种抽象模型在计算机中也被广泛应用，如计算机操作系统中同一个目录下是不允许有两个相同文件名的文件的">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/20180801/Snipaste_2018-08-01_11-58-23.png">
+<meta property="og:image" content="https://0x400.com/images/20180801/Snipaste_2018-08-01_11-53-44.png">
+<meta property="article:published_time" content="2018-08-01T02:18:14.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.178Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/20180801/Snipaste_2018-08-01_11-58-23.png">
+
+
+<link rel="canonical" href="https://0x400.com/fundamental/programming-language/php/php-namespace/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/fundamental/programming-language/php/php-namespace/","path":"fundamental/programming-language/php/php-namespace/","title":"PHP 命名空间"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PHP 命名空间 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E6%8A%BD%E6%A0%B7%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">命名空间抽样模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">命名空间使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E7%94%B3%E6%98%8E"><span class="nav-number">2.1.</span> <span class="nav-text">命名空间申明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E5%BC%95%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">命名空间引用</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/fundamental/programming-language/php/php-namespace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PHP 命名空间 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PHP 命名空间
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2018-08-01 10:18:14" itemprop="dateCreated datePublished" datetime="2018-08-01T10:18:14+08:00">2018-08-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/" itemprop="url" rel="index"><span itemprop="name">Fundamental</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/programing-language/" itemprop="url" rel="index"><span itemprop="name">Programing-language</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/programing-language/php/" itemprop="url" rel="index"><span itemprop="name">PHP</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="命名空间抽样模型"><a href="#命名空间抽样模型" class="headerlink" title="命名空间抽样模型"></a>命名空间抽样模型</h2><p>编程的本质是抽象，命名空间是一种编程抽象模型，它表示了一个标识符的可见范围。生活中我们会经常遇到两个人完全重名的情况，但是他们是不会被混淆的，因为他们来自不同的家庭，如果两人都来自同一个家庭，那么哥哥叫“小明”，弟弟绝对就不会再起名为“小明”了，我们可以认为每一个家庭都是一个命名空间。这种抽象模型在计算机中也被广泛应用，如计算机操作系统中同一个目录下是不允许有两个相同文件名的文件的，但不同的目录下确可以有文件名相同的文件。如</p>
+<span id="more"></span>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">whereis python</span></span><br><span class="line">python: /usr/bin/python2.6 /usr/bin/python /usr/local/bin/python2.6</span><br></pre></td></tr></table></figure>
+<p>python2.6 分别在不同的目录下，假设要使用 <code>/usr/bin/</code> 下的 python2.6 应按如下方式调用，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/usr/bin/python2.6 -h</span></span><br></pre></td></tr></table></figure>
+<p>要使用 <code>/usr/local/bin</code> 下的 python2.6 则应如下调用，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/usr/local/bin/python2.6</span></span><br></pre></td></tr></table></figure>
+
+<p>除了使用绝对路径（绝对命名空间）方式调用之外，也可以通过文件的相对路径调用，假设当前路径位于 <code>/usr/</code> 下则，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./bin/python2.6 -v</span></span><br></pre></td></tr></table></figure>
+<p>即可调用到 <code>/usr/bin/python2.6</code>。</p>
+<p>命名空间是一种编程抽象模型，除了在操作系统中的应用，编程语言中也有广泛应用命名空间。在 PHP 中，命名空间主要用来解决两类问题：</p>
+<ul>
+<li>命名冲突——用户编写的代码与PHP内部的或第三方的类、函数、常量、接口名字冲突</li>
+<li>提高可读性——为很长的标识符名称创建一个别名的名称，提高源代码的可读性</li>
+</ul>
+<p>PHP命名空间提供了一种将相关的类、函数、常量和接口组合到一起的途径，不同命名空间的类、函数、常量、接口相互隔离不会冲突，注意：PHP命名空间只能隔离类、函数、常量和接口，不包括全局变量。</p>
+<h2 id="命名空间使用"><a href="#命名空间使用" class="headerlink" title="命名空间使用"></a>命名空间使用</h2><h3 id="命名空间申明"><a href="#命名空间申明" class="headerlink" title="命名空间申明"></a>命名空间申明</h3><p>命名空间使用 namespace  申明，命名空间必须在除了 <code>declare</code>关键字以外的其他代码之前申明，也就是说只要没有 <code>declare</code> 关键字，命名空间的申明都必须放在文件的开头。假设有一个基类 <code>app/controllers/Controller.php</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>需要特别注意的是：<strong>定义命名空间时省略了根空间符号 “&quot;，<code>namespace App\Controllers;</code> 定义的命名空间实际上是 <code>\App\Controller</code>，因此再引用命名空间时一定要记得加上根空间符号”&quot;</strong>，这种特殊方式实际上是可以类比的，如果你熟悉 shell 编程，你就会知道这和 shell 中的变量是一样的，shell 变量再申明或赋值的时候省略了 “$”，如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name = &#x27;Syncher&#x27;; # 申明</span><br><span class="line">...</span><br><span class="line">echo $name;  # 使用</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="命名空间引用"><a href="#命名空间引用" class="headerlink" title="命名空间引用"></a>命名空间引用</h3><p>在 <code>app/controllers/user/LoginController.php</code> 中要继承  <code>app/controllers</code> 中的 <code>Controller</code> 类，</p>
+<ul>
+<li>首先需要引入文件</li>
+<li>然后引用命名空间</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Controllers</span>\<span class="title class_">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;../Controller.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> <span class="keyword">extends</span> \<span class="title">App</span>\<span class="title">Controllers</span>\<span class="title">Controller</span> </span>&#123;</span><br><span class="line">    <span class="comment">// some codes here ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>引用命名空间的方式有如下三种，</p>
+<ul>
+<li><p>非限定名称</p>
+<p>  非限定名称，或不包含前缀的类名称，会被解析为当前命名空间下。相当于文件系统中的当前路径，如下所示的 <code>Controller</code> 类将被解析为 <code>\App\Controllers\User\Controller</code>，</p>
+  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Controllers</span>\<span class="title class_">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;../Controller.php&#x27;</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> <span class="keyword">extends</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line">    <span class="comment">// some codes here ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  而当前命名空间下没有该类，因此会报如下错误，</p>
+<p>  <img src="/images/20180801/Snipaste_2018-08-01_11-58-23.png"></p>
+</li>
+<li><p>限定名称</p>
+<p>  限定名称,或包含前缀的名称和非限定名称类似，相当于文件系统中的相对路径，如下代码中的 <code>Controller</code> 类将被解析为 <code>\App\Controllers\User\App\Controllers\Controller</code>，</p>
+  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Controllers</span>\<span class="title class_">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;../Controller.php&#x27;</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> <span class="keyword">extends</span> <span class="title">App</span>\<span class="title">Controllers</span>\<span class="title">Controller</span> </span>&#123;</span><br><span class="line">    <span class="comment">// some codes here ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  而当前命名空间下没有该类，因此会报如下错误，</p>
+<p>  <img src="/images/20180801/Snipaste_2018-08-01_11-53-44.png"></p>
+</li>
+<li><p>完全限定名称</p>
+<p>  完全限定名称，或包含了全局前缀操作符的名称，相当于文件系统中的相对路径。如下为正确的对 Controller 类的继承，</p>
+  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> <span class="keyword">extends</span> \<span class="title">App</span>\<span class="title">Controllers</span>\<span class="title">Controller</span> </span>&#123;</span><br><span class="line">    <span class="comment">// some codes here ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>除了在标识符前面添加限定词之外，还可以使用 <code>use</code> 导入使用类，如<code>use \App\Controllers\Controller as Controller;</code> as 是指定导入类的别名，如果导入类的别名和原名相同则可省略别名的描述。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Controllers</span>\<span class="title class_">User</span>;</span><br><span class="line"><span class="keyword">use</span> \<span class="title">App</span>\<span class="title">Controllers</span>\<span class="title">Controller</span>; <span class="comment">// 相当于：use \App\Controllers\Controller as Controller;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;../Controller.php&#x27;</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> <span class="keyword">extends</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line">    <span class="comment">// some codes here ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>根据 PSR 要求，命名空间应与文件路径一致，比如 Laravel 默认生成的 <code>app/Http/Controllers/Auth/LoginController.php</code>，其命名空间为 <code>App\Http\Controllers\Auth</code>，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Http</span>\<span class="title class_">Controllers</span>\<span class="title class_">Auth</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>\<span class="title">Controller</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Auth</span>\<span class="title">AuthenticatesUsers</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">// code here ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>命名空间与文件路径一致是 PSR 的规范，但这并不意味这命名空间和文件名有关联，实际上二者并无关系，这样规范是为了更加方便自动加载。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/php/" rel="tag"># PHP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/practice/linux-learning-docker-II/" rel="prev" title="Docker 学习笔记（2）">
+                  <i class="fa fa-angle-left"></i> Docker 学习笔记（2）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/practice/frontend-datatable-js-example/" rel="next" title="DataTable.js 使用笔记">
+                  DataTable.js 使用笔记 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

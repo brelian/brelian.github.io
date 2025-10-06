@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="零、背景Mac Book Pro （MBP）一直是极客开发者首选的操作系统，然而在工作中，并不是每个公司都会为开发者配备 MBP 的，然而，相信有强迫症的程序员都无法忍受 Windows 的命令行工具，我也不例外。好再微软在 2019 年 5 月推出了一款 Windows Terminal（截至作者撰稿时，仅 Preview 版可用），可以说给基于 Window 开发的程序员带来了福音。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows 10 配合 Ubuntu 搭建舒适开发环境不完全指北">
+<meta property="og:url" content="https://0x400.com/experience/guide/dev-environment-on-windows-and-linux/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="零、背景Mac Book Pro （MBP）一直是极客开发者首选的操作系统，然而在工作中，并不是每个公司都会为开发者配备 MBP 的，然而，相信有强迫症的程序员都无法忍受 Windows 的命令行工具，我也不例外。好再微软在 2019 年 5 月推出了一款 Windows Terminal（截至作者撰稿时，仅 Preview 版可用），可以说给基于 Window 开发的程序员带来了福音。">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2019-07/map-drive.png">
+<meta property="og:image" content="https://0x400.com/images/2019-07/can-not-access-shared-folder.png">
+<meta property="og:image" content="https://0x400.com/images/2019-07/share-folder.png">
+<meta property="article:published_time" content="2019-07-02T09:52:34.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.124Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Dev">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2019-07/map-drive.png">
+
+
+<link rel="canonical" href="https://0x400.com/experience/guide/dev-environment-on-windows-and-linux/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/guide/dev-environment-on-windows-and-linux/","path":"experience/guide/dev-environment-on-windows-and-linux/","title":"Windows 10 配合 Ubuntu 搭建舒适开发环境不完全指北"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Windows 10 配合 Ubuntu 搭建舒适开发环境不完全指北 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%B6%E3%80%81%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">零、背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%90%AD%E5%BB%BA-Samba-%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">一、搭建 Samba 服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Linux-%E5%AE%89%E8%A3%85-Samba-%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 Linux 安装 Samba 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Windows-%E6%8E%A5%E5%85%A5%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 Windows 接入共享文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Optional-troubleshooting"><span class="nav-number">2.3.</span> <span class="nav-text">1.3 [Optional] troubleshooting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%94%AE%E9%BC%A0%E5%85%B1%E4%BA%AB"><span class="nav-number">3.</span> <span class="nav-text">二、键鼠共享</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%96%B9%E6%A1%88"><span class="nav-number">4.</span> <span class="nav-text">其他方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-WSL-Window-Terminal"><span class="nav-number">4.1.</span> <span class="nav-text">Windows + WSL + Window Terminal</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-Virtual-Machine"><span class="nav-number">4.2.</span> <span class="nav-text">Windows + Virtual Machine</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/guide/dev-environment-on-windows-and-linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Windows 10 配合 Ubuntu 搭建舒适开发环境不完全指北 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Windows 10 配合 Ubuntu 搭建舒适开发环境不完全指北
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2019-07-02 17:52:34" itemprop="dateCreated datePublished" datetime="2019-07-02T17:52:34+08:00">2019-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/guide/" itemprop="url" rel="index"><span itemprop="name">Guide</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="零、背景"><a href="#零、背景" class="headerlink" title="零、背景"></a>零、背景</h2><p>Mac Book Pro （MBP）一直是极客开发者首选的操作系统，然而在工作中，并不是每个公司都会为开发者配备 MBP 的，然而，相信有强迫症的程序员都无法忍受 Windows 的命令行工具，我也不例外。好再微软在 2019 年 5 月推出了一款 Windows Terminal（截至作者撰稿时，仅 Preview 版可用），可以说给基于 Window 开发的程序员带来了福音。</p>
+<span id="more"></span>
+
+<p>然而不幸的是，Windows Terminal 只能在 Windows 10 的某些高版本中使用，而作者所在公司仅支持 Windows 7 系统，好在同事申请了一台 MBP 后我把他原来的 Windows 机借过来了，所以作者就拥有了两台开发机器。基于以上背景，本文记录了使用 Window 配合 Linux 搭建舒畅的开发环境的过程。操作系统配置信息如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">OS</th>
+<th align="center">Version</th>
+<th align="center">CPU core</th>
+<th align="center">Memory</th>
+<th align="center">Disk</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Windows 10</td>
+<td align="center">1809</td>
+<td align="center">4</td>
+<td align="center">16G</td>
+<td align="center">512G(SSD)</td>
+</tr>
+<tr>
+<td align="center">Ubuntu</td>
+<td align="center">18.04</td>
+<td align="center">4</td>
+<td align="center">16G</td>
+<td align="center">512G</td>
+</tr>
+</tbody></table>
+<p>由于 Linux 机器无法接入公司的域，同时很多办公软件在 Linux 下没有简单的替代品，最终选择 Windows + Ubuntu 的解决方案：</p>
+<ul>
+<li>Windows — 办公，负责邮件，文档，多媒体的处理。</li>
+<li>Linux — 开发，负责部署开发环境</li>
+</ul>
+<p>两台主机协同办公，难免会存在如下问题：</p>
+<ol>
+<li>Linux 机器无法接入办公网，导致代码不能正常部署&#x2F;下载</li>
+<li>Windows 和 Linux 之间难免有文件传输</li>
+<li>多鼠标&#x2F;键盘且换带来困扰</li>
+</ol>
+<p>只需要解决如上三个问题，两台电脑开发几乎游刃有余，经过摸索以及实践，最终采用如下方案解决如上三个问题，</p>
+<ol>
+<li>Windows 机器接入公司域，然后开启热点，供 Linux 使用，以保证两台电脑在一个局域网内</li>
+<li>Linux 机器上安装 Samba 服务，将目录共享到 Windows 机器上，方便文件传输</li>
+<li>使用 Synergy 实现键鼠共享，一套键鼠共同控制两台主机</li>
+</ol>
+<p>本文后续即为以上解决方案的绝体实现，仅供你参考，如有疑惑可以自行 Google 或者通过邮件与我交流。</p>
+<h2 id="一、搭建-Samba-服务"><a href="#一、搭建-Samba-服务" class="headerlink" title="一、搭建 Samba 服务"></a>一、搭建 Samba 服务</h2><h3 id="1-1-Linux-安装-Samba-服务"><a href="#1-1-Linux-安装-Samba-服务" class="headerlink" title="1.1 Linux 安装 Samba 服务"></a>1.1 Linux 安装 Samba 服务</h3><p><strong>Samba service Installation</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="built_in">sudo</span> apt-get install -y samba samba-common</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>创建共享目录</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="built_in">cd</span> ~ &amp;&amp; <span class="built_in">mkdir</span> share</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>添加账号</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="built_in">sudo</span> smbpasswd -a gbin <span class="comment"># gbin 账号必须是系统中存在的账号，如果系统中不存在则先 useradd 添加账号</span></span></span><br></pre></td></tr></table></figure>
+
+<p><strong>修改配置</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="built_in">sudo</span> vim /etc/samba/smb.conf</span></span><br></pre></td></tr></table></figure>
+
+<p>末尾添加如下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[share]</span><br><span class="line">    comment = share from ubuntu</span><br><span class="line">    browseable = yes</span><br><span class="line">    path = /home/gbin/share</span><br><span class="line">    create mask = 0700</span><br><span class="line">    directory mask = 0700</span><br><span class="line">    valid users = gbin</span><br><span class="line">    force user = gbin</span><br><span class="line">    force group = gbin</span><br><span class="line">    public = yes </span><br><span class="line">    available = yes </span><br><span class="line">    writable = yes</span><br></pre></td></tr></table></figure>
+
+<p><strong>重启 smbd 服务</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="built_in">sudo</span> service smbd restart</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-Windows-接入共享文件夹"><a href="#1-2-Windows-接入共享文件夹" class="headerlink" title="1.2 Windows 接入共享文件夹"></a>1.2 Windows 接入共享文件夹</h3><p>打开资源管理器，输入 <a href="">\your-ip\your-shared-folder</a>，在弹出的对话框中输入账号密码。输入完成后，即可在 Windows 上开发项目，对项目的更改会实时同步到 Linux 中，修改完成后可直接在 Linux 中编译运行，Web 等项目则可以直接在 Window 中通过浏览器远程访问项目。</p>
+<p><strong>[Optional]</strong>: 将共享目录映射成一个 Drive<br>打开资源管理器 -&gt; Network -&gt; Map Network Drive:<br><img src="/images/2019-07/map-drive.png"></p>
+<h3 id="1-3-Optional-troubleshooting"><a href="#1-3-Optional-troubleshooting" class="headerlink" title="1.3 [Optional] troubleshooting"></a>1.3 [Optional] troubleshooting</h3><p><strong>Window 无法连接共享文件夹</strong><br>Window 尝试连接共享文件夹时，报如下错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You Can’t  Access This Share Folder Because Your Organisation’s Security Policies Block Unauthenticated Guest Access.</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019-07/can-not-access-shared-folder.png" alt="can not access shared folder"></p>
+<ul>
+<li><p>ssh 登录 ubuntu，使用 smbclient 检查 samba 服务的可用性</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="built_in">sudo</span> apt-get install -y smbclient</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">smbclient -L \\localhost -U username%your-password</span></span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">WARNING: The &quot;syslog&quot; option is deprecated</span><br><span class="line"></span><br><span class="line">        Sharename       Type      Comment</span><br><span class="line">        ---------       ----      -------</span><br><span class="line">        print$          Disk      Printer Drivers</span><br><span class="line">        share           Disk      share from ubuntu</span><br><span class="line">        IPC$            IPC       IPC Service (gbin-dev server (Samba, Ubuntu))</span><br><span class="line">Reconnecting with SMB1 for workgroup listing.</span><br><span class="line"></span><br><span class="line">        Server               Comment</span><br><span class="line">        ---------            -------</span><br><span class="line"></span><br><span class="line">        Workgroup            Master</span><br><span class="line">        ---------            -------</span><br><span class="line">        WORKGROUP            GBIN-DEV</span><br></pre></td></tr></table></figure>
+
+<p>其中看到 <code>share from ubuntu</code> 的注释代表 smb 服务启动成功</p>
+</li>
+<li><p>修改 windows 的配置<br>按照这个<a href="https://www.windowproblemsolve.com/2019/05/you-can-not-access-this-shared-folder.html">教程</a> 开启 <code>insecure guest logons</code> 选项</p>
+</li>
+</ul>
+<h2 id="二、键鼠共享"><a href="#二、键鼠共享" class="headerlink" title="二、键鼠共享"></a>二、键鼠共享</h2><h2 id="其他方案"><a href="#其他方案" class="headerlink" title="其他方案"></a>其他方案</h2><h3 id="Windows-WSL-Window-Terminal"><a href="#Windows-WSL-Window-Terminal" class="headerlink" title="Windows + WSL + Window Terminal"></a>Windows + WSL + Window Terminal</h3><p>最近，微软发布了 <a href="https://github.com/microsoft/terminal">Windows Terminal</a> 的 <a href="https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701">preview</a> 版本，该方案也是值得尝尝新，但是要求 Window 10 的系统版本要 <code>&gt;=1903</code>，因为公司电脑统一升级，我尝试自己升级两次后都失败了，所以放弃了该方案，感兴趣的同学可以自己尝试尝试。 </p>
+<h3 id="Windows-Virtual-Machine"><a href="#Windows-Virtual-Machine" class="headerlink" title="Windows + Virtual Machine"></a>Windows + Virtual Machine</h3><p>这种方案是使用诸如  VMware Workstation (Player || pro)、Hyper-V、VirtualBox 之类的虚拟机管理软件安装 Linux 虚拟机，然后虚拟机和主机之间通过某些方案(虚拟机的文件夹共享或者 samba 服务)进行文件共享，最后在 Windows 上进行开发，在 VM 上完成编译。</p>
+<p>在没有远程 Linux 的情况下可以考虑使用这种方案，但是可能会遇到如下问题：</p>
+<ul>
+<li><p>网络问题</p>
+<p>虚拟机提供多种网络环境，如果要接入外网的话一般会选 <code>Bridge</code> 和 <code>NAT</code> 这两种方案之一。但是，一般来讲公司的内网 IP 会受限制，无法使用 <code>Bridge</code>，而使用 <code>NAT</code> 网络时，VM Player 对端口转发支持并不是很好(Pro 版要收费)。总的来讲，一是折腾起来很麻烦， 二十使用虚拟机本身就很耗费资源，显得臃肿，与极客开发者的性格不相符合。</p>
+</li>
+<li><p>文件夹共享问题</p>
+<p>使用虚拟机管理软件提供的文件夹共享可以把 Windows 宿主机下的文件夹挂在到 Linux 中，但是这种方式在共享文件夹中使用 <code>npm</code> 会有一些坑，与 <code>symlink</code> 相关，详情可以参考<a href="https://blog.csdn.net/joshua2011/article/details/88580489">这里</a><br><img src="/images/2019-07/share-folder.png"></p>
+<p>除了使用虚拟机管理软件提供的文件夹共享方式以外，还可以用 samba 服务把虚拟机里的目录共享到宿主机上，这样可以很方便的在 Windows 上开发，在 Linux 中完成编译运行。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/dev/" rel="tag"># Dev</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/programming-language/javascript/frontend-javascript-execution-procession/" rel="prev" title="JavaScript 执行机制（不完全指北）">
+                  <i class="fa fa-angle-left"></i> JavaScript 执行机制（不完全指北）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/algorithm/lc-01-two-sum/" rel="next" title="Leetcode-01 —— Two Sum">
+                  Leetcode-01 —— Two Sum <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

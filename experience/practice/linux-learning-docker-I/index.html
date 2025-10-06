@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Docker 是一种新的虚拟化技术，随着技术的不断革新 Docker 越来越受开发者的青睐，Docker 给开发带来了诸多方便，如提供如本地开发环境、单元测试环境、构建环境；Docker 还常用语弹性云服务和组件微服务。本文主要介绍 Docker 的基本使用，更多进阶内容我们将在下一节介绍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 学习笔记（1）">
+<meta property="og:url" content="https://0x400.com/experience/practice/linux-learning-docker-I/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="Docker 是一种新的虚拟化技术，随着技术的不断革新 Docker 越来越受开发者的青睐，Docker 给开发带来了诸多方便，如提供如本地开发环境、单元测试环境、构建环境；Docker 还常用语弹性云服务和组件微服务。本文主要介绍 Docker 的基本使用，更多进阶内容我们将在下一节介绍。">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/20180705/virtualization.png">
+<meta property="og:image" content="https://0x400.com/images/20180705/docker.png">
+<meta property="og:image" content="https://0x400.com/images/20180705/Snipaste_2018-07-17_16-58-22.png">
+<meta property="og:image" content="https://0x400.com/images/20180705/docker-installation.png">
+<meta property="article:published_time" content="2018-07-05T14:23:19.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.140Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/20180705/virtualization.png">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/linux-learning-docker-I/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/linux-learning-docker-I/","path":"experience/practice/linux-learning-docker-I/","title":"Docker 学习笔记（1）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Docker 学习笔记（1） | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%AE%A4%E8%AF%86-Docker"><span class="nav-number">1.</span> <span class="nav-text">一、认识 Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-%E5%AE%B9%E5%99%A8%EF%BC%88LXC%EF%BC%89%E5%92%8C-Docker"><span class="nav-number">1.1.</span> <span class="nav-text">Linux 容器（LXC）和 Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-%E4%B8%BB%E8%A6%81%E7%94%A8%E9%80%94"><span class="nav-number">1.2.</span> <span class="nav-text">Docker 主要用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-%E2%80%94%E2%80%94-%E9%95%9C%E5%83%8F%E3%80%81%E5%AE%B9%E5%99%A8%E5%92%8C%E4%BB%93%E5%BA%93"><span class="nav-number">1.3.</span> <span class="nav-text">Docker 基本概念 —— 镜像、容器和仓库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Docker-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">二、Docker 基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-7-%E4%B8%8B%E5%AE%89%E8%A3%85-Docker"><span class="nav-number">2.1.</span> <span class="nav-text">Windows 7 下安装 Docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E7%AE%A1%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">镜像管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">容器管理</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/linux-learning-docker-I/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Docker 学习笔记（1） | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker 学习笔记（1）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2018-07-05 22:23:19" itemprop="dateCreated datePublished" datetime="2018-07-05T22:23:19+08:00">2018-07-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Docker 是一种新的虚拟化技术，随着技术的不断革新 Docker 越来越受开发者的青睐，Docker 给开发带来了诸多方便，如提供如本地开发环境、单元测试环境、构建环境；Docker 还常用语弹性云服务和组件微服务。本文主要介绍 Docker 的基本使用，更多进阶内容我们将在下一节介绍。</p>
+<span id="more"></span>
+
+<h2 id="一、认识-Docker"><a href="#一、认识-Docker" class="headerlink" title="一、认识 Docker"></a>一、认识 Docker</h2><h3 id="Linux-容器（LXC）和-Docker"><a href="#Linux-容器（LXC）和-Docker" class="headerlink" title="Linux 容器（LXC）和 Docker"></a>Linux 容器（LXC）和 Docker</h3><p>LXC 是Linux 发展的一种新的虚拟化技术，他的虚拟不是基于硬件层面的，而是对进程的隔离，再正常的进程外面套了一个保护层，封装称一个容器。</p>
+<p>Docker 是基于 LXC  的封装，进一步封装了文件系统和网络互联和进程隔离等。Docker 使用 Google 公司推出的 <a href="https://golang.org/">Go 语言</a> 进行开发实现，基于 Linux 内核的 <a href="https://zh.wikipedia.org/wiki/Cgroups">cgroup</a>，<a href="https://en.wikipedia.org/wiki/Linux_namespaces">namespace</a>，以及<a href="https://en.wikipedia.org/wiki/Aufs">AUFS</a> 类的 <a href="https://en.wikipedia.org/wiki/Union_mount">Union FS</a> 等技术，对进程进行封装隔离，属于 <a href="https://en.wikipedia.org/wiki/Operating-system-level_virtualization">操作系统层面的虚拟化技术</a>。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 <a href="https://linuxcontainers.org/lxc/introduction/">LXC</a>，从 0.7 版本以后开始去除 LXC，转而使用自行开发的 <a href="https://github.com/docker/libcontainer">libcontainer</a>，从 1.11 开始，则进一步演进为使用 <a href="https://github.com/opencontainers/runc">runC</a> 和 <a href="https://github.com/containerd/**containerd**">containerd</a>。</p>
+<p>传统虚拟化技术是基于硬件的虚拟化，与传统虚拟化技术不同，</p>
+<p><img src="/images/20180705/virtualization.png"></p>
+<p>Docker 是基于操作系统层面的虚拟化技术，</p>
+<p><img src="/images/20180705/docker.png"></p>
+<p>相比与传统的虚拟化技术，Docker 具有启动快、占用内存小、轻量、可动态扩容等特点，</p>
+<p><img src="/images/20180705/Snipaste_2018-07-17_16-58-22.png"></p>
+<h3 id="Docker-主要用途"><a href="#Docker-主要用途" class="headerlink" title="Docker 主要用途"></a>Docker 主要用途</h3><ol>
+<li><strong>提供一次性环境，如本地开发环境、单元测试环境、构建环境等</strong></li>
+<li>弹性云服务，动态扩容</li>
+<li>组件微服务架构</li>
+</ol>
+<h3 id="Docker-基本概念-——-镜像、容器和仓库"><a href="#Docker-基本概念-——-镜像、容器和仓库" class="headerlink" title="Docker 基本概念 —— 镜像、容器和仓库"></a>Docker 基本概念 —— 镜像、容器和仓库</h3><ul>
+<li><p>镜像 image<br>  Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。镜像不包含任何动态数据，其内容在构建之后也不会被改变。</p>
+</li>
+<li><p>容器 Container<br>  容器是镜像的实例，是Docker服务直接操作的对象，容器可以被创建、启动、停止、删除和暂停等。<br>  容器的实质是进程，运行在属于自己的独立的命名空间。<br>  容器以镜像为基础层，并在此基础上创建了一个存储层，容器运行时，大部分读写操作都发生在存储层，存储层的生命周期和容器一致，容器销毁时存储层也随之消毁。</p>
+<p>  按照 Docker 的最佳实践，容器存储层不应写入任何有效数据，所有文件的写入操作都应该使用数据卷(Volume)、或者绑定宿主目录，这样数据的读写会直接跳过容器的存储层，直接对宿主（或网络存储）发生读写，其性能和稳定性更加高。因此，数据卷是容器数据持久化的一种设计方案。</p>
+</li>
+<li><p>仓库 Registry<br>  和 Git 仓库类似，仓库是用与存储镜像的，Docker 中仓库名一般有两段路径构成，如  <code>daocloud.io/nginx</code> 前者是仓库地址，后者是仓库名称，一个仓库中包含多个标签 Tag,每个 Tag 对应一个镜像。</p>
+</li>
+</ul>
+<h2 id="二、Docker-基本使用"><a href="#二、Docker-基本使用" class="headerlink" title="二、Docker 基本使用"></a>二、Docker 基本使用</h2><h3 id="Windows-7-下安装-Docker"><a href="#Windows-7-下安装-Docker" class="headerlink" title="Windows 7 下安装 Docker"></a>Windows 7 下安装 Docker</h3><p>目前 Docker 分为两个发行版，社区版（CE）和企业版（EE），企业版提供一些收费服务，对于我们普通开发者来说，社区版就足以使用，所以我们选择安装社区版就行了。早期的 Docker 是基于 LXC 的，对于 Windows 7，官方提供了 <a href="https://download.docker.com/win/stable/DockerToolbox.exe">Docker Toolbox</a> 集成工具用于支持 Docker。 Docker Toolbox 实际上集成了 VirtualBox、boot2docker 和一些 docker 常用工具，如 git、docker-compose、docker-machine 等。从官方下载 <a href="https://download.docker.com/win/stable/DockerToolbox.exe">Docker ToolBox </a>，安装即可（如需更加详细的安装教程可自行 Google 或百度之），需要注意的是安装路径不应有中文字符。</p>
+<p>一般而言，安装完成之后，点击桌面上的 <code>Docker QuickStart Terminal</code> 快捷方式或进入安装目录双击 <code>start.sh</code>启动 Docker 服务。启动 Docker 服务后，使用如下命令查看 Docker 相关信息，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker version</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker info</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/20180705/docker-installation.png"></p>
+<p>如图，Docker 分为客户端和服务端，与 Linux 不同的是 Docker 并不是直接运行在 Windows 系统之上的，而是运行在一个轻量级的 Linux 虚拟机上，这个虚拟机就是之前提到的 boot2docker。图中显示的 IP 地址<code>192.169.99.100</code>就是这个虚拟机的 IP，使用 xshell 或类似工具可以 ssh 连接到这台虚拟机上，默认用户名和密码分别是 <code>docker</code>和<code>tcuser</code>。</p>
+<p>小试牛刀，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker run hello-world</span></span><br></pre></td></tr></table></figure>
+
+<p><code>docker run hello-world</code> 表示启动基于 <code>hello-world</code> 镜像容器，如果本地不存在 <code>hello-world</code>镜像那么将从远程镜像仓库 <a href="https://hub.docker.com/">docker hub</a> 中下载，为了提高下载速度，我们可以手动修改镜像地址为国内镜像。</p>
+<ol>
+<li><p>修改 <code>profile</code> 文件</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> vi /var/lib/boot2docker/profile</span></span><br></pre></td></tr></table></figure>
+
+<p>  将<code>--registry-mirror=https://registry.docker-cn.com </code>  添加到  <code>EXTRA_ARGS</code>中</p>
+</li>
+<li><p>重启 docker 服务</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> /etc/init.d/docker restart</span></span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>验证</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker info</span></span><br></pre></td></tr></table></figure>
+
+<p>  ​</p>
+</li>
+</ol>
+<h3 id="镜像管理"><a href="#镜像管理" class="headerlink" title="镜像管理"></a>镜像管理</h3><ol>
+<li><p>从远程仓库拉取镜像</p>
+<blockquote>
+<p>docker pull [选项]  [地址]&#x2F;仓库名:[标签]</p>
+</blockquote>
+<p>  其中标签是镜像的标识，有点类似与版本号</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker pull ubuntu:16.04</span></span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>查看镜像</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker images</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker image <span class="built_in">ls</span></span></span><br></pre></td></tr></table></figure>
+
+<p>  【注意】从查看结果中有些镜像没有仓库名也没有标签，这写镜像被成为虚悬镜像（dangling image），这些镜像没有名称一般是因为新镜像构建时与旧镜像同名导致旧镜像名称被占用。</p>
+<p>  为了加速镜像构建，Docker 会利用中间层镜像，<code>docker image ls</code>只会列出顶层镜像，使用如下命令可以查看到中间层镜像，</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker image <span class="built_in">ls</span> -a</span></span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>删除本地镜像</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker image <span class="built_in">rm</span> [tag|<span class="built_in">id</span>]</span></span><br></pre></td></tr></table></figure>
+
+<p>  前面提到过的虚悬镜像一般来讲，已经失去了存在的价值，可以用如下命令批量删除虚悬镜像，</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker image prune</span></span><br></pre></td></tr></table></figure>
+
+<p>  ​</p>
+</li>
+</ol>
+<h3 id="容器管理"><a href="#容器管理" class="headerlink" title="容器管理"></a>容器管理</h3><ol>
+<li><p>启动一个容器</p>
+<blockquote>
+<p>docker run [container]</p>
+</blockquote>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker run hello-world</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker run -d nginx</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker run -it --<span class="built_in">rm</span> ubuntu:16.04 bash</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-it：这是两个参数很重要，-t 是启动容器是分配一个伪终端，i 是让容器的标准输入保持打开。我们这里打算进入 bash 执行一些命令并查看返回结果，因此我们需要交互式终端。</li>
+<li>–rm：这个参数是说容器退出后随之将其删除。默认情况下，为了排障需求，退出的容器并不会立即删除，除非手动 docker rm。我们这里只是随便执行个命令，看看结果，不需要排障和保留结果，因此使用 –rm 可以避免浪费空间。</li>
+<li>ubuntu:16.04：这是指用 ubuntu:16.04 镜像为基础来启动容器。</li>
+<li>bash：放在镜像名后的是命令，这里我们希望有个交互式 Shell，因此用的是 bash。</li>
+<li>-d 是让容器作为宿主机的后台进程运行。</li>
+</ul>
+</li>
+<li><p>查看容器</p>
+<blockquote>
+<p>docker container ls 或 docker ps</p>
+</blockquote>
+</li>
+<li><p>停止容器</p>
+<blockquote>
+<p>docker [container] stop container_id || docker [container] kill container_id</p>
+</blockquote>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker container stop 308bb024a63b</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker stop 308bb024a63b</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker container <span class="built_in">kill</span> 308bb024a63b</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker <span class="built_in">kill</span> 308bb024a63b</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入容器</p>
+<blockquote>
+<p> docker exec [OPTIONS] CONTAINER COMMAND [ARG…][flags]</p>
+</blockquote>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker <span class="built_in">exec</span> -it 124f52960169 bash</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除容器</p>
+<blockquote>
+<p>docker [container] rm container_id</p>
+</blockquote>
+<p>  彻底从 <code>docker ps -a</code> 列表中删除，<code>docker start</code> 不能启动。</p>
+<blockquote>
+<p>docker container prune</p>
+</blockquote>
+<p>  清楚所有停止的容器</p>
+</li>
+<li><p>保存容器的改变</p>
+<blockquote>
+<p>docker commit [选项] &lt;容器ID或容器名&gt; [&lt;仓库名&gt;[:&lt;标签&gt;]]</p>
+</blockquote>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker run --name mynginx -d -p 80:80 nginx:alpine</span></span><br></pre></td></tr></table></figure>
+
+<p>  进入容器</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker <span class="built_in">exec</span> -it mynginx bash</span></span><br><span class="line">OCI runtime exec failed: exec failed: container_linux.go:296: starting container process caused &quot;exec: \&quot;bash\&quot;: executable file not found in $PATH&quot;: unknown</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker <span class="built_in">exec</span> -it mynginx <span class="built_in">ls</span> /bin/bash</span></span><br><span class="line">ls: /bin/bash: No such file or directory</span><br><span class="line">说明没有 bash，因此可以使用 sh</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker <span class="built_in">exec</span> -it mynginx sh</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> <span class="string">&quot;&lt;center&gt;&lt;h1&gt;Hello docker&lt;/h1&gt;&lt;/center&gt;&quot;</span> &gt; /usr/share/nginx/html/index.html</span></span><br><span class="line">停止容器、容器的改变不会影响基础镜像，所以再次启动基础镜像时，内容不变</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker stop mynginx</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker <span class="built_in">rm</span> mynginx</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker run --name mynginx -d -p 80:80 nginx:alpine</span></span><br></pre></td></tr></table></figure>
+
+<p>  使用 <code>docker commit</code> 保存容器存储层的改变</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit  --author &quot;Syncher&quot;  --message &quot;updated index.html&quot;   mynginx  nginx:alpine</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># Linux</a>
+              <a href="/tags/docker/" rel="tag"># Docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/practice/linux-reading-note-of-practical-vim-II/" rel="prev" title="《Vim 实用技巧》读书笔记（第二部分）">
+                  <i class="fa fa-angle-left"></i> 《Vim 实用技巧》读书笔记（第二部分）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/practice/linux-learning-docker-II/" rel="next" title="Docker 学习笔记（2）">
+                  Docker 学习笔记（2） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

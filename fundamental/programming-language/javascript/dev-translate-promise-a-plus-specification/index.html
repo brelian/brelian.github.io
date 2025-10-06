@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一个健全的、可互操作的 JavaScript Promise 标准  —— 由开发者而定，为开发者而生。 promise代表异步操作的最终结果。Promise 开放的最原始接口是 then 方法，由该方法注册的回调函数来接受 Promise 成功状态（fulfilled）下返回的值或失败状态（rejected）下返回的错误信息。 本规范详细定义了 then 方法的行为，提供了 Promise 可互">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Promises&#x2F;A+ 标准翻译">
+<meta property="og:url" content="https://0x400.com/fundamental/programming-language/javascript/dev-translate-promise-a-plus-specification/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="一个健全的、可互操作的 JavaScript Promise 标准  —— 由开发者而定，为开发者而生。 promise代表异步操作的最终结果。Promise 开放的最原始接口是 then 方法，由该方法注册的回调函数来接受 Promise 成功状态（fulfilled）下返回的值或失败状态（rejected）下返回的错误信息。 本规范详细定义了 then 方法的行为，提供了 Promise 可互">
+<meta property="og:locale">
+<meta property="article:published_time" content="2019-10-17T11:23:12.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.173Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Promise">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://0x400.com/fundamental/programming-language/javascript/dev-translate-promise-a-plus-specification/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/fundamental/programming-language/javascript/dev-translate-promise-a-plus-specification/","path":"fundamental/programming-language/javascript/dev-translate-promise-a-plus-specification/","title":"Promises/A+ 标准翻译"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Promises/A+ 标准翻译 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%AF%E8%AF%AD"><span class="nav-number">1.</span> <span class="nav-text">1. 术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A0%87%E5%87%86"><span class="nav-number">2.</span> <span class="nav-text">2. 标准</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Promise-%E7%9A%84%E7%8A%B6%E6%80%81"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Promise 的状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-then-%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 then 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Promise-%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Promise 处理程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%B3%A8%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">3. 注解</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/fundamental/programming-language/javascript/dev-translate-promise-a-plus-specification/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Promises&#x2F;A+ 标准翻译 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Promises/A+ 标准翻译
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2019-10-17 19:23:12" itemprop="dateCreated datePublished" datetime="2019-10-17T19:23:12+08:00">2019-10-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/" itemprop="url" rel="index"><span itemprop="name">Fundamental</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/programing-language/" itemprop="url" rel="index"><span itemprop="name">Programing-language</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/programing-language/javascript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><strong>一个健全的、可互操作的 JavaScript Promise 标准  —— 由开发者而定，为开发者而生。</strong></p>
+<p><em>promise</em>代表异步操作的最终结果。Promise 开放的最原始接口是 <code>then</code> 方法，由该方法注册的回调函数来接受 Promise 成功状态（fulfilled）下返回的值或失败状态（rejected）下返回的错误信息。</p>
+<p>本规范详细定义了 <code>then</code> 方法的行为，提供了 Promise 可互操作的基础，所有 Promises&#x2F;A+ 兼容的 Promise 实现都可以参考该规范。因此，该规范是非常稳定的。 尽管 Promises&#x2F;A+ 组织有时会为了向后兼容而对此规范做小的改动，但只有经过深思熟虑，充分讨论和测试之后，我们才会集成有较大改动的或向后兼容的版本更改。</p>
+<span id="more"></span>
+
+<p>Promises&#x2F;A+ 阐明了早期 <a href="http://wiki.commonjs.org/wiki/Promises/A">Promises&#x2F;A 草案</a> 的行为条款，在此基础上扩展其涵盖 <em>de facto</em> 的所有行为，并且省略了未指定或有问题的部分。</p>
+<p>最后，Promises&#x2F;A+ 规范的核心不涉及如何创建，完成或拒绝 Promise，而是专注于提供不同实现的 Promise 可互操作的 <code>then</code> 方法。 当然，不排除未来的规范会涉及这些主题。</p>
+<h2 id="1-术语"><a href="#1-术语" class="headerlink" title="1. 术语"></a>1. 术语</h2><ol>
+<li>“promise” 是一个有 <code>then</code> 方法的对象或者函数，<code>then</code> 方法的所有行为都符合本规范。</li>
+<li>“thenable” 是一个定义了 <code>then</code> 方法的对象或者函数。</li>
+<li>“value” 是 JavaScript 任意数据类型的值（包括 <code>undefined</code> 、 <code>thenable</code> 或者 <code>promise</code>）</li>
+<li>“exception” 是由 <code>throw</code>  抛出的异常。</li>
+<li>“reason”  表示 Promise 失败的原因。</li>
+</ol>
+<h2 id="2-标准"><a href="#2-标准" class="headerlink" title="2. 标准"></a>2. 标准</h2><h3 id="2-1-Promise-的状态"><a href="#2-1-Promise-的状态" class="headerlink" title="2.1 Promise 的状态"></a>2.1 Promise 的状态</h3><p>一个 Promise 的状态必须是 pending、 fulfilled 或者 rejected。</p>
+<ul>
+<li>2.1.1 当 Promise 处于  pending 状态：<ul>
+<li>2.1.1.1 Promise 可能会转变成 fulfilled 或者 rejected 中的一种。</li>
+</ul>
+</li>
+<li>2.1.2 当 Promise 处于 fulfilled 状态：<ul>
+<li>2.1.2.1 Promise 状态必须保持不变。</li>
+<li>2.1.2.1 Promise 必须有一个 value，并且它的值不会改变。</li>
+</ul>
+</li>
+<li>2.1.3 当 Promise 处于 rejected 状态：<ul>
+<li>2.1.3.1 Promise 状态必须保持不变。</li>
+<li>2.1.3.2 Promise 必须有一个 reason，并且它的值不会改变。</li>
+</ul>
+</li>
+</ul>
+<p>这里的不会改变指的是恒定不变(<code>===</code>)，但不意味着深拷贝不变（这句话我暂时还没理解，附上原文如下）。</p>
+<p>Here, “must not change” means immutable identity (i.e. <code>===</code>), but does not imply deep immutability.</p>
+<h3 id="2-2-then-方法"><a href="#2-2-then-方法" class="headerlink" title="2.2 then 方法"></a>2.2 <code>then</code> 方法</h3><p>Promise 必须提供一个 <code>then</code> 方法用于获取 Promise 当前或最终的 value 或 reason。</p>
+<p><code>then</code> 方法接收两个参数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">promise.<span class="title function_">then</span>(onFulfilled, onRejected)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>2.2.1 <code>onFulfilled</code> 和 <code>onRejected</code> 都是可选参数：</p>
+<ul>
+<li><p>2.2.1.1 如果 <code>onFulfilled</code> 不是函数，必须忽略它。</p>
+</li>
+<li><p>2.2.1.2 如果 <code>onRejected</code> 不是函数，必须忽略它。</p>
+</li>
+</ul>
+</li>
+<li><p>2.2.2 如果 <code>onFulfilled</code> 是一个函数：</p>
+<ul>
+<li><p>2.2.2.1 它必须在 Promise 变成 fulfilled 状态后以 Promise 的 value 作为第一个参数被调用。</p>
+</li>
+<li><p>2.2.2.2 它不能在 Promise 变成 fulfilled 状态以前调用。</p>
+</li>
+<li><p>2.2.2.3 它只能被调用一次。</p>
+</li>
+</ul>
+</li>
+<li><p>2.2.3 如果 <code>onRejected</code> 是一个函数：</p>
+<ul>
+<li><p>2.2.3.1 它必须在 Promise 变成 rejected 状态后以 Promise 的 reason 作为第一个参数被调用。</p>
+</li>
+<li><p>2.2.3.2 它不能在 Promise 变成  rejected 状态以前调用。</p>
+</li>
+<li><p>2.2.3.3 它只能被调用一次。</p>
+</li>
+</ul>
+</li>
+<li><p>2.2.4 <code>onFulfilled</code>  或  <code>onRejected</code>  不能在执行栈(<a href="https://es5.github.io/#x10.3">execution context</a>)  仅包含平台代码之前调用。</p>
+</li>
+<li><p>2.2.5 <code>onFulfilled</code> 和 <code>onRejected</code> 必须以函数形式被调用（不能传递 this 指针）。</p>
+</li>
+<li><p>2.2.6 同一个 Promise 的 <code>then</code> 方法可能被多次调用。</p>
+<ul>
+<li><p>2.2.6.1 当且仅当 Promise 变成 fulfilled 后，各个 <code>onFullfilled</code> 回调必须按照原始的调用顺序被依次执行。</p>
+</li>
+<li><p>2.2.6.2 当且仅当 Promise 变成 rejected 后，各个 <code>onRejected</code> 回调必须按照原始的调用顺序被依次执行。</p>
+</li>
+</ul>
+</li>
+<li><p>2.2.7 <code>then</code> 方法必须返回一个新的 Promise。</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">promise2 = promise1.<span class="title function_">then</span>(onFulfilled, onRejected);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>2.2.7.1 如果 <code>onFulfilled</code> 或 <code>onRejected</code> 返回一个值 <code>x</code>，则执行 Promise 解析过程 <code>[[Resolve]](promise2, x)</code>。</p>
+</li>
+<li><p>2.2.7.2 如果 <code>onFulfilled</code> 或 <code>onRejected</code> 抛出异常 <code>e</code>，则执行  Promise 解析过程 <code>[[Resolve]](promise2, e)</code>。</p>
+</li>
+<li><p>2.2.7.3 如果 <code>onFulfilled</code> 不是一个函数，<code>promise1</code> 处于 fulfilled 状态，则 <code>promise2</code> 必须变成 fulfilled 状态且 vale 和 <code>promise1</code> 相同。</p>
+</li>
+<li><p>2.2.7.4 如果 <code>onRejected</code> 不是一个函数，<code>promise1</code> 处于 rejected 状态，则 <code>promise2</code> 必须变成 rejected 状态且 reason 和 <code>promise1</code> 相同。</p>
+</li>
+</ul>
+<h3 id="2-3-Promise-处理程序"><a href="#2-3-Promise-处理程序" class="headerlink" title="2.3 Promise 处理程序"></a>2.3 Promise 处理程序</h3><p>Promise 处理程序是一个抽象过程，以一个 Promise 和 value 作为输入，表示为 <code>[[Resolve]](promise, x)</code>。如果 <code>x</code> 是一个 thenable 对象，则 <code>promise</code> 将直接采用 <code>x</code> 的状态，否则 <code>promise</code> 会试图变成 fulfilled 状态，且其 value 等于 <code>x</code>。</p>
+<p>thenable 的处理程序允许不同 Promise 可以互相操作，只要它们提供一个兼容 Promises&#x2F;A+ 的 <code>then</code> 方法。它还允许 Promises&#x2F;A+ 实现使用合理的 <code>then</code> 方法“集成”不符合标准的实现。</p>
+<p><code>[[Resolve]](promise, x)</code> 按如下步骤执行：</p>
+<ul>
+<li>2.3.1 如果 <code>promise</code> 和 <code>x</code> 是同一个对象，则 <code>promise</code> 变成 rejected，reason 是一个 <code>TypeError</code> 异常。</li>
+<li>2.3.2 如果 <code>x</code> 是一个 Promise，则 <code>promise</code> 采用 <code>x</code> 的状态：<ul>
+<li>如果 <code>x</code> 处于 pending 状态，则 <code>promise</code> 必须保持 pending 状态直到 <code>x</code> 的状态变成 fulfilled 或 rejected。</li>
+<li>当且仅当 <code>x</code>  变成 fulfilled， <code>promise</code>  也以相同的 value 变成 fullfiled 状态。</li>
+<li>当且仅当 <code>x</code> 变成 rejected，<code>promise</code> 也以相同的 reason 变成 rejected 状态。</li>
+</ul>
+</li>
+<li>2.3.3 如果 <code>x</code> 是一个对象或者一个函数：<ul>
+<li>把 <code>x.then</code> 赋值给 <code>then</code></li>
+<li>如果引用 <code>x.then</code> 属性时抛出异常 <code>e</code>，那么用 <code>e</code> 作为 <code>promise</code> 的 reason 将其变成 rejected 状态。</li>
+<li>如果 <code>then</code> 是一个函数，则以 <code>x</code> 作为 <code>this</code>， <code>resolvePromise</code> 作为第一个参数，<code>rejectePromise</code> 作为第二参数调用它。</li>
+</ul>
+</li>
+</ul>
+<p>&#x2F;&#x2F; TODO ……</p>
+<h2 id="3-注解"><a href="#3-注解" class="headerlink" title="3. 注解"></a>3. 注解</h2>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/promise/" rel="tag"># Promise</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/programming-language/javascript/dev-implement-promise-step-by-step/" rel="prev" title="JavaScipr 异步和 Promise">
+                  <i class="fa fa-angle-left"></i> JavaScipr 异步和 Promise
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/algorithm/lc-650-2-keys-keyboard/" rel="next" title="Leetcode-650 —— 2 Keys Keyboard">
+                  Leetcode-650 —— 2 Keys Keyboard <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

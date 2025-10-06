@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="看完这篇文章，你可以知道  PHP-CGI 是 PHP 解析器 CGI 是一种协议 Fast-CGI  是 CGI 的一个变种 PHP-FPM 是对 Fast-CGI 的实现，是对 PHP-CGI 进程的管理 Nginx 和 PHP-FPM 之间的通信方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx 与 PHP-FPM 通信机制">
+<meta property="og:url" content="https://0x400.com/experience/practice/linux-nginx-fpm-communication-explaination/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="看完这篇文章，你可以知道  PHP-CGI 是 PHP 解析器 CGI 是一种协议 Fast-CGI  是 CGI 的一个变种 PHP-FPM 是对 Fast-CGI 的实现，是对 PHP-CGI 进程的管理 Nginx 和 PHP-FPM 之间的通信方式">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/20180331/Nginx-fpm-Communitacion.png">
+<meta property="og:image" content="https://0x400.com/images/20180331/FPM-Nginx-TCP-Unix.png">
+<meta property="article:published_time" content="2018-03-31T14:23:19.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.142Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Nginx">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/20180331/Nginx-fpm-Communitacion.png">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/linux-nginx-fpm-communication-explaination/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/linux-nginx-fpm-communication-explaination/","path":"experience/practice/linux-nginx-fpm-communication-explaination/","title":"Nginx 与 PHP-FPM 通信机制"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nginx 与 PHP-FPM 通信机制 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-%E4%B8%8E-PHP-FPM"><span class="nav-number">1.</span> <span class="nav-text">Nginx 与 PHP-FPM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-%E4%B8%8E-PHP-FPM-%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Nginx 与 PHP-FPM 通信机制与配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">配置方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E9%80%9A%E4%BF%A1%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.1.</span> <span class="nav-text">TCP通信配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Unix-socket-%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.2.</span> <span class="nav-text">Unix socket 配置方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E7%9A%84%E5%88%86%E6%9E%90%E5%92%8C%E6%80%BB%E7%BB%93"><span class="nav-number">2.1.3.</span> <span class="nav-text">两种通信方式的分析和总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/linux-nginx-fpm-communication-explaination/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nginx 与 PHP-FPM 通信机制 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nginx 与 PHP-FPM 通信机制
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2018-03-31 22:23:19" itemprop="dateCreated datePublished" datetime="2018-03-31T22:23:19+08:00">2018-03-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>看完这篇文章，你可以知道</p>
+<ul>
+<li>PHP-CGI 是 PHP 解析器</li>
+<li>CGI 是一种协议</li>
+<li>Fast-CGI  是 CGI 的一个变种</li>
+<li>PHP-FPM 是对 Fast-CGI 的实现，是对 PHP-CGI 进程的管理</li>
+<li>Nginx 和 PHP-FPM 之间的通信方式</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Nginx-与-PHP-FPM"><a href="#Nginx-与-PHP-FPM" class="headerlink" title="Nginx 与 PHP-FPM"></a>Nginx 与 PHP-FPM</h2><p>Nginx（服务器）是内容的分发者，Nginx 启动后会监听某个指定的端口，等待客户端请求。如果通过解析 URI 得知客户端请求的是<code>/index.html</code>文件，服务器会去文件系统中找到这个文件，发送给浏览器，这里分发的是静态数据。如果现在请求的是<code>/index.php</code>，根据配置文件，服务器知道这不是静态文件，需要去找 **PHP 解析器 （PHP-CGI）**来处理。PHP-CGI 收到<code>/index.php</code>这个请求后，会解析 php.ini 文件，初始化执行环境，然后处理请求，再以规定 CGI 规定的格式返回处理后的结果，退出进程。Nginx 再把结果返回给浏览器。</p>
+<p>Nginx 调用 PHP-CGI 时会传第必要的信息如 URI、URL 参数、POST、HTTP header 等，<a href="%5Bhttps://tools.ietf.org/html/rfc3875%5D(https://tools.ietf.org/html/rfc3875)"><strong>通用网关接口 （CGI ）</strong></a>规定了从 Nginx 到 PHP-CGI 之间的数据传输格式。</p>
+<p>PHP-CGI 接收到 CGI 传来的数据后：环境初始化 –&gt; 处理请求 –&gt; 返回结果 –&gt; 杀死进程 。每个请求都将对应一个 PHP-CGI 进程，因此导致服务器性能下降，并发不高。因此出现了一种新的协议叫 <strong><a href="https://en.wikipedia.org/wiki/FastCGI">快速通用网关接口（FastCGI）</a></strong>，FastCGI 的主要目标是减少 Web 服务器和 CGI 程序之间通信的开销，允许服务器一次处理更多的网页请求。</p>
+<p> PHP-FPM  就是 FastCGI  协议的实现，对于 Fast-CGI 程序，不是每个请求都创建一个进程，PHP-FPM 会先启一个 Master 进程 –&gt; 解析配置文件 –&gt; 初始化执行环境 –&gt; 启动多个 Worker。每个 Worker 都是一个 PHP-CGI，当请求过来时，Master 会将请求交给一个 Worker，然后立即可以接受下一个请求。PHP-FPM 对 PHP-CGI 进程进行管理，当 Worker 不够用时，Master 可以根据配置预先启动几个Worker ；当然空闲 Worker 太多时，也会停掉一些，这样就提高了性能，也节约了资源。</p>
+<p><img src="/images/20180331/Nginx-fpm-Communitacion.png" alt="img"></p>
+<h2 id="Nginx-与-PHP-FPM-通信机制与配置"><a href="#Nginx-与-PHP-FPM-通信机制与配置" class="headerlink" title="Nginx 与 PHP-FPM 通信机制与配置"></a>Nginx 与 PHP-FPM 通信机制与配置</h2><p>Nginx 和 FastCGI 的通信方式有两种，一种是 TCP socket，一种是 Unix domain socket 。连接示意图如下：</p>
+<p><img src="/images/20180331/FPM-Nginx-TCP-Unix.png"></p>
+<h3 id="配置方式"><a href="#配置方式" class="headerlink" title="配置方式"></a>配置方式</h3><h4 id="TCP通信配置"><a href="#TCP通信配置" class="headerlink" title="TCP通信配置"></a>TCP通信配置</h4><p><strong>第一步</strong>，编辑 Nginx 配置文件 <code>/path/to/nginx/conf/your-stie.conf</code></p>
+<p>如果 PHP-FPM 和 Nginx 在同一台机器上，将 <code>fastcgi_pass</code>参数修改为<code>127.0.0.1:9000</code>，不在同一台机器时，将<code>127.0.0.1</code>替换为 PHP-FPM 所在机器的 IP， 如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">      index index.php index.html index.htm;</span><br><span class="line">      include /etc/nginx/fastcgi_params;</span><br><span class="line">      fastcgi_pass 127.0.0.1:9000;</span><br><span class="line">      fastcgi_index index.php;</span><br><span class="line">      include fastcgi_params;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p> <strong>第二步</strong>，编辑PHP-FPM 配置文件 <code>/path/to/php/etc/php-fpm.conf</code></p>
+<p>将 <code>listen</code> 参数修改为 <code>your-php-fpm-ip:9000</code>，如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listen = <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9000</span></span><br></pre></td></tr></table></figure>
+
+<p> <strong>第三步</strong>，重启或重新载入 Nginx 和 PHP-FPM 的配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service nginx reload</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">kill</span> all php-fpm</span></span><br><span class="line">pgrep php-fpm | xargs kill</span><br><span class="line">cd /path/to/php/sbin/ &amp;&amp; ./php-fpm</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Unix-socket-配置方式"><a href="#Unix-socket-配置方式" class="headerlink" title="Unix socket 配置方式"></a>Unix socket 配置方式</h4><p>Unix socket其实严格意义上应该叫 Unix domain socket，它是 *nix 系统进程间通信（IPC）的一种被广泛采用方式，以文件（一般是 .sock ）作为 socket 的唯一标识（描述符），需要通信的两个进程引用同一个 socket 描述符文件就可以建立通道进行通信了。</p>
+<p><strong>第一步</strong>，决定你的 socket 描述符文件的存储位置。</p>
+<p>可以放在系统的任意位置，如果想要更快的通信速度，可以放在 &#x2F;dev&#x2F;shm下面，这个目录是所谓的 tmpfs，是RAM 可以直接使用的区域，所以，读写速度都会很快。</p>
+<p>决定了文件位置，就要修改文件的权限了，要让 Nginx 和 PHP-FPM 对它都有读写的权限，可以这样：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo touch /dev/shm/fpm-cgi.sock</span><br><span class="line">sudo chown www-data:www-data /dev/shm/fpm-cgi.sock</span><br><span class="line">sudo chmod 666 /dev/shm/fpm-cgi.sock</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>第二步</strong>，修改 PHP-FPM 配置文件 <code>/path/to/php/etc/php-fpm.conf</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">listen = /dev/shm/fpm-cgi.sock</span><br><span class="line"></span><br><span class="line">; Set listen(2) backlog. A value of &#x27;-1&#x27; means unlimited.</span><br><span class="line">; Default Value: 128 (-1 on FreeBSD and OpenBSD)</span><br><span class="line">listen.backlog = -1</span><br></pre></td></tr></table></figure>
+
+<p> 注意： 要注意根据并发调整 listen.backlog 参数的值，默认是128，在高并发下可以改为-1，表示可以无限使用连接，最大连接限制有操作系统层控制。如下可以修改限制：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo echo &#x27;net.core.somaxconn = 2048&#x27; &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sudo sysctl -p</span><br></pre></td></tr></table></figure>
+
+<p> <strong>第三步</strong>，修改 Nginx 站点配置文件 <code>/path/to/nginx/conf/your-stie.conf</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">      index index.php index.html index.htm;</span><br><span class="line">      include /etc/nginx/fastcgi_params;</span><br><span class="line">      fastcgi_pass /dev/shm/fpm-cgi.sock;</span><br><span class="line">      fastcgi_index index.php;</span><br><span class="line">      include fastcgi_params;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p> <strong>第四步</strong>，重启或重新载入 Nginx 和 PHP-FPM 的配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service nginx reload</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">kill</span> all php-fpm</span></span><br><span class="line">pgrep php-fpm | xargs kill</span><br><span class="line">cd /path/to/php/sbin/ &amp;&amp; ./php-fpm</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="两种通信方式的分析和总结"><a href="#两种通信方式的分析和总结" class="headerlink" title="两种通信方式的分析和总结"></a>两种通信方式的分析和总结</h4><p>从原理上来说，Unix socket 方式肯定要比 TCP 的方式快而且消耗资源少，因为 TCP 需要经过本地回环驱动，还要申请临时端口。</p>
+<p>Unix socket 会显得不是那么稳定，当并发连接数爆发时，会产生大量的长时缓存，在没有面向连接协议支撑的情况下，大数据包很有可能就直接出错并不会返回异常。而 TCP 这样的面向连接的协议，多少可以保证通信的正确性和完整性。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://xieminis.me/?p=216">http://xieminis.me/?p=216</a></p>
+<p><a href="http://www.cnblogs.com/tinywan/p/6625432.html">http://www.cnblogs.com/tinywan/p/6625432.html</a></p>
+<p><a href="https://www.awaimai.com/371.html">https://www.awaimai.com/371.html</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/php/" rel="tag"># PHP</a>
+              <a href="/tags/nginx/" rel="tag"># Nginx</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/programming-language/php/php-codeigniter-load-database-analysis/" rel="prev" title="CodeIgniter load database 分析">
+                  <i class="fa fa-angle-left"></i> CodeIgniter load database 分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/storage/mysql-features-of-partition/" rel="next" title="MySQL 特性之分区表">
+                  MySQL 特性之分区表 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

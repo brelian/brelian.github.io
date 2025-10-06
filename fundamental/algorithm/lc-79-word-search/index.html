@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="描述在给定的 2D 平面 board 中搜索单词 word，可以在垂直相邻和水平相邻方向进行深度搜索，如果找到返回 True，否则返回 False。 12345678910board &#x3D;[  [&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;E&#x27;],  [&#x27;S&#x27;,&#x27;F&#x27;,&#x27;C&#x27;,&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode-79 Word Search">
+<meta property="og:url" content="https://0x400.com/fundamental/algorithm/lc-79-word-search/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="描述在给定的 2D 平面 board 中搜索单词 word，可以在垂直相邻和水平相邻方向进行深度搜索，如果找到返回 True，否则返回 False。 12345678910board &#x3D;[  [&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;E&#x27;],  [&#x27;S&#x27;,&#x27;F&#x27;,&#x27;C&#x27;,&amp;">
+<meta property="og:locale">
+<meta property="article:published_time" content="2019-11-11T14:58:43.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.162Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Backtrack">
+<meta property="article:tag" content="DFS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://0x400.com/fundamental/algorithm/lc-79-word-search/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/fundamental/algorithm/lc-79-word-search/","path":"fundamental/algorithm/lc-79-word-search/","title":"Leetcode-79 Word Search"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Leetcode-79 Word Search | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">测试用例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/fundamental/algorithm/lc-79-word-search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Leetcode-79 Word Search | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Leetcode-79 Word Search
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2019-11-11 22:58:43" itemprop="dateCreated datePublished" datetime="2019-11-11T22:58:43+08:00">2019-11-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/" itemprop="url" rel="index"><span itemprop="name">Fundamental</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>在给定的 2D 平面 board 中搜索单词 word，可以在垂直相邻和水平相邻方向进行深度搜索，如果找到返回 True，否则返回 False。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">board =</span><br><span class="line">[</span><br><span class="line">  [&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;E&#x27;],</span><br><span class="line">  [&#x27;S&#x27;,&#x27;F&#x27;,&#x27;C&#x27;,&#x27;S&#x27;],</span><br><span class="line">  [&#x27;A&#x27;,&#x27;D&#x27;,&#x27;E&#x27;,&#x27;E&#x27;]</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">Given word = &quot;ABCCED&quot;, return true.</span><br><span class="line">Given word = &quot;SEE&quot;, return true.</span><br><span class="line">Given word = &quot;ABCB&quot;, return false.</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<h2 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">board =</span><br><span class="line">[</span><br><span class="line">  [&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;E&#x27;],</span><br><span class="line">  [&#x27;S&#x27;,&#x27;F&#x27;,&#x27;A&#x27;,&#x27;S&#x27;],</span><br><span class="line">  [&#x27;A&#x27;,&#x27;E&#x27;,&#x27;F&#x27;,&#x27;E&#x27;]</span><br><span class="line">]</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Case 0: word is an empty string, word = <span class="string">&#x27;&#x27;</span>, <span class="built_in">return</span> <span class="literal">false</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Case 1: genaral <span class="keyword">case</span> - word = <span class="string">&quot;ABFE&quot;</span>, <span class="built_in">return</span> <span class="literal">true</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Case 2: take backtracking under advisement, word = <span class="string">&quot;AEFBCAFE&quot;</span>, <span class="built_in">return</span> <span class="literal">true</span>.</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Case 3: word = <span class="string">&quot;ADEF&quot;</span>, <span class="built_in">return</span> <span class="literal">false</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这是一个经典的 DFS 问题，对于一个坐标 <code>(x, y)</code> 可以往四个方向进行搜索，分别是 <code>(x+1, y)</code>, <code>(x-1, y)</code>, <code>(x, y+1)</code>, <code>(x, y-1)</code>。四个方向只要有一个方向搜索成功即可，搜索成功的条件是搜索深度 <code>d == len(word)-1</code>。而搜素失败的原因有很多：</p>
+<ol>
+<li>(x, y) 出界；</li>
+<li>(x, y) 已经使用过（题目要求每个坐标只能使用一次）；</li>
+<li>当前的 (x, y) 对应的值和 word[d] 不相等。</li>
+</ol>
+<p>根据以上分析，构造 dfs 函数需要的参数有 x, y 和 d，其中 d 表示搜索的深度。此外，还需要一个保存搜索过的坐标的辅助变量，这个变量可以放在全局。考虑搜索失败的情况，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">visited = <span class="built_in">set</span>()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">x, y, d</span>):</span><br><span class="line">    <span class="keyword">if</span> out_of_bound(x, y):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> (x, y) <span class="keyword">in</span> visited:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> board[x][y] != word[d]:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="comment"># TODO </span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果当前坐标 (x, y) 满足条件 <code>board[x][y] == word[d]</code> 且 <code>d == len(word) - 1</code> 则搜索成功，代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">visited = <span class="built_in">set</span>()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">x, y, d</span>):</span><br><span class="line">    <span class="keyword">if</span> out_of_bound(x, y):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> (x, y) <span class="keyword">in</span> visited:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> board[x][y] != word[d]:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> d == <span class="built_in">len</span>(word) - <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>否则继续往当前坐标的四个方向深入搜索，同时将当前坐标加入到 visited 中，表示当前坐标已经访问过，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">visited = <span class="built_in">set</span>()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">x, y, d</span>):</span><br><span class="line">    <span class="keyword">if</span> out_of_bound(x, y):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> (x, y) <span class="keyword">in</span> visited:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> board[x][y] != word[d]:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> d == <span class="built_in">len</span>(word) - <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># continue dfs</span></span><br><span class="line">    visited.add((x,y))</span><br><span class="line">    dx = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>]</span><br><span class="line">    dy = [<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>]</span><br><span class="line">    found = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        new_x = x + dx</span><br><span class="line">        new_y = y + dy</span><br><span class="line">        found = found <span class="keyword">or</span> dfs(new_x, new_y, d+<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> found</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如上，代码基本结构已经完成，大部分测试已经通过。<strong>但是， 考虑具有回溯情况的 Case 2 ，以上代码会失。这是因为如果坐标 (x,y) 的某个方向深入搜索多个步骤后失败，最终还会回到 (x, y) 上进行下一个方向的尝试，可是在进行下一个方向搜索时，上次的失败搜索并没有释放搜索过的坐标，导致有些坐标在本次搜索不能被访问，最终搜索失败。</strong> 所以，对于当前坐标的搜索，如果四个方向都搜索失败，则需要释放当前的 (x, y)，即 <strong>回溯</strong>。如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">visited = <span class="built_in">set</span>()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">x, y, d</span>):</span><br><span class="line">    <span class="keyword">if</span> out_of_bound(x, y):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> (x, y) <span class="keyword">in</span> visited:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> board[x][y] != word[d]:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> d == <span class="built_in">len</span>(word) - <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># continue dfs</span></span><br><span class="line">    visited.add((x,y))</span><br><span class="line">    dx = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>]</span><br><span class="line">    dy = [<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>]</span><br><span class="line">    found = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        new_x = x + dx</span><br><span class="line">        new_y = y + dy</span><br><span class="line">        found = found <span class="keyword">or</span> dfs(new_x, new_y, d+<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">        visited.remove((x, y))</span><br><span class="line">    <span class="keyword">return</span> found</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>根据如上分析，代码实现如下（实现使用 used 数组保存访问过的坐标，和用集合 visited 功能一致）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">exist</span>(<span class="params">self, board: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]], word: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> board <span class="keyword">or</span> <span class="keyword">not</span> word:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        m, n = <span class="built_in">len</span>(board), <span class="built_in">len</span>(board[<span class="number">0</span>])</span><br><span class="line">        used = [[<span class="literal">False</span>] * n <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(m)]</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">x, y, pos</span>):</span><br><span class="line">            <span class="comment"># x, y out of bound</span></span><br><span class="line">            <span class="keyword">if</span> x &lt; <span class="number">0</span> <span class="keyword">or</span> x &gt;= m <span class="keyword">or</span> y &lt; <span class="number">0</span> <span class="keyword">or</span> y &gt;= n:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="comment"># word[pos] not equals to board[x][y]</span></span><br><span class="line">            <span class="keyword">if</span> word[pos] != board[x][y]:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="comment"># (x, y) already used</span></span><br><span class="line">            <span class="keyword">if</span> used[x][y]:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="comment"># pos == len(word)-1</span></span><br><span class="line">            <span class="keyword">if</span> pos == <span class="built_in">len</span>(word) - <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">            used[x][y] = <span class="literal">True</span></span><br><span class="line">            dx = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>]</span><br><span class="line">            dy = [<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">            found = <span class="literal">False</span> </span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">                new_x = x + dx[i]</span><br><span class="line">                new_y = y + dy[i]</span><br><span class="line">                found = found <span class="keyword">or</span> dfs(new_x, new_y, pos+<span class="number">1</span>)</span><br><span class="line">            <span class="comment"># backtrack</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">                used[x][y] = <span class="literal">False</span></span><br><span class="line">            <span class="keyword">return</span> found</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">                <span class="keyword">if</span> dfs(i, j, <span class="number">0</span>):</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>改进：</strong></p>
+<p>如上代码使用额外空间来记录访问过的坐标，以避免重复访问，有个技巧可以使用 O(1) 的空间记录访问过的节点。我们只需要用一个特殊符号如 “#” 将访问过的坐标值替换，勾勒出访问路径，并在当前坐标搜索完成后将原来的值替换回来即可。如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">exist</span>(<span class="params">self, board: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]], word: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> board <span class="keyword">or</span> <span class="keyword">not</span> word:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        m, n = <span class="built_in">len</span>(board), <span class="built_in">len</span>(board[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">x, y, pos</span>):</span><br><span class="line">            <span class="comment"># x, y out of bound</span></span><br><span class="line">            <span class="keyword">if</span> x &lt; <span class="number">0</span> <span class="keyword">or</span> x &gt;= m <span class="keyword">or</span> y &lt; <span class="number">0</span> <span class="keyword">or</span> y &gt;= n:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="comment"># word[pos] not equals to board[x][y]</span></span><br><span class="line">            <span class="keyword">if</span> word[pos] != board[x][y]:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            <span class="comment"># pos == len(word)-1</span></span><br><span class="line">            <span class="keyword">if</span> pos == <span class="built_in">len</span>(word) - <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">            orignal = board[x][y]</span><br><span class="line">            board[x][y] = <span class="string">&quot;#&quot;</span></span><br><span class="line">            dx = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>]</span><br><span class="line">            dy = [<span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">            found = <span class="literal">False</span> </span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">                new_x = x + dx[i]</span><br><span class="line">                new_y = y + dy[i]</span><br><span class="line">                found = found <span class="keyword">or</span> dfs(new_x, new_y, pos+<span class="number">1</span>)</span><br><span class="line">            <span class="comment"># backtrack</span></span><br><span class="line">            board[x][y] = orignal</span><br><span class="line">            <span class="keyword">return</span> found</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">                <span class="keyword">if</span> dfs(i, j, <span class="number">0</span>):</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/dfs/" rel="tag"># DFS</a>
+              <a href="/tags/backtrack/" rel="tag"># Backtrack</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/algorithm/lc-992-subarrays-with-k-different-integers/" rel="prev" title="Leetcode-992 Subarrays with K Differant Integers">
+                  <i class="fa fa-angle-left"></i> Leetcode-992 Subarrays with K Differant Integers
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/algorithm/lc-241-different-ways-to-add-parentheses/" rel="next" title="Leetcode-241 —— different ways to add parentheses">
+                  Leetcode-241 —— different ways to add parentheses <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

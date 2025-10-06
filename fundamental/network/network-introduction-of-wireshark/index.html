@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="通俗来讲，Wireshark 是一个免费的抓包工具（分组嗅探器），它可以显示协议栈不同层级封装的消息内容，Wireshark 有盘大的用户群体，它可在Windows，Mac和Linux &#x2F; Unix计算机上运行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Wireshark 使用说明">
+<meta property="og:url" content="https://0x400.com/fundamental/network/network-introduction-of-wireshark/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="通俗来讲，Wireshark 是一个免费的抓包工具（分组嗅探器），它可以显示协议栈不同层级封装的消息内容，Wireshark 有盘大的用户群体，它可在Windows，Mac和Linux &#x2F; Unix计算机上运行。">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2019-03/wireshark-running-start.png">
+<meta property="og:image" content="https://0x400.com/images/2019-03/wireshark-user-interface.png">
+<meta property="article:published_time" content="2019-03-08T07:13:00.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.171Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Network">
+<meta property="article:tag" content="TCP">
+<meta property="article:tag" content="Wireshark">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2019-03/wireshark-running-start.png">
+
+
+<link rel="canonical" href="https://0x400.com/fundamental/network/network-introduction-of-wireshark/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/fundamental/network/network-introduction-of-wireshark/","path":"fundamental/network/network-introduction-of-wireshark/","title":"Wireshark 使用说明"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Wireshark 使用说明 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">1. 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%9F%BA%E6%9C%AC%E7%95%8C%E9%9D%A2"><span class="nav-number">2.</span> <span class="nav-text">2. 基本界面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99"><span class="nav-number">3.</span> <span class="nav-text">3. 过滤规则</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/fundamental/network/network-introduction-of-wireshark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Wireshark 使用说明 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Wireshark 使用说明
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2019-03-08 15:13:00" itemprop="dateCreated datePublished" datetime="2019-03-08T15:13:00+08:00">2019-03-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/" itemprop="url" rel="index"><span itemprop="name">Fundamental</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/network/" itemprop="url" rel="index"><span itemprop="name">Network</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>通俗来讲，<a href="http://www.wireshark.org/">Wireshark</a> 是一个免费的抓包工具（分组嗅探器），它可以显示协议栈不同层级封装的消息内容，Wireshark 有盘大的用户群体，它可在Windows，Mac和Linux &#x2F; Unix计算机上运行。</p>
+<span id="more"></span>
+
+<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h2><ul>
+<li><p>Ubuntu 下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"><span class="built_in">sudo</span> apt-get install wireshark</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Windows</p>
+<p>前往<a href="https://www.wireshark.org/#download">官网</a>中下载相应安装包即可。</p>
+</li>
+</ul>
+<h2 id="2-基本界面"><a href="#2-基本界面" class="headerlink" title="2. 基本界面"></a>2. 基本界面</h2><p>Ubuntu 环境下，命令行中使用管理员权限启动 Wireshark<code>sudo wireshark-gkt</code>， 启动界面如图</p>
+<p><img src="/images/2019-03/wireshark-running-start.png"></p>
+<p>点击 <code>Interface List</code> 查看当前活动的网卡接口，选中某个接口后点击 <code>start</code> 开始抓包。抓包时， Wireshark 分为五大部分</p>
+<p><img src="/images/2019-03/wireshark-user-interface.png"></p>
+<ul>
+<li><p><strong>菜单栏和工具栏</strong></p>
+<p>菜单栏提供抓包设置、数据筛选、数据统计、帮助等丰富的功能</p>
+<p>工具栏中包括快捷打开接口列表、抓包设置、开始抓包、停止抓包、包文件管理以及一些其他快捷操作，鼠标长放到工具按钮上会显示按钮的作用。</p>
+</li>
+<li><p><strong>规则过滤器</strong></p>
+<p>规则过滤器用来过滤请求列表，相关规则介绍请见下文。</p>
+</li>
+<li><p><strong>数据包列表</strong></p>
+<p>数据包列表实际是通信请求列表，展示了每个请求的的概览信息，包括请求时间、源地址和目标地址、协议、长度等信息。</p>
+</li>
+<li><p><strong>数据包封装内容详情</strong></p>
+<p>在请求列表中选中某个具体的请求后，该区域分层展示没一层的数据包，最上层是帧（Frame)，依次往下是链路层、网络层（IP）、传输层（TCP），然后是应用层协议，应用层协议可以有一个或多个。</p>
+</li>
+<li><p><strong>数据包16进制 ASCII 码表示</strong></p>
+<p>此处显示传输信息的 16 进制 ASCII 编码。</p>
+</li>
+</ul>
+<h2 id="3-过滤规则"><a href="#3-过滤规则" class="headerlink" title="3. 过滤规则"></a>3. 过滤规则</h2><p>启动 Wireshark 后，通过规则过滤器可以过滤请求列表，在规则过滤器中数据过滤规则时，如果语法有误，框会显红色，如正确，会是绿色，输入正确的规则后点击<code>Apply</code> 生效。其中过滤规则包括</p>
+<ul>
+<li><p><strong>过滤IP</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ip eq 192.168.191.2  # 不管源 IP 还是目标 IP</span><br><span class="line">ip.src eq 192.168.191.2  # 限制源 IP</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>过滤端口</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tcp.port eq 80 # 限制端口为 80</span><br><span class="line">tcp.srcport eq 80 # 限制源端口</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>过滤协议</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">tcp</span><br><span class="line">udp</span><br><span class="line">arp</span><br><span class="line">icmp</span><br><span class="line">http</span><br><span class="line">smtp</span><br><span class="line">ftp</span><br><span class="line">dns</span><br><span class="line">msnms</span><br><span class="line">ip</span><br><span class="line">ssl</span><br><span class="line">oicq</span><br><span class="line">bootp</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>过滤MAC地址</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eth.dst == A0:00:00:04:C5:84 // 过滤目标mac</span><br><span class="line">eth.src eq A0:00:00:04:C5:84 // 过滤来源mac</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>HTTP模式过滤</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http.request.method == “GET”</span><br><span class="line">http.request.method == “POST”</span><br><span class="line">http.request.uri == “/public/images/test.png”</span><br><span class="line">http contains “GET”</span><br><span class="line">http contains “HTTP/1.”</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>以上基本过滤规则基本已经满足了日常的抓包需求，Wireshark 的过滤规则很庞大，如果想详细了解请参考官方文档。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wireshark/" rel="tag"># Wireshark</a>
+              <a href="/tags/network/" rel="tag"># Network</a>
+              <a href="/tags/tcp/" rel="tag"># TCP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/programming-language/php/php-autoload-and-composer/" rel="prev" title="PHP 自动加载和 Composer">
+                  <i class="fa fa-angle-left"></i> PHP 自动加载和 Composer
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/practice/dev-load-balancing/" rel="next" title="常用负载均衡算法">
+                  常用负载均衡算法 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

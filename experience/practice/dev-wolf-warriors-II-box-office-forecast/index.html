@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="电影票房影响因素有很多，如影片质量、宣传、档期、排片、同期竞争、口碑等。灰色模型（GM） 常常用于对小规模数据进行预测分析。本文试图使用 GM(1,1) 对战狼 2 票房进行预测。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="战狼 2 票房是否会达到 40 亿？">
+<meta property="og:url" content="https://0x400.com/experience/practice/dev-wolf-warriors-II-box-office-forecast/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="电影票房影响因素有很多，如影片质量、宣传、档期、排片、同期竞争、口碑等。灰色模型（GM） 常常用于对小规模数据进行预测分析。本文试图使用 GM(1,1) 对战狼 2 票房进行预测。">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/20170806/data.png">
+<meta property="og:image" content="https://0x400.com/images/20170806/me.jpg">
+<meta property="article:published_time" content="2017-08-06T04:41:32.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.134Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="GM">
+<meta property="article:tag" content="战狼">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/20170806/data.png">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/dev-wolf-warriors-II-box-office-forecast/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/dev-wolf-warriors-II-box-office-forecast/","path":"experience/practice/dev-wolf-warriors-II-box-office-forecast/","title":"战狼 2 票房是否会达到 40 亿？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>战狼 2 票房是否会达到 40 亿？ | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GM-1-1"><span class="nav-number">1.</span> <span class="nav-text">GM(1,1)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E5%91%A8%E6%9C%AB%E7%89%B9%E5%BE%81"><span class="nav-number">2.</span> <span class="nav-text">非周末特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%A8%E6%9C%AB%E7%89%B9%E5%BE%81"><span class="nav-number">3.</span> <span class="nav-text">周末特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E7%A4%BE%E4%B9%88%E5%8F%AF%E4%BB%A5%E7%9B%B8%E4%BF%A1%E9%A2%84%E6%B5%8B%E7%BB%93%E6%9E%9C"><span class="nav-number">4.</span> <span class="nav-text">为社么可以相信预测结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-number">5.</span> <span class="nav-text">写在最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">6.</span> <span class="nav-text">源码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E6%B5%8B%E6%BA%90%E7%A0%81"><span class="nav-number">6.1.</span> <span class="nav-text">预测源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E6%BA%90%E7%A0%81"><span class="nav-number">6.2.</span> <span class="nav-text">验证源码</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/dev-wolf-warriors-II-box-office-forecast/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="战狼 2 票房是否会达到 40 亿？ | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          战狼 2 票房是否会达到 40 亿？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2017-08-06 12:41:32" itemprop="dateCreated datePublished" datetime="2017-08-06T12:41:32+08:00">2017-08-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p> 电影票房影响因素有很多，如影片质量、宣传、档期、排片、同期竞争、口碑等。<a href="https://en.wikipedia.org/wiki/Grey_box_model">灰色模型（GM）</a> 常常用于对小规模数据进行预测分析。本文试图使用 GM(1,1) 对战狼 2 票房进行预测。</p>
+ <span id="more"></span>
+<h2 id="GM-1-1"><a href="#GM-1-1" class="headerlink" title="GM(1,1)"></a>GM(1,1)</h2><p>灰色系统内的一部分信息是已知的，另一部分信息是未知的，系统内各因素间有不确定的关系。</p>
+<p>灰色预测是对既含有已知信息又含有不确定信息的系统进行预则，就是对在一定范围内变化的、与时间有关的灰色过程进行预测。灰色预测通过鉴别系统因素之间发展趋势的相异程度，即进行关联分析，并对 原始数据进行生成处理来寻找系统变动的规律，生成有较强规律性的数据序列，然后建立相应的微分方程模型，从而预测事物未来发展趋势的状况。</p>
+<p>『注』更多详细介绍可以参考我的另一篇博文<a href="https://www.syncher.cn/?p=466">基于灰色模型（GM(1,1)）的船舶事故预测研究</a></p>
+<h2 id="非周末特征"><a href="#非周末特征" class="headerlink" title="非周末特征"></a>非周末特征</h2><p>初步观察历史数据可以发现，周末票房明显增长，这也是合理的，因此周末和非周末分开预测。基于7月27~8月4日除去周末的历史票房，</p>
+<p><img src="/images/20170806/data.png" alt="数据"></p>
+<p>使用 GM(1,1) 对未来 5 天工作日（8.07-8.11）预测，预测结果为：</p>
+<pre><code>[ 26592.85722754  26863.52726345  27136.95225974  27413.16025724，27692.17958215]
+</code></pre>
+<h2 id="周末特征"><a href="#周末特征" class="headerlink" title="周末特征"></a>周末特征</h2><p>基于周票房末数据即7月29,7月30,8月5号使用GM(1,1)对周日（8 .06） 票房预测，预测结果为：29942.36973182 万。</p>
+<p> 因此未来 6 天以后总票房预测达到 429990 万元。</p>
+<h2 id="为社么可以相信预测结果"><a href="#为社么可以相信预测结果" class="headerlink" title="为社么可以相信预测结果"></a>为社么可以相信预测结果</h2><p>其实在真正预测之前需要对模型的精度和准确性做估计，以非周末特征做为例，为了验证模型的准确性，我们选择7月27~8月3日中的非周末数据对8月4号票房做预测，预测结果为，26308.26947235，实际结果为 26340.9 相对误差 0.1%，娱乐而已，足矣！</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p> 影响电影的票房因素有很多，本文使用 GM（1,1）预测，模型对内部的复杂关系进行了关联，最终做出了预测。当然如果未来的影响因素发生巨变，比如电影排期突然下降、甚至停播，那么预测结果将会受到巨大影响，因此预测纯属娱乐，仅供参考，不准轻喷。</p>
+<p> 最后放一张我在战狼中的照片[左一]，其实只有几秒的镜头，我和班长站在舰长前面保卫着舰长，当冷锋干儿子跑过来的时候我说：“站住”，仅此而已！<br> <img src="/images/20170806/me.jpg"></p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><h3 id="预测源码"><a href="#预测源码" class="headerlink" title="预测源码"></a>预测源码</h3><p>使用方式，新建文件 gm.py，将一下代码复制到 gm.py 中，在文件目录下执行</p>
+<pre><code>&gt;# python gm.py
+</code></pre>
+<p>即可看到输出结果</p>
+<pre><code># -*- coding: utf-8 -*-
+import numpy as np
+import math
+
+def predict_func(history_data, m):
+    n = len(history_data)
+    X0 = np.array(history_data)
+
+    #累加生成
+    history_data_agg = [sum(history_data[0:i+1]) for i in range(n)]
+    X1 = np.array(history_data_agg)
+
+    #计算数据矩阵B和数据向量Y
+    B = np.zeros([n-1,2])
+    Y = np.zeros([n-1,1])
+    for i in range(0,n-1):
+        B[i][0] = -0.5*(X1[i] + X1[i+1])
+        B[i][1] = 1
+        Y[i][0] = X0[i+1]
+
+    #计算GM(1,1)微分方程的参数a和u
+    #A = np.zeros([2,1])
+    A = np.linalg.inv(B.T.dot(B)).dot(B.T).dot(Y)
+    a = A[0][0]
+    u = A[1][0]
+
+    #建立灰色预测模型
+    XX0 = np.zeros(n)
+    XX0[0] = X0[0]
+    for i in range(1,n):
+        XX0[i] = (X0[0] - u/a)*(1-math.exp(a))*math.exp(-a*(i));
+
+
+    #模型精度的后验差检验
+    e = 0      #求残差平均值
+    for i in range(0,n):
+        e += (X0[i] - XX0[i])
+    e /= n
+
+    #求历史数据平均值
+    aver = 0;
+    for i in range(0,n):
+        aver += X0[i]
+    aver /= n
+
+    #求历史数据方差
+    s12 = 0;
+    for i in range(0,n):
+        s12 += (X0[i]-aver)**2;
+    s12 /= n
+
+    #求残差方差
+    s22 = 0;
+    for i in range(0,n):
+        s22 += ((X0[i] - XX0[i]) - e)**2;
+    s22 /= n
+
+    #求后验差比值
+    C = s22 / s12
+    #求小误差概率
+    cout = 0.0
+    for i in range(0,n):
+        if abs((X0[i] - XX0[i]) - e) &lt; 0.6754*math.sqrt(s12):
+            cout = cout+1
+        else:
+            cout = cout
+    P = (cout / n)
+
+    sum_pre = 0
+    if (C &lt; 0.35 and P &gt; 0.95):
+        #预测精度为一级
+        f = np.zeros(m)
+        for i in range(0,m):
+            f[i] = (X0[0] - u/a)*(1-math.exp(a))*math.exp(-a*(i+n))
+        # print f  # 预测接下来 m 天各天票房
+        return sum(history_data) + sum(f) # 预测总票房
+    else:
+        print(&#39;灰色预测法不适用&#39;)
+
+
+# 工作日数据： 7月27~8月4日除去周末
+history_work_data = [9831.6,21226.6,27224.7,29118.1,27736.3,22375.8,26340.9]
+m1 = 5
+## 周末
+history_weekend_data = [30988.6,36457.4,33049.7] # 周末数据,7月29,7月30,8月5号
+m2 = 1
+
+forcast_box = predict_func(history_work_data, m1) + predict_func(history_weekend_data, m2)
+print(&quot;The forcast total box office of Wolf Warriors II is %d million after %d days&quot;%(forcast_box,m1+m2))
+</code></pre>
+<h3 id="验证源码"><a href="#验证源码" class="headerlink" title="验证源码"></a>验证源码</h3><p>新建 gm_validation.py 复制一下内容，保存，执行：</p>
+<pre><code>&gt;# python gm_validation.py
+</code></pre>
+<p>即可看到输出结果</p>
+<pre><code># -*- coding: utf-8 -*-
+import numpy as np
+import math
+
+history_data = [9831.6,21226.6,27224.7,29118.1,27736.3,22375.8] # 8月4号： 26340.9
+n = len(history_data)
+X0 = np.array(history_data)
+
+#累加生成
+history_data_agg = [sum(history_data[0:i+1]) for i in range(n)]
+X1 = np.array(history_data_agg)
+
+#计算数据矩阵B和数据向量Y
+B = np.zeros([n-1,2])
+Y = np.zeros([n-1,1])
+for i in range(0,n-1):
+    B[i][0] = -0.5*(X1[i] + X1[i+1])
+    B[i][1] = 1
+    Y[i][0] = X0[i+1]
+
+#计算GM(1,1)微分方程的参数a和u
+#A = np.zeros([2,1])
+A = np.linalg.inv(B.T.dot(B)).dot(B.T).dot(Y)
+a = A[0][0]
+u = A[1][0]
+
+#建立灰色预测模型
+XX0 = np.zeros(n)
+XX0[0] = X0[0]
+for i in range(1,n):
+    XX0[i] = (X0[0] - u/a)*(1-math.exp(a))*math.exp(-a*(i));
+
+
+#模型精度的后验差检验
+e = 0      #求残差平均值
+for i in range(0,n):
+    e += (X0[i] - XX0[i])
+e /= n
+
+#求历史数据平均值
+aver = 0;
+for i in range(0,n):
+    aver += X0[i]
+aver /= n
+
+#求历史数据方差
+s12 = 0;
+for i in range(0,n):
+    s12 += (X0[i]-aver)**2;
+s12 /= n
+
+#求残差方差
+s22 = 0;
+for i in range(0,n):
+    s22 += ((X0[i] - XX0[i]) - e)**2;
+s22 /= n
+
+#求后验差比值
+C = s22 / s12
+#求小误差概率
+cout = 0.0
+for i in range(0,n):
+    if abs((X0[i] - XX0[i]) - e) &lt; 0.6754*math.sqrt(s12):
+        cout = cout+1
+    else:
+        cout = cout
+P = (cout / n)
+
+sum_pre = 0
+if (C &lt; 0.35 and P &gt; 0.95):
+    m = 1 # 预测8月3号，8月4号
+    #预测精度为一级
+    f = np.zeros(m)
+    for i in range(0,m):
+        f[i] = (X0[0] - u/a)*(1-math.exp(a))*math.exp(-a*(i+n))
+    print f  # 预测接下来 m 天各天票房
+else:
+    print(&#39;灰色预测法不适用&#39;)
+</code></pre>
+<p>刚学的 Python，希望您宽广的胸怀能包它的存在，如果您有建议或意见可以通过邮件 <a href="mailto:&#115;&#121;&#110;&#x63;&#104;&#101;&#x72;&#64;&#x71;&#113;&#46;&#x63;&#111;&#109;">syncher@qq.com</a> 与我取得联系。</p>
+<p><strong>申明</strong>： 预测结果仅代表个人观点，历史数据来自<a href="https://mdianying.baidu.com/rank/boxDetail?sfrom=wise_film_box&movieId=62880">百度糯米电影</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%88%98%E7%8B%BC/" rel="tag"># 战狼</a>
+              <a href="/tags/gm/" rel="tag"># GM</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/guide/linux-blog-deployed-in-github-and-coding/" rel="prev" title="Hexo 双线部署启用 SSL 【不完全指北】">
+                  <i class="fa fa-angle-left"></i> Hexo 双线部署启用 SSL 【不完全指北】
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/storage/mysql-optimize/" rel="next" title="MySQL 基础优化">
+                  MySQL 基础优化 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

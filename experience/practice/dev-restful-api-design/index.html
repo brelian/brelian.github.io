@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. RESTful 简介REST (Representational State Transfer) 翻作「表层状态转换」，是 Roy Thomas Fielding 在他的博士论文中提出的一种 API 设计风格。  表现层状态转换是根基于超文本传输协议(HTTP)之上而确定的一组约束和属性，是一种设计提供万维网络服务的软件构建风格。匹配或兼容于这种架构风格(简称为 REST 或 RESTful">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RESTful API 设计指导">
+<meta property="og:url" content="https://0x400.com/experience/practice/dev-restful-api-design/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="1. RESTful 简介REST (Representational State Transfer) 翻作「表层状态转换」，是 Roy Thomas Fielding 在他的博士论文中提出的一种 API 设计风格。  表现层状态转换是根基于超文本传输协议(HTTP)之上而确定的一组约束和属性，是一种设计提供万维网络服务的软件构建风格。匹配或兼容于这种架构风格(简称为 REST 或 RESTful">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2019-02/restful-api-structure.png">
+<meta property="article:published_time" content="2019-02-21T13:47:30.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.133Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="API">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2019-02/restful-api-structure.png">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/dev-restful-api-design/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/dev-restful-api-design/","path":"experience/practice/dev-restful-api-design/","title":"RESTful API 设计指导"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RESTful API 设计指导 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-RESTful-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1. RESTful 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-API-%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.</span> <span class="nav-text">2. API 设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%8D%8F%E8%AE%AE"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%9F%9F%E5%90%8D%E4%B8%8E%E7%89%88%E6%9C%AC"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 域名与版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E8%B5%84%E6%BA%90%E6%93%8D%E4%BD%9C"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 资源操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E8%B5%84%E6%BA%90%E8%B7%AF%E5%BE%84%E2%80%94%E2%80%94URL"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 资源路径——URL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-URL-%E5%8F%82%E6%95%B0"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 URL 参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-HTTP-%E8%AF%B7%E6%B1%82%E5%A4%B4"><span class="nav-number">2.6.</span> <span class="nav-text">2.6 HTTP 请求头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-HTTP-%E7%8A%B6%E6%80%81%E7%A0%81"><span class="nav-number">2.7.</span> <span class="nav-text">2.7 HTTP 状态码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%B8%8D%E7%AC%A6%E5%90%88-CURD-%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">3. 不符合 CURD 的操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-REST-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">4. REST 的优点</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/dev-restful-api-design/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RESTful API 设计指导 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RESTful API 设计指导
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2019-02-21 21:47:30" itemprop="dateCreated datePublished" datetime="2019-02-21T21:47:30+08:00">2019-02-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="1-RESTful-简介"><a href="#1-RESTful-简介" class="headerlink" title="1. RESTful 简介"></a>1. RESTful 简介</h2><p>REST (Representational State Transfer) 翻作「表层状态转换」，是 Roy Thomas Fielding 在他的博士论文中提出的一种 API 设计风格。</p>
+<blockquote>
+<p>表现层状态转换是根基于超文本传输协议(HTTP)之上而确定的一组约束和属性，是一种设计提供万维网络服务的软件构建风格。匹配或兼容于这种架构风格(简称为 REST 或 RESTful)的网络服务，允许客户端发出以统一资源标识符访问和操作网络资源的请求，而与预先定义好的无状态操作集一致化。因此表现层状态转换提供了在互联网络的计算系统之间，彼此资源可交互使用的协作性质(interoperability)。<br> —— wikipedia</p>
+</blockquote>
+<span id="more"></span>
+<p>当今互联网无处不在，现实需求日益复杂，为适应这种复杂性，技术不断革新。传统的 B&#x2F;S 架构中，前后端分离是大势所趋，而这种分离正式基于 API 模型，由于 RESTful 的诸多便利，越来越多的公司开始拥抱 RESTful，如 Github、Google 等都大量使用这种风格的 API，掌握 RESTful API 成为了一个后端程序员必备的基本技能。</p>
+<h2 id="2-API-设计"><a href="#2-API-设计" class="headerlink" title="2. API 设计"></a>2. API 设计</h2><p>RESTful API 是基于 HTTP 之上的一种设计风格，按照 HTTP 请求的基本组成将 RESTful API 分为如下几个模块：</p>
+<p><img src="/images/2019-02/restful-api-structure.png"> </p>
+<h3 id="2-1-协议"><a href="#2-1-协议" class="headerlink" title="2.1 协议"></a>2.1 协议</h3><p>为保证数据的传输安全，推荐使用 HTTPS 协议</p>
+<h3 id="2-2-域名与版本"><a href="#2-2-域名与版本" class="headerlink" title="2.2 域名与版本"></a>2.2 域名与版本</h3><p>API 域名有两种形式可选择： </p>
+<ul>
+<li>使用专属域名 <a href="">api.example.com</a></li>
+<li>主站域名+<code>/api</code> 形式, 如 <a href="">example.com&#x2F;api</a></li>
+</ul>
+<p>API 版本通常页有两种形式</p>
+<ul>
+<li>域名 + <code>v1/</code> 如 <a href="">api.example.com&#x2F;v1</a></li>
+<li>版本信息放在 HTTP header 中，参见 <a href="https://developer.github.com/v3/media/#request-specific-version">GitHub</a></li>
+</ul>
+<h3 id="2-3-资源操作"><a href="#2-3-资源操作" class="headerlink" title="2.3 资源操作"></a>2.3 资源操作</h3><p>使用 HTTP 方法表示资源的操作</p>
+<table>
+<thead>
+<tr>
+<th align="center">HTTP 方法</th>
+<th align="center">对应数据库操作</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GET</td>
+<td align="center">SELECT</td>
+<td align="center">获取 URI 表示的资源（retrive），不产生副作用，对资源属性没有改变</td>
+</tr>
+<tr>
+<td align="center">POST</td>
+<td align="center">INSERT</td>
+<td align="center">创建资源</td>
+</tr>
+<tr>
+<td align="center">PUT</td>
+<td align="center">UPDATE</td>
+<td align="center">更新资源，客户端提供完整资源</td>
+</tr>
+<tr>
+<td align="center">PATCH</td>
+<td align="center">UPDATE</td>
+<td align="center">更新资源的部分属性，客户端只提供更新的部分属性</td>
+</tr>
+<tr>
+<td align="center">DELETE</td>
+<td align="center">DELETE</td>
+<td align="center">删除 URI 定位到的资源</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-资源路径——URL"><a href="#2-4-资源路径——URL" class="headerlink" title="2.4 资源路径——URL"></a>2.4 资源路径——URL</h3><p>资源路径的设计是 RESTful API 的核心，资源是 HTTP 协议对数据的抽象，一个资源可简单理解为数据库中的一张表。URL （统一资源定位符）是用于标识资源的字符串，资源如果可数则使用名词复数表示，否则使用单数表示，以用户<code>users</code>为例，</p>
+<ul>
+<li><p>获取用户列表</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /users</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取具体用户 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /users/:user_id</span><br></pre></td></tr></table></figure>
+
+<p>如 <a href="">&#x2F;users&#x2F;1</a> 表示获取用户 id 为 1 的用户</p>
+</li>
+<li><p>新增用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST /users</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PUT /users/:user_id</span><br></pre></td></tr></table></figure>
+
+<p>客户端（表单）应提供完整的用户信息</p>
+</li>
+<li><p>修改用户的部分属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PATCH /users/:user_id</span><br></pre></td></tr></table></figure>
+
+<p>客户端提供要修改的用户属性</p>
+</li>
+<li><p>删除用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE /users/:user_id</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>以上只是最基本的 URI 设计原则，但是在实际工程中，多个资源之间会存在关联关系，如在经典的博客系统中，存在「用户—文章—评论」存在如下关联关系：</p>
+<ul>
+<li>一篇文章必定有一个或多个作者</li>
+<li>一个评论必定属于具体的一篇文章</li>
+</ul>
+<p>用如下方式可表示「查看某个用户发布的文章」：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /users/<span class="number">1</span>/articles 	<span class="comment"># 查看 user_id 为 1 的文章</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-5-URL-参数"><a href="#2-5-URL-参数" class="headerlink" title="2.5 URL 参数"></a>2.5 URL 参数</h3><p>URL 参数应该只是对资源的过滤，不应该有其他作用，一般可用于分页、排序和筛选</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?limit=10：指定返回记录的数量</span><br><span class="line">?offset=10：指定返回记录的开始位置。</span><br><span class="line">?page=2&amp;per_page=100：指定第几页，以及每页的记录数。</span><br><span class="line">?sortby=name&amp;order=asc：指定返回结果按照哪个属性排序，以及排序顺序。</span><br><span class="line">?animal_type_id=1：指定筛选条件</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-6-HTTP-请求头"><a href="#2-6-HTTP-请求头" class="headerlink" title="2.6 HTTP 请求头"></a>2.6 HTTP 请求头</h3><p>HTTP 请求头可以携带附加信息，如版本号、响应格式和 Token 等。</p>
+<h3 id="2-7-HTTP-状态码"><a href="#2-7-HTTP-状态码" class="headerlink" title="2.7 HTTP 状态码"></a>2.7 HTTP 状态码</h3><p>HTTP 状态码是由三位整数组成的，分为 5 大系列</p>
+<ul>
+<li><p>1xx : 请求已被接受，等待进一步处理，一般不常用。</p>
+<p>在使用 websocket 的时候从 websocket 协议升级到 socket.io 协议时返回 101，表示转换协议。</p>
+</li>
+<li><p>2xx: 请求成功</p>
+</li>
+<li><p>3xx: 重定向</p>
+</li>
+<li><p>4xx: 客户端错误</p>
+</li>
+<li><p>5xx: 服务端异常</p>
+</li>
+</ul>
+<p>详细的 HTTP 状态码可参考<a href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81">维基百科</a>  或 <a href="https://tools.ietf.org/html/rfc2616#section-10">RFC2616</a></p>
+<h2 id="3-不符合-CURD-的操作"><a href="#3-不符合-CURD-的操作" class="headerlink" title="3. 不符合 CURD 的操作"></a>3. 不符合 CURD 的操作</h2><p>在实际生产中，并非所有的 HTTP 请求都符合资源的 CURD 操作，不符合常规资源 CURD 操作的请求一般有如下三种处理方法：</p>
+<ul>
+<li><p>增加动作，并使用 POST 方法执行动作</p>
+<p>如文章发布 <code>POST /articles/:id/publish</code></p>
+</li>
+<li><p>增加控制参数</p>
+<p>发布文章使用 PATCH 更改文章的 published 属性 <code>PATCH /articles/:id?published=true</code></p>
+</li>
+<li><p>把动作转化为资源</p>
+<p>GitHub 把「喜欢」这个动作转化为一个资源 star，因为喜欢是不可数的，所以使用单数表示，比如“喜欢”一个 gist，使用 <code>PUT /gists/:id/star</code>，“取消喜欢”使用 <code>DELETE /gists/:id/star</code>。</p>
+</li>
+</ul>
+<h2 id="4-REST-的优点"><a href="#4-REST-的优点" class="headerlink" title="4. REST 的优点"></a>4. REST 的优点</h2><ul>
+<li>可更高效利用 HTTP 缓存来提高响应速度</li>
+<li>通讯本身的无状态性可以让不同的服务器的处理一系列请求中的不同请求，提高服务器的扩展性</li>
+<li>浏览器即可作为客户端，简化软件需求</li>
+<li>相对于其他叠加在HTTP协议之上的机制，REST的软件依赖性更小</li>
+<li>不需要额外的资源发现机制</li>
+<li>在软件技术演进中的长期的兼容性更好</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/api/" rel="tag"># API</a>
+              <a href="/tags/php/" rel="tag"># PHP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/algorithm/algorithm-find-circle-linked-list/" rel="prev" title="有环链表">
+                  <i class="fa fa-angle-left"></i> 有环链表
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/programming-language/php/php-autoload-and-composer/" rel="next" title="PHP 自动加载和 Composer">
+                  PHP 自动加载和 Composer <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

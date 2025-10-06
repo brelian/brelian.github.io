@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本文记录了 INVALID_STATE_ERR 排查过程。项目前端使用 SAPUI5 开发，运行集成测试时，所有的 AJAX 请求都会被 Mock。今天遇到一个问题，一些 URL 改动后集成测试运行失败， 报了个 INVALID_STATE_ERR 的错误。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="INVALID_STATE_ERR Debug 记录">
+<meta property="og:url" content="https://0x400.com/experience/debugging/dev-invalid-state-error-debug-log/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="本文记录了 INVALID_STATE_ERR 排查过程。项目前端使用 SAPUI5 开发，运行集成测试时，所有的 AJAX 请求都会被 Mock。今天遇到一个问题，一些 URL 改动后集成测试运行失败， 报了个 INVALID_STATE_ERR 的错误。">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2020-05/mockserver-start-up.png">
+<meta property="og:image" content="https://0x400.com/images/2020-05/mockserver-start.png">
+<meta property="og:image" content="https://0x400.com/images/2020-05/mockserver-start-1.png">
+<meta property="og:image" content="https://0x400.com/images/2020-05/error-info.png">
+<meta property="og:image" content="https://0x400.com/images/2020-05/set-response-headers.png">
+<meta property="article:published_time" content="2020-05-28T13:08:34.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.120Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="XHR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2020-05/mockserver-start-up.png">
+
+
+<link rel="canonical" href="https://0x400.com/experience/debugging/dev-invalid-state-error-debug-log/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/debugging/dev-invalid-state-error-debug-log/","path":"experience/debugging/dev-invalid-state-error-debug-log/","title":"INVALID_STATE_ERR Debug 记录"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>INVALID_STATE_ERR Debug 记录 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E9%98%85-API-%E6%96%87%E6%A1%A3"><span class="nav-number">1.</span> <span class="nav-text">查阅 API 文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%8B%E4%B8%AA-Demo"><span class="nav-number">2.</span> <span class="nav-text">看个 Demo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E6%BA%90%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">深入源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9C%8B%E6%87%82%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF"><span class="nav-number">4.</span> <span class="nav-text">看懂错误信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DEBUG"><span class="nav-number">5.</span> <span class="nav-text">DEBUG</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/debugging/dev-invalid-state-error-debug-log/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="INVALID_STATE_ERR Debug 记录 | Pylon PENG's home page">
+      <meta itemprop="description" content="本文记录了 INVALID_STATE_ERR 排查过程。项目前端使用 SAPUI5 开发，运行集成测试时，所有的 AJAX 请求都会被 Mock。今天遇到一个问题，一些 URL 改动后集成测试运行失败， 报了个 INVALID_STATE_ERR 的错误。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          INVALID_STATE_ERR Debug 记录
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2020-05-28 21:08:34" itemprop="dateCreated datePublished" datetime="2020-05-28T21:08:34+08:00">2020-05-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/debugging/" itemprop="url" rel="index"><span itemprop="name">Debugging</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">本文记录了 INVALID_STATE_ERR 排查过程。项目前端使用 SAPUI5 开发，运行集成测试时，所有的 AJAX 请求都会被 Mock。今天遇到一个问题，一些 URL 改动后集成测试运行失败， 报了个 INVALID_STATE_ERR 的错误。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>项目前端使用 SAPUI5 开发，运行集成测试时，所有的 AJAX 请求都会被 Mock。今天遇到一个问题，一些 URL 改动后集成测试运行失败， 报错信息如下：  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Uncaught Error: INVALID_STATE_ERR - 4</span><br><span class="line">    at k (sinon.js:184)</span><br><span class="line">    at F.setResponseHeaders (sinon.js:184)</span><br><span class="line">    at F.respond (sinon.js:184)</span><br><span class="line">    at F.window.sinon.FakeXMLHttpRequest.respondJSON (MockServer-dbg.js:3834)</span><br><span class="line">    at mockserver.js:298</span><br><span class="line">    at Array.some (&lt;anonymous&gt;)</span><br><span class="line">    at Object.response (mockserver.js:284)</span><br><span class="line">    at F.b (sinon.js:196)</span><br><span class="line">    at F.processRequest (sinon.js:196)</span><br><span class="line">    at F.respond (sinon.js:196)</span><br></pre></td></tr></table></figure>
+
+<p>本文记录了该错误的排查过程，方便今后查阅。</p>
+<span id="more"></span>
+
+<p>尝试 Google Search，关键词 <code>INVALID_STATE_ERR</code>，只搜到一些不是很相关的答案</p>
+<ul>
+<li><a href="https://blogs.sap.com/2016/11/17/opa5-testing-with-json-backend/">https://blogs.sap.com/2016/11/17/opa5-testing-with-json-backend/</a></li>
+<li><a href="https://github.com/sinonjs/sinon/issues/493">https://github.com/sinonjs/sinon/issues/493</a></li>
+</ul>
+<p>转化思路 - Bug 是发生在 SAPUI5 的 MockServer 中，由于我对 MockServer 并不了解，因此我决定深入一下  MockServer</p>
+<h3 id="查阅-API-文档"><a href="#查阅-API-文档" class="headerlink" title="查阅 API 文档"></a>查阅 API 文档</h3><p>打开 SAPUI5 API 文档，找到 <a href="https://sapui5.hana.ondemand.com/#/api/sap.ui.core.util.MockServer">MockServer</a>， 这个对象继承自 ManagedObject，至于 ManagedObject 是干嘛的我目前还不太清楚，但是我决定先跳过这个细节。</p>
+<p>MockServer 用来 Mock HTTP 请求。往下看 <code>Constructor</code> 用于创建一个 mocked server，可以 Mock XHR 和 OData&#x2F;JSON Models。虽然我对 OData 还不是很懂，但是这应该与这个 BUG 关系不大，所以我跳过这个细节。Constructor 接受一些配置参数，</p>
+<ul>
+<li><code>rootUri</code> </li>
+<li><code>requests</code></li>
+<li><code>recordRequests</code></li>
+</ul>
+<p>rootUri 是根路径，具体怎么用暂时比较模糊，稍后通过查阅源码来确定。requests 是一个数组，存放了被 mock 的请求（大致理解，稍后确认）。至于 recordRequests 是请求性能分析相关的，暂时忽略。</p>
+<p>基于以上理解，一个 MockServer demo 如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> aReqs = [];</span><br><span class="line"><span class="comment">// <span class="doctag">TODO:</span> add mocked requests</span></span><br><span class="line"><span class="keyword">var</span> oMockServer = <span class="keyword">new</span> <span class="title class_">MockServer</span>(&#123;</span><br><span class="line">    <span class="attr">rootUri</span>: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">    <span class="attr">requests</span>: aReqs</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">oMockServer.<span class="title function_">start</span>();</span><br></pre></td></tr></table></figure>
+
+<p>继续阅读 API 文档，Events 部分暂时跳过，来到 Methods 部分，项目中使用到了 <a href="https://sapui5.hana.ondemand.com/api/sap.ui.core.util.MockServer#methods/sap.ui.core.util.MockServer.config">sap.ui.core.util.MockServer.config</a> 方法，该方法接受一个配置对象，其中几个属性如下：</p>
+<ul>
+<li>autoRespond</li>
+<li>autoRespondAfter</li>
+<li>fakeHTTPMethod</li>
+</ul>
+<p>项目中的配置是 </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">autoRespond</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">autoRespondAfter</span>: (oUriParameters.<span class="title function_">get</span>(<span class="string">&quot;serverDelay&quot;</span>) </span><br><span class="line">    || <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * (<span class="number">1501</span> - <span class="number">200</span>) + <span class="number">200</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并有注释说明，autoRespondAfter 加随机数是用于模拟真实环境的网络时延，其中 <code>oUriParameters</code> 如下定义：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> oUriParameters = <span class="keyword">new</span> <span class="title class_">UriParameters</span>(<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="看个-Demo"><a href="#看个-Demo" class="headerlink" title="看个 Demo"></a>看个 Demo</h3><p>看完文档，还是比较模糊，下一步我需要看个 Demo，本来我可以直接看项目中的 MockServer，只不过项目中的 MockServer 是比较复杂的，不利于理解。</p>
+<p>根据<a href="https://sapui5.hana.ondemand.com/#/topic/bae9d90d2e9c4206889368f04edab508">官方 Demo</a> 画了个流程图，</p>
+<p><img src="/images/2020-05/mockserver-start-up.png"></p>
+<p>其中用到了 simulate 的方法。</p>
+<h3 id="深入源码"><a href="#深入源码" class="headerlink" title="深入源码"></a>深入源码</h3><p>至此，我对 MockServer 有了一知半解，但是我还不知道 <code>rootUri</code>, <code>requests</code> 和 <code>autoRespond</code> 的具体逻辑，所以我决定去看看 MockServer 的源码。克隆 openui5</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">git <span class="built_in">clone</span> https://github.com/SAP/openui5.git</span></span><br></pre></td></tr></table></figure>
+
+<p>找到 <code>src/sap.ui.core/src/sap/ui/core/util/MockServer.js</code> </p>
+<p>从 start 方法开始分析， 我们可以发现 start 方法会调 <code>sinon.fakeServer.create</code> 创建一个 FakeServer，然后再注册 mocked requests. 所以接下来我需要了解一下 sinon.fakeServer.</p>
+<p><img src="/images/2020-05/mockserver-start.png"></p>
+<p>打开 sinon API 文档，找到<a href="https://sinonjs.org/releases/latest/fake-xhr-and-server/">FakeServer</a>，使用很简单，直接看如下 demo，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">setUp</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">server</span> = sinon.<span class="title function_">createFakeServer</span>();</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="attr">tearDown</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">server</span>.<span class="title function_">restore</span>();</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;test should fetch comments from server&quot;</span> : <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">server</span>.<span class="title function_">respondWith</span>(<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;/some/article/comments.json&quot;</span>,</span><br><span class="line">            [<span class="number">200</span>, &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/json&quot;</span> &#125;,</span><br><span class="line">             <span class="string">&#x27;[&#123; &quot;id&quot;: 12, &quot;comment&quot;: &quot;Hey there&quot; &#125;]&#x27;</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> callback = sinon.<span class="title function_">spy</span>();</span><br><span class="line">        myLib.<span class="title function_">getCommentsFor</span>(<span class="string">&quot;/some/article&quot;</span>, callback);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">server</span>.<span class="title function_">respond</span>();</span><br><span class="line"></span><br><span class="line">        sinon.<span class="property">assert</span>.<span class="title function_">calledWith</span>(callback, [&#123; <span class="attr">id</span>: <span class="number">12</span>, <span class="attr">comment</span>: <span class="string">&quot;Hey there&quot;</span> &#125;]);</span><br><span class="line"></span><br><span class="line">        <span class="title function_">assert</span>(server.<span class="property">requests</span>.<span class="property">length</span> &gt; <span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中两个 <code>respondWith</code> 和 <code>respond</code> 这两个方法需要我重点关注。回到 <code>MockServer.js</code> 的源码发现，<code>_addRequestHanlder</code> 方法最终调用 <code>respondWith</code> (3446 行附近)，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">_oServer</span>.<span class="title function_">respondWith</span>(sMethod, oRegExp, fnResponse);</span><br></pre></td></tr></table></figure>
+
+<p>从 API 文档得知，正则匹配到的 HTTP 方法将调用 <code>fnResponse</code>，由该方法手动处理响应。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">server.<span class="title function_">respondWith</span>(<span class="string">&quot;GET&quot;</span>, <span class="regexp">/\/todo-items\/(\d+)/</span>, <span class="keyword">function</span> (<span class="params">xhr, id</span>) &#123;</span><br><span class="line">    xhr.<span class="title function_">respond</span>(<span class="number">200</span>, &#123; <span class="string">&quot;Content-Type&quot;</span>: <span class="string">&quot;application/json&quot;</span> &#125;, <span class="string">&#x27;[&#123; &quot;id&quot;: &#x27;</span> + id + <span class="string">&quot; &#125;]&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>When the response is a <code>Function</code>, it will be passed the request object. You must manually call <a href="https://sinonjs.org/releases/latest/fake-xhr-and-server/#serverrespond">respond</a> on it to complete the request.</p>
+</blockquote>
+<p>文档还说，如果 <code>respondeWith</code> 中传递的<code>response</code>是一个回调函数，那么执行回调时会传递 xhr 对象，并且需要回调手动调用 <code>xhr.respond</code> 方法发动响应。</p>
+<p>现在，回头看项目中的 MockServer 的代码，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> aReqs = [];</span><br><span class="line"><span class="comment">// <span class="doctag">TODO:</span> add mocked requests</span></span><br><span class="line"><span class="keyword">var</span> oMockServer = <span class="keyword">new</span> <span class="title class_">MockServer</span>(&#123;</span><br><span class="line">    <span class="attr">rootUri</span>: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">    <span class="attr">requests</span>: aReqs</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">oMockServer.<span class="title function_">start</span>();</span><br></pre></td></tr></table></figure>
+
+<p>其中还有一个循环将所有的 request 添加到 aReqs 中，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aReqs.<span class="title function_">push</span>(<span class="title function_">createRequest</span>(data));</span><br></pre></td></tr></table></figure>
+
+<p>再看 <code>createRequest(data)</code> 方法，该方法返回一个对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">createRequest</span>(<span class="params">data</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> oRequest = &#123;</span><br><span class="line">        <span class="comment">// ... some code here</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> oRequest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个对象被 <code>MockerServer.js</code> 的 start 方法消费，看源码</p>
+<p><img src="/images/2020-05/mockserver-start-1.png"></p>
+<p>该对象提供了 <code>respondWith</code> 中需要的三个参数，即 method, path 和 response。</p>
+<p>至此， 我已经看懂了整个 MockServer 的过程了，再回头看错误信息，</p>
+<p><img src="/images/2020-05/error-info.png"></p>
+<h3 id="看懂错误信息"><a href="#看懂错误信息" class="headerlink" title="看懂错误信息"></a>看懂错误信息</h3><p>错误由 XMLHttpRequest 对象引起，因此需要查阅 XHR 的 <a href="https://www.w3.org/TR/XMLHttpRequest1/">API 文档</a>，搜索关键词 <code>INVALID_STATE_ERR</code> 共发现 8 处，</p>
+<blockquote>
+<p>Throws an <code>INVALID_STATE_ERR</code> exception if the state is not <a href="https://www.w3.org/TR/XMLHttpRequest1/#dom-xmlhttprequest-opened">OPENED</a> or if the <a href="https://www.w3.org/TR/XMLHttpRequest1/#send-flag"><code>send()</code> flag</a> is true.</p>
+</blockquote>
+<p>也就是说如果 XHR 的状态如果是 not opend 或者是已经 send 后的状态，那么就会抛出该异常。</p>
+<p>结合错误信息给出的函数调用栈很容易定位出该错误发生在 <code>setRespinseHeaders</code> 之后，打开 sinon 源码去看 setResponseHeader 的实现，发现有个 verifyRequestOpend 方法。</p>
+<p><img src="/images/2020-05/set-response-headers.png"></p>
+<p>再进入 verifyRequestOpend 方法一看，果然是从这里抛出的异常，异常原因就是 xhr 的状态已经变成 4 了，4 代表 DONE，详细状态参考<a href="https://www.w3.org/TR/XMLHttpRequest1/#dom-xmlhttprequest-done">这里</a>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">verifyRequestOpened</span>(<span class="params">xhr</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (xhr.<span class="property">readyState</span> != <span class="title class_">FakeXMLHttpRequest</span>.<span class="property">OPENED</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;INVALID_STATE_ERR - &quot;</span> + xhr.<span class="property">readyState</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说明 298 行执行 <code>xhr.resondJSON</code> 之前已经执行过 <code>xhr.send</code> 方法了。</p>
+<h3 id="DEBUG"><a href="#DEBUG" class="headerlink" title="DEBUG"></a>DEBUG</h3><p>基于以上理解，打断点追踪一下就很容易发现代码逻辑有问题了（当然，这个代码不是本人写的，甩锅……）。</p>
+<p>以上，记录一次 Debug 的过程。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/xhr/" rel="tag"># XHR</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/network/http/dev-http-caching/" rel="prev" title="HTTP 缓存不完全指南">
+                  <i class="fa fa-angle-left"></i> HTTP 缓存不完全指南
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/guide/dev-getting-started-with-sapui5/" rel="next" title="搭建 SAPUI5 开发环境">
+                  搭建 SAPUI5 开发环境 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

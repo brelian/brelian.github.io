@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="如果协议，端口（如果指定了一个）和域名对于两个页面是相同的，则两个页面具有相同的源，请求不同源的资源时涉及跨域请求。跨域请求有很多种，本文重点探讨 CORS 跨域请求。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于 CORS 跨域的一点点理解">
+<meta property="og:url" content="https://0x400.com/experience/practice/frontend-learn-about-cros/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="如果协议，端口（如果指定了一个）和域名对于两个页面是相同的，则两个页面具有相同的源，请求不同源的资源时涉及跨域请求。跨域请求有很多种，本文重点探讨 CORS 跨域请求。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2017-08-02T05:41:32.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.137Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="CORS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/frontend-learn-about-cros/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/frontend-learn-about-cros/","path":"experience/practice/frontend-learn-about-cros/","title":"关于 CORS 跨域的一点点理解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>关于 CORS 跨域的一点点理解 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5"><span class="nav-number">1.</span> <span class="nav-text">同源策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%A8%E5%9F%9F"><span class="nav-number">2.</span> <span class="nav-text">跨域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82"><span class="nav-number">2.1.</span> <span class="nav-text">非简单请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82"><span class="nav-number">2.2.</span> <span class="nav-text">简单请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%B7%E6%B1%82%E5%A4%B4%E4%BF%A1%E6%81%AF%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">客户端请求头信息设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">参考链接：</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/frontend-learn-about-cros/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="关于 CORS 跨域的一点点理解 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          关于 CORS 跨域的一点点理解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2017-08-02 13:41:32" itemprop="dateCreated datePublished" datetime="2017-08-02T13:41:32+08:00">2017-08-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>如果协议，端口（如果指定了一个）和域名对于两个页面是相同的，则两个页面具有相同的源，请求不同源的资源时涉及跨域请求。跨域请求有很多种，本文重点探讨 CORS 跨域请求。</p>
+<span id="more"></span>
+
+<h2 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h2><p>请求不同源的资源时，浏览器的同源策略会对不同请求方式的资源做出限制，有一些标签可以可以嵌入第三方源：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">- &lt;script src=&quot;...&quot;&gt;&lt;/script&gt;标签嵌入跨域脚本。语法错误信息只能在同源脚本中捕捉到。</span><br><span class="line"></span><br><span class="line">- &lt;link rel=&quot;stylesheet&quot; href=&quot;...&quot;&gt;标签嵌入CSS。由于CSS的松散的语法规则，CSS的跨域</span><br><span class="line"></span><br><span class="line">需要一个设置正确的Content-Type消息头。不同浏览器有不同的限制： IE, Firefox,</span><br><span class="line"></span><br><span class="line">Chrome, Safari(跳至CVE-2010-0051)部分 和 Opera。</span><br><span class="line"></span><br><span class="line">- &lt;img&gt;嵌入图片。支持的图片格式包括PNG,JPEG,GIF,BMP,SVG,...</span><br><span class="line"></span><br><span class="line">- &lt;video&gt; 和 &lt;audio&gt;嵌入多媒体资源。</span><br><span class="line"></span><br><span class="line">- &lt;object&gt;, &lt;embed&gt; 和 &lt;applet&gt;的插件。</span><br><span class="line"></span><br><span class="line">- @font-face引入的字体。一些浏览器允许跨域字体（ cross-origin fonts），一些需要同源</span><br><span class="line"></span><br><span class="line">字体（same-origin fonts）。</span><br><span class="line"></span><br><span class="line">- &lt;frame&gt; 和 &lt;iframe&gt;载入的任何资源。站点可以使用X-Frame-Options消息头来阻止这种形式的跨域交互。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h2><p>XMLHttpRequest 和 Fetch 等都需遵从同源策略（同源策略是基于浏览器的，浏览器或阻止<br>请求或阻止结果，CSRF 跨站就是阻止了结果，而有 Chrome 等浏览器阻止了 HTTP 到 HTTPS<br>的请求），如果请求的资源不属于同一个源则为跨域请求。跨域请求需要客户端支持。</p>
+<h3 id="非简单请求"><a href="#非简单请求" class="headerlink" title="非简单请求"></a>非简单请求</h3><ol>
+<li><p>请求方式为 PUT、DELETE、CONNECT、OPTIONS、TRACE、PATCH 中的一种</p>
+</li>
+<li><p>人为设置了非安全头信息字段，这些字段除了一下字段都应该被人为是不安全的</p>
+<pre><code> Accept
+ Accept-Language
+ Content-Language
+ Content-Type (but note the additional requirements below)
+ DPR
+ Downlink
+ Save-Data
+ Viewport-Width
+ Width
+</code></pre>
+</li>
+<li><p>Content-Type 取值不属于下列之一</p>
+<pre><code> Content-Type 的值不属于下列之一:
+ application/x-www-form-urlencoded
+ multipart/form-data
+ text/plain
+</code></pre>
+<p> 对于非简单请求，浏览器先发送一个使用 OPTIONS 方法的“预检请求”，请求的同时在头信息中携带两个字段</p>
+<pre><code> Access-Control-Request-Headers:content-type  // 告知服务器携带自定义非安全字段
+ Access-Control-Request-Method: POST // 告知服务器，实际请求将使用 POST 方法
+</code></pre>
+<p> “预检请求”的响应表明请求的源是否被允许跨域，请求自定的非安全字段是否被允许定义以及请求的方法是否被允许等。</p>
+<pre><code> Access-Control-Allow-Headers:Content-Type, Content-Length,
+ Authorization, Accept, X-Requested-With , yourHeaderFeild // 跨域请求可以定义这些非安全字段
+ Access-Control-Allow-Methods:PUT, POST, GET, DELETE, OPTIONS  // 跨域请求可以使用这些方法
+ Access-Control-Allow-Origin:* // 跨域可以是任意源
+ Access-Control-Max-Age:86400 // 该时间内无需再次发起“预检请求”
+</code></pre>
+<p> 首部字段 Access-Control-Max-Age 表明该响应的有效时间为 86400 秒，也就是 24 小时。在有效时间内，浏览器无须为同一请求再次发起预检请求。请注意，浏览器自身维护了一个最大有效时间，如果该首部字段的值超过了最大有效时间，将不会生效。</p>
+</li>
+</ol>
+<h3 id="简单请求"><a href="#简单请求" class="headerlink" title="简单请求"></a>简单请求</h3><p>请求方式是 GET&#x2F;POST&#x2F;HEAD 之一 且请求头信息中 Content-Type 取值为 <code>application/x-www-form-urlencoded、multipart/form-data、text/plain</code>中的一种。简单请求与非简单请求最大的区别是简单请求没有<strong>预请求</strong>。对于简单请求，如果服务器未返回正确的响应首部，则请求方不会收到任何数据。</p>
+<pre><code>GET /login HTTP/1.1
+Host: 111.111.111.111:80
+Content-Type: application/x-www-form-urlencoded
+Cache-Control: no-cache
+Postman-Token: 52804546-8b1b-7dad-0d96-ea14a4c41241
+</code></pre>
+<p>但 AJAX 发送跨域请求时，浏览器会在请求头信息中添加 origin 字段以表示请求的来源，服务端通过 <code>Access-Control-Allow-Origin</code> 字段设置允许跨域请求的地址。只有当 origin 的取值被包含在 <code>Access-Control-Allow-Origin</code>的值时跨域才被允许。</p>
+<h3 id="客户端请求头信息设置"><a href="#客户端请求头信息设置" class="headerlink" title="客户端请求头信息设置"></a>客户端请求头信息设置</h3><p>基于 Node 的 Express 头信息设置：</p>
+<pre><code>app.all(&#39;*&#39;, function(req, res, next) {
+	res.header(&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;); // * 代表允许所有跨域
+	res.header(&quot;Access-Control-Allow-Headers&quot;, &quot;Content-Type,
+	Content-Length, Authorization, Accept,X-Requested-With&quot;);
+	res.header(&quot;Access-Control-Allow-Methods&quot;,
+	&quot;PUT,POST,GET,DELETE,OPTIONS&quot;);  // 允许跨域请求的方式
+	res.header(&quot;X-Powered-By&quot;, &#39; 3.2.1&#39;)
+	res.header(&quot;Content-Type&quot;, &quot;application/json;charset=utf-8&quot;);
+	next();
+});
+</code></pre>
+<p><strong>[坑]Node 跨域头的设置</strong></p>
+<p>在发送跨域请求时如果是非简单请求将会先发送 OPTIONS “预检请求”，而 Node 服务在没有设置 OPTIONS 路由的情况下前端会有 503 的网关超时提示：</p>
+<pre><code> XMLHttpRequest cannot load http://111.111.111.111:8089/login_service. Response to
+ preflight request doesn&#39;t pass access control check: No
+ &#39;Access-Control-Allow-Origin&#39; header is present on the requested resource. Origin
+ &#39;http://111.111.111.111&#39; is therefore not allowed access. The response had HTTP
+ status code 504.
+</code></pre>
+<p>因此为了避免才坑，后端需要对 OPTIONS 方式进行路由设置或提前返回结果，如下设置：</p>
+<pre><code>app.all(&#39;*&#39;,function (req, res, next) {
+	res.header(&#39;Access-Control-Allow-Origin&#39;, &#39;*&#39;);
+	res.header(&#39;Access-Control-Allow-Headers&#39;, &#39;Content-Type, Content-Length,
+	Authorization, Accept, X-Requested-With , yourHeaderFeild&#39;);
+	res.header(&#39;Access-Control-Allow-Methods&#39;, &#39;PUT, POST, GET, DELETE, OPTIONS&#39;);
+
+	if (req.method == &#39;OPTIONS&#39;) {
+	   console.log(&#39;you can do that!!&#39;);
+	   res.send(200); //让options请求快速返回
+	} else {
+		next();
+	}
+});
+</code></pre>
+<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><ul>
+<li><p><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html">http://www.ruanyifeng.com/blog/2016/04/cors.html</a></p>
+</li>
+<li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cors/" rel="tag"># CORS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/practice/linux-command-note/" rel="prev" title="Linux 命令使用笔记">
+                  <i class="fa fa-angle-left"></i> Linux 命令使用笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/guide/linux-blog-deployed-in-github-and-coding/" rel="next" title="Hexo 双线部署启用 SSL 【不完全指北】">
+                  Hexo 双线部署启用 SSL 【不完全指北】 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="IntroductionIn the ever-evolving realm of software development, errors and exceptions are constant companions. These errors can be broadly categorized into two types: programming errors and operationa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Error Handling in Practice - Centralizing Operational Errors in Node.js">
+<meta property="og:url" content="https://0x400.com/experience/practice/error-handling-in-practice/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="IntroductionIn the ever-evolving realm of software development, errors and exceptions are constant companions. These errors can be broadly categorized into two types: programming errors and operationa">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-10-10T14:45:49.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.136Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="Error Handling">
+<meta property="article:tag" content="Practice">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/error-handling-in-practice/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/error-handling-in-practice/","path":"experience/practice/error-handling-in-practice/","title":"Error Handling in Practice - Centralizing Operational Errors in Node.js"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Error Handling in Practice - Centralizing Operational Errors in Node.js | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Operational-Errors-Navigating-the-Real-World-Challenges"><span class="nav-number">2.</span> <span class="nav-text">Operational Errors: Navigating the Real-World Challenges</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Central-Error-Class-One-for-All"><span class="nav-number">3.</span> <span class="nav-text">The Central Error Class: One for All</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Utilize-Central-Error-Class"><span class="nav-number">4.</span> <span class="nav-text">Utilize Central Error Class</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Unified-Error-Creation"><span class="nav-number">4.1.</span> <span class="nav-text">1. Unified Error Creation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Send-Error-Responses"><span class="nav-number">4.2.</span> <span class="nav-text">2. Send Error Responses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Convert-Unknown-Errors"><span class="nav-number">4.3.</span> <span class="nav-text">3. Convert Unknown Errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Localize-Translate-Error-Messages"><span class="nav-number">4.4.</span> <span class="nav-text">4. Localize&#x2F;Translate Error Messages</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Error-handling-in-Three-Layers-of-backend-service"><span class="nav-number">5.</span> <span class="nav-text">Error handling in Three Layers of backend service</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller-Layer"><span class="nav-number">5.1.</span> <span class="nav-text">Controller Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Error-handling-in-controller-layer"><span class="nav-number">5.1.1.</span> <span class="nav-text">Error handling in controller layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service-Layer"><span class="nav-number">5.2.</span> <span class="nav-text">Service Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Error-handling-in-the-service-layer"><span class="nav-number">5.2.1.</span> <span class="nav-text">Error handling in the service layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Database-Access-Layer-Dao"><span class="nav-number">5.3.</span> <span class="nav-text">Database Access Layer (Dao)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion-Streamlining-Error-Handling-for-a-Reliable-Application"><span class="nav-number">6.</span> <span class="nav-text">Conclusion: Streamlining Error Handling for a Reliable Application</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/error-handling-in-practice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Error Handling in Practice - Centralizing Operational Errors in Node.js | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Error Handling in Practice - Centralizing Operational Errors in Node.js
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2023-10-10 22:45:49" itemprop="dateCreated datePublished" datetime="2023-10-10T22:45:49+08:00">2023-10-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>In the ever-evolving realm of software development, errors and exceptions are constant companions. These errors can be broadly categorized into two types: programming errors and operational errors. While programming errors are typically caught during development and testing phases, operational errors are the real-world hurdles that applications must gracefully navigate in production environments. In this blog, we will shine a spotlight on the art of handling operational errors and delve into the pivotal role played by a central error class in Node.js.</p>
+<span id="more"></span>
+
+<h2 id="Operational-Errors-Navigating-the-Real-World-Challenges"><a href="#Operational-Errors-Navigating-the-Real-World-Challenges" class="headerlink" title="Operational Errors: Navigating the Real-World Challenges"></a>Operational Errors: Navigating the Real-World Challenges</h2><p>Operational errors are a natural part of any software application’s lifecycle. They can arise from various sources, including network issues, database failures, external service unavailability, and even user input. In a typical Node.js application, these errors can occur at different layers, such as the controller, service, and database access (Dao) layers. Handling these errors effectively is crucial for maintaining application reliability and providing a smooth user experience.</p>
+<h2 id="The-Central-Error-Class-One-for-All"><a href="#The-Central-Error-Class-One-for-All" class="headerlink" title="The Central Error Class: One for All"></a>The Central Error Class: One for All</h2><p>In the world of Node.js, it’s a common practice to employ a central error class to manage operational errors efficiently. This central error class serves as a hub for creating, formatting, and handling errors in a structured and consistent manner. By adhering to a single error class throughout your project, you can simplify error management and ensure uniformity in error responses.</p>
+<p>For instance, we have <code>MyProjectError</code> as an central error class.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyProjectError</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Error</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="variable constant_">UNKNOWN_ERROR_CODE</span> = <span class="string">&quot;99999&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** The module in which the error occurred. */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">_module</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="comment">/** A code to uniquely identify the error in a module. */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">_code</span>: <span class="built_in">number</span> | <span class="built_in">string</span>;</span><br><span class="line">  <span class="comment">/** A unique id that identifies the error uniquely in the logs. */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">_guid</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="comment">/** A http status code that is assigned to the error. */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">_statusCode</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="comment">/** An array of error objects that lead to this error. Errors in causes do not have any causes themselves. */</span></span><br><span class="line">  <span class="keyword">protected</span> <span class="attr">_causes</span>: <span class="title class_">MyProjectError</span>[];</span><br><span class="line">  <span class="comment">/** An optional message field for additional information. */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">_details</span>?: <span class="built_in">string</span>;</span><br><span class="line">  <span class="comment">/** The host on which the error occurred. */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">_host</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="comment">/* Optional array of strings that are used to build the localization string */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">_i18nParameters</span>: <span class="title class_">Array</span>&lt;<span class="built_in">string</span>&gt;;</span><br><span class="line">  <span class="comment">/** Key to localization string that will be looked up along with a language key */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="attr">_i18nKey</span>: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Create a new MyProjectError.</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">module</span> - The module in which the error is thrown, e.g. x-glossary</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">code</span> - The error code number, e.g. 22500. It&#x27;s also possible to use a string, but this is discouraged!</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">message</span> - The message that should be displayed with the error</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">i18nKey</span> - internationalization key</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">i18nParameters</span> - parameters for i18n translation</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">statusCode</span> - A status code that can be used for the http response</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">causes</span> - Additional errors that lead to this error</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">details</span> - An optional message field for additional information</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> <span class="variable">host</span> - An optional indicator of the pod in which the error occured</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span></span><br><span class="line"><span class="params">    <span class="attr">module</span>: <span class="built_in">string</span>,</span></span><br><span class="line"><span class="params">    <span class="attr">code</span>: <span class="built_in">number</span> | <span class="built_in">string</span>,</span></span><br><span class="line"><span class="params">    <span class="attr">message</span>: <span class="built_in">string</span>,</span></span><br><span class="line"><span class="params">    <span class="attr">i18nParameters</span>: <span class="title class_">Array</span>&lt;<span class="built_in">string</span>&gt; = [],</span></span><br><span class="line"><span class="params">    <span class="attr">i18nKey</span>: <span class="built_in">string</span> = <span class="string">&quot;&quot;</span>,</span></span><br><span class="line"><span class="params">    <span class="attr">statusCode</span>: <span class="built_in">number</span> = <span class="number">500</span>,</span></span><br><span class="line"><span class="params">    <span class="attr">causes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">MyProjectError</span> | <span class="title class_">Error</span>&gt; = [],</span></span><br><span class="line"><span class="params">    <span class="attr">details</span>?: <span class="built_in">string</span>,</span></span><br><span class="line"><span class="params">    host = hostname()</span></span><br><span class="line"><span class="params">  </span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>(<span class="string">`<span class="subst">$&#123;message&#125;</span>: <span class="subst">$&#123;details&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">message</span> = message;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&quot;MyProjectError&quot;</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_module</span> = <span class="variable language_">module</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_i18nParameters</span> = i18nParameters;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_i18nKey</span> = i18nKey;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_code</span> = code || <span class="title class_">MyProjectError</span>.<span class="property">UNKNOWN_ERROR_CODE</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_guid</span> = <span class="title function_">uuidv4</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_statusCode</span> = statusCode;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_causes</span> = <span class="title class_">MyProjectError</span>.<span class="title function_">flatten</span>(</span><br><span class="line">      causes.<span class="title function_">map</span>(<span class="function">(<span class="params">_</span>) =&gt;</span> <span class="title class_">MyProjectError</span>.<span class="title function_">wrap</span>(_))</span><br><span class="line">    );</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_details</span> = details;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_host</span> = host;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Returns the error as a JSON object. */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">toJSON</span>(): <span class="title class_">JSON</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">message</span>: <span class="variable language_">this</span>.<span class="property">message</span>,</span><br><span class="line">      <span class="attr">code</span>: <span class="variable language_">this</span>.<span class="property">_code</span>,</span><br><span class="line">      <span class="attr">module</span>: <span class="variable language_">this</span>.<span class="property">_module</span>,</span><br><span class="line">      <span class="attr">guid</span>: <span class="variable language_">this</span>.<span class="property">_guid</span>,</span><br><span class="line">      <span class="attr">statusCode</span>: <span class="variable language_">this</span>.<span class="property">_statusCode</span>,</span><br><span class="line">      <span class="attr">causes</span>: <span class="variable language_">this</span>.<span class="property">_causes</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">_</span>) =&gt;</span> _.<span class="title function_">toJSON</span>()),</span><br><span class="line">      <span class="attr">details</span>: <span class="variable language_">this</span>.<span class="property">_details</span>,</span><br><span class="line">      <span class="attr">hostname</span>: <span class="variable language_">this</span>.<span class="property">_host</span>,</span><br><span class="line">      <span class="attr">i18nParameters</span>: <span class="variable language_">this</span>.<span class="property">_i18nParameters</span>,</span><br><span class="line">      <span class="attr">i18nKey</span>: <span class="variable language_">this</span>.<span class="property">_i18nKey</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** Add a cause to the error. */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">addCause</span>(<span class="params"><span class="attr">err</span>: <span class="title class_">MyProjectError</span> | <span class="title class_">Error</span></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">_causes</span>.<span class="title function_">push</span>(<span class="title class_">MyProjectError</span>.<span class="title function_">wrap</span>(err));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The <code>MyProjectError</code> class is a custom error class that extends the built-in Error class. It includes additional properties and methods to handle and format errors in a structured way. By using this error class, we are able to create and handle specific types of errors based on their characteristics.<br>The <code>MyProjectError</code> class includes properties such as the module in which the error occurred, an error code, a unique identifier for the error, an HTTP status code, causes of the error, and additional details. It also provides methods to add causes to the error and convert the error to a JSON object.<br>By using this error class, we can create consistent and standardized error objects, making error handling more structured and maintainable.</p>
+<h2 id="Utilize-Central-Error-Class"><a href="#Utilize-Central-Error-Class" class="headerlink" title="Utilize Central Error Class"></a>Utilize Central Error Class</h2><p>Around the central error class, we are able to utilize the error handling.</p>
+<h3 id="1-Unified-Error-Creation"><a href="#1-Unified-Error-Creation" class="headerlink" title="1. Unified Error Creation"></a>1. Unified Error Creation</h3><p>The central error class allows developers to create and throw specific types of errors with ease. This consistency in error creation facilitates better communication between different layers of your application, ensuring that everyone speaks the same error language.</p>
+<h3 id="2-Send-Error-Responses"><a href="#2-Send-Error-Responses" class="headerlink" title="2. Send Error Responses"></a>2. Send Error Responses</h3><p>When an operational error occurs, it’s essential to communicate the issue to the client in a clear and standardized way. The central error class enables you to generate error responses that adhere to a predefined structure, making it easier for clients to understand and handle errors gracefully.</p>
+<h3 id="3-Convert-Unknown-Errors"><a href="#3-Convert-Unknown-Errors" class="headerlink" title="3. Convert Unknown Errors"></a>3. Convert Unknown Errors</h3><p>Not all errors are predictable, and some may be unexpected or unfamiliar. In such cases, the central error class can help by converting these unknown errors into a generic format that can be handled more effectively. This approach ensures that your application can gracefully recover from unforeseen issues.</p>
+<h3 id="4-Localize-Translate-Error-Messages"><a href="#4-Localize-Translate-Error-Messages" class="headerlink" title="4. Localize&#x2F;Translate Error Messages"></a>4. Localize&#x2F;Translate Error Messages</h3><p>In a globalized world, catering to users with diverse language preferences is crucial. The central error class can be extended to include localization and translation features. This allows error messages to be presented to users in their preferred language, enhancing the overall user experience.</p>
+<p>For example, we throw the an error when ‘two tenant mode feature is not enabled’.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">throw</span> <span class="variable constant_">ERRORS</span>.<span class="title function_">twoTenantModeFeatureNotEnabled</span>(targetTenantUuid, systemAction);</span><br></pre></td></tr></table></figure>
+
+<p>The error is generated by function <code>twoTenantModeFeatureNotEnabled</code></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">twoTenantModeFeatureNotEnabled</span>: (<span class="attr">tenantUuid</span>: string, <span class="attr">systemAction</span>: <span class="title class_">SystemAction</span>): <span class="function"><span class="params">MyProjectError</span></span></span><br><span class="line"><span class="function">	=&gt;</span> <span class="title function_">create</span>(<span class="string">&#x27;10045&#x27;</span>, <span class="string">&#x27;errOdc04045&#x27;</span>, [systemAction, tenantUuid], <span class="number">400</span>)</span><br></pre></td></tr></table></figure>
+
+<p>The function <code>create</code> is the single entry point to create an error that instances of <code>MyProjectError</code>. It receives an error code, an error message localization key, a set of parameters for translation, and an HTTP response code.</p>
+<p>In the localization properties, we have the definition of <code>errOdc04045</code> for building an error message.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#<span class="attr">YMSE</span>: &#123;<span class="number">0</span>&#125; is the action name <span class="keyword">of</span> the system</span><br><span class="line">#<span class="attr">YMSE</span>: &#123;<span class="number">1</span>&#125; is the target system to create/restore.</span><br><span class="line">errOdc04045=<span class="title class_">Cannot</span> &#123;<span class="number">0</span>&#125; the system &#123;<span class="number">1</span>&#125; because two tenant mode is not enabled</span><br></pre></td></tr></table></figure>
+
+<p>The error message is built during the serialization phase before sending it to clients.</p>
+<h2 id="Error-handling-in-Three-Layers-of-backend-service"><a href="#Error-handling-in-Three-Layers-of-backend-service" class="headerlink" title="Error handling in Three Layers of backend service"></a>Error handling in Three Layers of backend service</h2><p>In a typical backend architecture, your application may consist of three primary layers: the controller, service, and database access (Dao) layers. Each of these layers plays a role in processing requests and handling operational errors.</p>
+<h3 id="Controller-Layer"><a href="#Controller-Layer" class="headerlink" title="Controller Layer"></a>Controller Layer</h3><p>The controller layer serves as the entry point for incoming requests and plays a crucial role in error handling and response generation. e.g. we have the entry <code>createSystems</code> for <code>POST /v1/systems</code> to create a set of systems in batch as below.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Create a set of systems. Only BTP systems have been implemented so far.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">req</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">res</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">createSystems</span>(<span class="params"><span class="attr">req</span>: <span class="title class_">Request</span>, <span class="attr">res</span>: <span class="title class_">Response</span></span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> serviceContext = <span class="keyword">await</span> <span class="title function_">getServiceContext</span>(req);</span><br><span class="line">    <span class="keyword">const</span> systemService = <span class="keyword">new</span> <span class="title class_">SystemService</span>(serviceContext);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> systemsToCreate = getRequestBody &lt; <span class="title class_">ISystemsToCreate</span> &gt; req.<span class="property">systems</span>;</span><br><span class="line">    <span class="keyword">await</span> systemService.<span class="title function_">createSystems</span>(systemsToCreate);</span><br><span class="line">    res.<span class="title function_">status</span>(<span class="number">201</span>).<span class="title function_">end</span>();</span><br><span class="line">  &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">sendErrorResponse</span>(req, res, error);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Error-handling-in-controller-layer"><a href="#Error-handling-in-controller-layer" class="headerlink" title="Error handling in controller layer"></a>Error handling in controller layer</h4><p>In the provided code snippet, we see a global try-catch block wrapping the entry function of the controller. This approach ensures that any exceptions thrown during request processing are caught and handled gracefully. The controller is responsible for crafting and sending responses back to clients. In the provided code, HTTP status codes and appropriate responses are sent, ensuring a consistent and user-friendly experience.</p>
+<p>Handling errors isn’t just about catching exceptions; it’s also about providing meaningful error messages to clients. In the provided example, the need for localization of error messages is evident. The error messages need to be translated according to the client’s language preference. To achieve this, a translation search key, such as <code>errOdc04044</code>, is used to retrieve the correct localized text. This localization information is crucial for delivering a user-centric experience, especially in applications with a global user base.</p>
+<h3 id="Service-Layer"><a href="#Service-Layer" class="headerlink" title="Service Layer"></a>Service Layer</h3><p>The service layer is where complex business logic resides. It involves tasks such as data validation, interaction with the database, and building output data. In this layer, error handling is equally critical.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">async</span> <span class="title function_">createSystems</span>(<span class="params"><span class="attr">systemsToCreate</span>: <span class="title class_">SystemToCreate</span>[]</span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> systemsAndConnectionsToCreateDb = <span class="keyword">await</span> <span class="title class_">ServiceHelper</span>.<span class="title function_">buildSystemsAndConnectionsToCreateDb</span>(</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">requestContext</span>,</span><br><span class="line">      systemsToCreate</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">const</span> affectedSystems = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">saveSystemsAndConnections</span>(systemsAndConnectionsToCreateDb);</span><br><span class="line">    <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">updateSearchView</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="attr">btpSystemsToCreate</span>: <span class="title class_">IBtpSystemToCreate</span>[] = systemsToCreate.<span class="title function_">filter</span>(<span class="title class_">ServiceHelper</span>.<span class="property">isBtpSystem</span>);</span><br><span class="line">    <span class="keyword">if</span> (btpSystemsToCreate.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">syncUpTenantRelationshipsForCreation</span>(btpSystemsToCreate);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">client</span>.<span class="title function_">commit</span>();</span><br><span class="line">    trace.<span class="title function_">exiting</span>();</span><br><span class="line">    <span class="keyword">return</span> affectedSystems;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">client</span>.<span class="title function_">rollback</span>();</span><br><span class="line">    <span class="keyword">const</span> error = <span class="title function_">tryToConvertToGenericError</span>(e);</span><br><span class="line">    <span class="keyword">throw</span> error;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>Data Validation:</strong> Input data received from the controller must be validated and converted to a suitable format for processing. This step helps prevent invalid or malicious data from causing issues further down the line.</li>
+<li><strong>Database Interaction:</strong> When interacting with the database, error handling is paramount. Database errors, network issues, or unexpected data inconsistencies can all lead to exceptions. Handling these exceptions gracefully ensures the integrity of the application.</li>
+<li><strong>Output Data:</strong> After processing, the service layer is responsible for building and formatting the output data that will be sent back to the controller for response generation.</li>
+</ol>
+<h4 id="Error-handling-in-the-service-layer"><a href="#Error-handling-in-the-service-layer" class="headerlink" title="Error handling in the service layer"></a>Error handling in the service layer</h4><p>The function in the service layer is wrapped in a global try-catch block. In this layer, errors can originate from utilities, helpers, or the database access layer. If an error is not recognized, it should be converted to a generic error.</p>
+<h3 id="Database-Access-Layer-Dao"><a href="#Database-Access-Layer-Dao" class="headerlink" title="Database Access Layer (Dao)"></a>Database Access Layer (Dao)</h3><p>The database access layer is responsible for interacting with the database and handling errors that may arise during data retrieval or modification.</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private <span class="keyword">async</span> <span class="title function_">saveSystemsAndConnections</span>(</span><br><span class="line">  <span class="attr">systemsAndConnectionsToCreateDb</span>: <span class="title class_">ISystemAndConnectionToCreateDb</span>[]</span><br><span class="line">): <span class="title class_">Promise</span>&lt;<span class="title class_">ISystemDb</span>[]&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> affectedSystems = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">sharedDBAccess</span>.<span class="title function_">createSystemsAndConnections</span>(systemsAndConnectionsToCreateDb);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (affectedSystems.<span class="property">length</span> &gt; <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="variable constant_">ERRORS</span>.<span class="title function_">duplicatedSystem</span>()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> _.<span class="title function_">merge</span>(affectedSystems.<span class="property">createdSystems</span>, affectedSystems.<span class="property">updatedSystems</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The errors could come from this layer directly. We generate error by a unified entry point and throw it to the caller. We don’t need to cope with the error too much in this layer. However, we need a set of error utilities to generate the error easily.</p>
+<h2 id="Conclusion-Streamlining-Error-Handling-for-a-Reliable-Application"><a href="#Conclusion-Streamlining-Error-Handling-for-a-Reliable-Application" class="headerlink" title="Conclusion: Streamlining Error Handling for a Reliable Application"></a>Conclusion: Streamlining Error Handling for a Reliable Application</h2><p>In software development, mistakes are not only hurdles but helpful tools for enhancing dependability and user experience. By adhering to recommended methods in managing mistakes, such as sending error responses, transforming unknown errors into a standard format, adopting a unified approach to creating errors, offering error categories, and localizing error messages, developers can build software systems that are more resilient and user-friendly. Embracing mistakes as a part of the development process can result in more robust and reliable applications that serve users better.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/practice/" rel="tag"># Practice</a>
+              <a href="/tags/error-handling/" rel="tag"># Error Handling</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/storage/ddia-ch7-reading-notes/" rel="prev" title="DDIA reading notes - chapter 7 Transactions">
+                  <i class="fa fa-angle-left"></i> DDIA reading notes - chapter 7 Transactions
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/practice/troubleshooting-in-practice/" rel="next" title="Troubleshooting in Practice - connection leak detection as an example">
+                  Troubleshooting in Practice - connection leak detection as an example <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

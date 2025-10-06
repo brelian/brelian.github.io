@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="使用 CodeIgniter 2.x 可以配置 autoload 自动加载数据库，也可以在 Model 的构造函数中使用$this-&gt;load-&gt;database()方法加载数据库：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CodeIgniter load database 分析">
+<meta property="og:url" content="https://0x400.com/fundamental/programming-language/php/php-codeigniter-load-database-analysis/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="使用 CodeIgniter 2.x 可以配置 autoload 自动加载数据库，也可以在 Model 的构造函数中使用$this-&gt;load-&gt;database()方法加载数据库：">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/20180331/fpm-pconnect.png">
+<meta property="og:image" content="https://0x400.com/images/20180331/count-read-db.png">
+<meta property="og:image" content="https://0x400.com/images/20180331/read-db.png">
+<meta property="og:image" content="https://0x400.com/images/20180331/no-read.png">
+<meta property="article:published_time" content="2018-03-30T21:47:30.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.175Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/20180331/fpm-pconnect.png">
+
+
+<link rel="canonical" href="https://0x400.com/fundamental/programming-language/php/php-codeigniter-load-database-analysis/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/fundamental/programming-language/php/php-codeigniter-load-database-analysis/","path":"fundamental/programming-language/php/php-codeigniter-load-database-analysis/","title":"CodeIgniter load database 分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CodeIgniter load database 分析 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#database-%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">database() 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DB-%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">DB() 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%95%BF%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.</span> <span class="nav-text">数据库长连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">数据库初始化</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/fundamental/programming-language/php/php-codeigniter-load-database-analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CodeIgniter load database 分析 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CodeIgniter load database 分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2018-03-31 05:47:30" itemprop="dateCreated datePublished" datetime="2018-03-31T05:47:30+08:00">2018-03-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/" itemprop="url" rel="index"><span itemprop="name">Fundamental</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/programing-language/" itemprop="url" rel="index"><span itemprop="name">Programing-language</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/fundamental/programing-language/php/" itemprop="url" rel="index"><span itemprop="name">PHP</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>使用 CodeIgniter 2.x 可以配置 autoload 自动加载数据库，也可以在 Model 的构造函数中使用<code>$this-&gt;load-&gt;database()</code>方法加载数据库：</p>
+<span id="more"></span>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># xxx.model</span></span><br><span class="line"><span class="keyword">require_once</span> <span class="string">&#x27;db_config.php&#x27;</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">xxx_model</span> <span class="keyword">extends</span> <span class="title">CI_Model</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;db = <span class="variable language_">$this</span>-&gt;load-&gt;<span class="title function_ invoke__">database</span>(<span class="title class_">DB_Config</span>::<span class="variable">$db_config</span>[<span class="string">&quot;mydb&quot;</span>], <span class="literal">true</span>);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// other code ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="database-方法"><a href="#database-方法" class="headerlink" title="database() 方法"></a>database() 方法</h3><p><code>$this-&gt;load-&gt;database()</code>方法位于 <code>system/core/Loader.php</code>中，此方法返回 <code>DB($params, $active_record)</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Database Loader</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>	string	the DB credentials</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>	bool	whether to return the DB object</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>	bool	whether to enable active record (this allows us to override the config setting)</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>	object</span></span><br><span class="line"><span class="comment"> */</span>	</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">database</span>(<span class="params"><span class="variable">$params</span> = <span class="string">&#x27;&#x27;</span>, <span class="variable">$return</span> = <span class="literal">FALSE</span>, <span class="variable">$active_record</span> = <span class="literal">NULL</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// Grab the super object</span></span><br><span class="line">	<span class="variable">$CI</span> =&amp; <span class="title function_ invoke__">get_instance</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Do we even need to load the database class?</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">class_exists</span>(<span class="string">&#x27;CI_DB&#x27;</span>) AND <span class="variable">$return</span> == <span class="literal">FALSE</span> AND <span class="variable">$active_record</span> == <span class="literal">NULL</span> AND <span class="keyword">isset</span>(<span class="variable">$CI</span>-&gt;db) AND <span class="title function_ invoke__">is_object</span>(<span class="variable">$CI</span>-&gt;db))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">FALSE</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">require_once</span>(BASEPATH.<span class="string">&#x27;database/DB.php&#x27;</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$return</span> === <span class="literal">TRUE</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="title function_ invoke__">DB</span>(<span class="variable">$params</span>, <span class="variable">$active_record</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Initialize the db variable.  Needed to prevent</span></span><br><span class="line">	<span class="comment">// reference errors with some configurations</span></span><br><span class="line">	<span class="variable">$CI</span>-&gt;db = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Load the DB class</span></span><br><span class="line">	<span class="variable">$CI</span>-&gt;db =&amp; <span class="title function_ invoke__">DB</span>(<span class="variable">$params</span>, <span class="variable">$active_record</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="DB-方法"><a href="#DB-方法" class="headerlink" title="DB() 方法"></a>DB() 方法</h3><p><code>DB()</code>方法位于 <code>system/database/DB.php</code> 中，此方法重点完成以下两个任务</p>
+<ol>
+<li><code>new $driver($params)</code></li>
+<li><code>$DB-&gt;initialize()</code></li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Initialize the database</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@category</span>	Database</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>		EllisLab Dev Team</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@link</span>		http://codeigniter.com/user_guide/database/</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> 	string</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> 	bool	Determines if active record should be used or not</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> &amp;<span class="title">DB</span>(<span class="params"><span class="variable">$params</span> = <span class="string">&#x27;&#x27;</span>, <span class="variable">$active_record_override</span> = <span class="literal">NULL</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// Load the DB config file if a DSN string wasn&#x27;t passed</span></span><br><span class="line">	<span class="comment">// ... some code here</span></span><br><span class="line">	<span class="keyword">require_once</span>(BASEPATH.<span class="string">&#x27;database/drivers/&#x27;</span>.<span class="variable">$params</span>[<span class="string">&#x27;dbdriver&#x27;</span>].<span class="string">&#x27;/&#x27;</span>.<span class="variable">$params</span>[<span class="string">&#x27;dbdriver&#x27;</span>].<span class="string">&#x27;_driver.php&#x27;</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Instantiate the DB adapter</span></span><br><span class="line">	<span class="variable">$driver</span> = <span class="string">&#x27;CI_DB_&#x27;</span>.<span class="variable">$params</span>[<span class="string">&#x27;dbdriver&#x27;</span>].<span class="string">&#x27;_driver&#x27;</span>;</span><br><span class="line">	<span class="variable">$DB</span> = <span class="keyword">new</span> <span class="variable">$driver</span>(<span class="variable">$params</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$DB</span>-&gt;autoinit == <span class="literal">TRUE</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$DB</span>-&gt;<span class="title function_ invoke__">initialize</span>();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// some code here ...</span></span><br><span class="line">	<span class="keyword">return</span> <span class="variable">$DB</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当 autoinit 为 true 时，自动初始化数据库，<code>$DB-&gt;initialize()</code>，此方法位于 <code>system/database/DB_driver.php</code>中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Initialize Database Settings</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@access</span>	private Called by the constructor</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>	mixed</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>	void</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initialize</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// If an existing connection resource is available</span></span><br><span class="line">	<span class="comment">// there is no need to connect and select the database</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">is_resource</span>(<span class="variable">$this</span>-&gt;conn_id) OR <span class="title function_ invoke__">is_object</span>(<span class="variable">$this</span>-&gt;conn_id))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">TRUE</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// ----------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// Connect to the database and set the connection ID</span></span><br><span class="line">	<span class="variable language_">$this</span>-&gt;conn_id = (<span class="variable language_">$this</span>-&gt;pconnect == <span class="literal">FALSE</span>) ? <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">db_connect</span>() : <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">db_pconnect</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">// No connection resource?  Throw an error</span></span><br><span class="line">	<span class="comment">// some code here ...</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">TRUE</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="数据库长连接"><a href="#数据库长连接" class="headerlink" title="数据库长连接"></a>数据库长连接</h3><p>根据 <code>$this-&gt;pconnect</code> 决定数据库使用长连接或者短连接，<code>$this-&gt;pconnect</code> 的取值在数据库配置文件中配置。MySQL 的长连接是存在 php-fpm 子进程里的，进程之间是不共享连接的，所以每个 php-fpm 进程都有一个单独的长连接。使用 </p>
+<p><code>ps -aux | grep fpm</code> 和 <code>netstat -anp | grep 3306</code> 可分别查看 fpm 子进程个数和 MySQL 长连接个数相同。</p>
+<p><img src="/images/20180331/fpm-pconnect.png"></p>
+<p>使用 MySQL 长连接可以复用连接通道，减小连接时延，当 PHP 应用访问量不高，并发量不大时，我们只需要开启少量 php-fpm 子进程，每个子进程对应一个 MySQL 连接，但是当应用并发增加， php-fpm 子进程数量扩大时，MySQL 连接数也随之增加，对数据库造成较大压力，特别是当连接数达到数据库上限时会导致其他 fpm 连接异常。因此要注意使用长连接时 fpm 的子进程数不应超过数据库的最大连接数，在数据库中使用<code>SHOW VARIABLES like &#39;max_connections&#39;;</code> 查看数据库最大连接数。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">/</span><span class="operator">/</span>查看MySQL最大连接数</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SHOW</span> VARIABLES <span class="keyword">like</span> <span class="string">&#x27;max_connections&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+-------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name   <span class="operator">|</span> <span class="keyword">Value</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+-------+</span></span><br><span class="line"><span class="operator">|</span> max_connections <span class="operator">|</span> <span class="number">20000</span> <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+-------+</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="数据库初始化"><a href="#数据库初始化" class="headerlink" title="数据库初始化"></a>数据库初始化</h3><p>关于 <code>autoinit</code> ： CI 2.x 中默认为  true, 有些业务场景使用缓存且缓存命中率较高，若启用 <code>autoinit</code>，处理每个请 PHP 求时都会去连接数据库，耗时严重。使用 <code>strace -c -p 360558</code> 分析 360558  (FPM 进程id) 进程程序执行情况得出， 程序执行时 read 操作耗时最长。</p>
+<p><img src="/images/20180331/count-read-db.png"></p>
+<p>再使用 <code>strace  -p 360558 2&gt;&amp;1</code> 查看 360558  (FPM 进程id) 进程程序执行情况发现有大量的 read() 和 write() 操作，经分析发现一个参数为 4 的时候为数据库相关操作。</p>
+<p><img src="/images/20180331/read-db.png"></p>
+<p>将 <code>autoinit</code> 改为 false 后，read 和 write 耗时几乎为 0.</p>
+<p><img src="/images/20180331/no-read.png"></p>
+<p><strong>需要注意的时将 autoinit 改为 false 后，CI 会报如下错误</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_escape_string(): This function is deprecated; use mysql_real_escape_string() instead.</span><br></pre></td></tr></table></figure>
+
+<p>参照 <a href="https://stackoverflow.com/questions/26169455/codeigniter-use-mysql-real-escape-string-instead-database-connection-issue">https://stackoverflow.com/questions/26169455/codeigniter-use-mysql-real-escape-string-instead-database-connection-issue</a> 修改 <code>system/database/drivers/mysql/mysql_driver.php</code>下的 <code>escape_str()</code> 为：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape_str</span>(<span class="params"><span class="variable">$str</span>, <span class="variable">$like</span> = <span class="literal">FALSE</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">is_array</span>(<span class="variable">$str</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$str</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$val</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="variable">$str</span>[<span class="variable">$key</span>] = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">escape_str</span>(<span class="variable">$val</span>, <span class="variable">$like</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$str</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">function_exists</span>(<span class="string">&#x27;mysqli_real_escape_string&#x27;</span>) AND <span class="title function_ invoke__">is_object</span>(<span class="variable">$this</span>-&gt;conn_id))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$str</span> = <span class="title function_ invoke__">mysqli_real_escape_string</span>(<span class="variable">$this</span>-&gt;conn_id, <span class="variable">$str</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$str</span> = <span class="title function_ invoke__">addslashes</span>(<span class="variable">$str</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// escape LIKE condition wildcards</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$like</span> === <span class="literal">TRUE</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$str</span> = <span class="title function_ invoke__">str_replace</span>(<span class="keyword">array</span>(<span class="string">&#x27;%&#x27;</span>, <span class="string">&#x27;_&#x27;</span>), <span class="keyword">array</span>(<span class="string">&#x27;\\%&#x27;</span>, <span class="string">&#x27;\\_&#x27;</span>), <span class="variable">$str</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$str</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/php/" rel="tag"># PHP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/fundamental/storage/mysql-sql-about-trigger/" rel="prev" title="MySQL 触发器相关的 SQL">
+                  <i class="fa fa-angle-left"></i> MySQL 触发器相关的 SQL
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/experience/practice/linux-nginx-fpm-communication-explaination/" rel="next" title="Nginx 与 PHP-FPM 通信机制">
+                  Nginx 与 PHP-FPM 通信机制 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

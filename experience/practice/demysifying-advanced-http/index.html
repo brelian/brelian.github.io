@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="The Hypertext Transfer Protocol (HTTP) is the foundation of data communication on the web. Although HTTP&#x2F;1.1 has been a standard since 1997, many web developers don’t fully utilize its advanced f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Demystifying Advanced HTTP 1.1">
+<meta property="og:url" content="https://0x400.com/experience/practice/demysifying-advanced-http/index.html">
+<meta property="og:site_name" content="Pylon PENG&#39;s home page">
+<meta property="og:description" content="The Hypertext Transfer Protocol (HTTP) is the foundation of data communication on the web. Although HTTP&#x2F;1.1 has been a standard since 1997, many web developers don’t fully utilize its advanced f">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2023-10/HTTP-history.png">
+<meta property="og:image" content="https://0x400.com/images/2023-10/to-keep-live-connection.png">
+<meta property="og:image" content="https://0x400.com/images/2023-10/pipelining.png">
+<meta property="og:image" content="https://0x400.com/images/2023-10/trailer.png">
+<meta property="og:image" content="https://0x400.com/http-caching.png">
+<meta property="article:published_time" content="2023-10-16T15:00:49.000Z">
+<meta property="article:modified_time" content="2025-10-06T14:24:15.131Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="HTTP&#x2F;1.1">
+<meta property="article:tag" content="Practice">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2023-10/HTTP-history.png">
+
+
+<link rel="canonical" href="https://0x400.com/experience/practice/demysifying-advanced-http/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/experience/practice/demysifying-advanced-http/","path":"experience/practice/demysifying-advanced-http/","title":"Demystifying Advanced HTTP 1.1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Demystifying Advanced HTTP 1.1 | Pylon PENG's home page</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG's home page</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-History"><span class="nav-number">1.</span> <span class="nav-text">HTTP History</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Persistent-Connections"><span class="nav-number">2.</span> <span class="nav-text">Persistent Connections</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Request-Pipelining"><span class="nav-number">3.</span> <span class="nav-text">Request Pipelining</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chunked-Transfer-Encoding"><span class="nav-number">4.</span> <span class="nav-text">Chunked Transfer Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Powerful-Caching"><span class="nav-number">5.</span> <span class="nav-text">Powerful Caching</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">6.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">86</span>
+          <span class="site-state-item-name">المقالات</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">التصنيفات</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">الوسوم</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/experience/practice/demysifying-advanced-http/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG's home page">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Demystifying Advanced HTTP 1.1 | Pylon PENG's home page">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Demystifying Advanced HTTP 1.1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2023-10-16 23:00:49" itemprop="dateCreated datePublished" datetime="2023-10-16T23:00:49+08:00">2023-10-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2025-10-06 22:24:15" itemprop="dateModified" datetime="2025-10-06T22:24:15+08:00">2025-10-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">في</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/" itemprop="url" rel="index"><span itemprop="name">Experience</span></a>
+        </span>
+          ، 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/experience/practice/" itemprop="url" rel="index"><span itemprop="name">Practice</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>The Hypertext Transfer Protocol (HTTP) is the foundation of data communication on the web. Although HTTP&#x2F;1.1 has been a standard since 1997, many web developers don’t fully utilize its advanced features for optimized performance. In this post, I’ll explain some key capabilities in HTTP 1.1 and how to leverage them.</p>
+<h2 id="HTTP-History"><a href="#HTTP-History" class="headerlink" title="HTTP History"></a>HTTP History</h2><p><img src="/images/2023-10/HTTP-history.png"></p>
+<span id="more"></span>
+
+<h2 id="Persistent-Connections"><a href="#Persistent-Connections" class="headerlink" title="Persistent Connections"></a>Persistent Connections</h2><p>Performance issues from Non-persistent connection?</p>
+<p>In the early days of HTTP, each request would open a new TCP connection, introduce handshake delays, and accumulate TIME_WAIT sockets after closing.</p>
+<p>HTTP 1.1 introduced persistent connections through the Connection header with “keep-alive” value. This allows multiple requests&#x2F;responses to reuse one TCP connection:</p>
+<p><img src="/images/2023-10/to-keep-live-connection.png" alt="Connection Keep-Alive Header"></p>
+<p>Benefits include:</p>
+<ul>
+<li>Avoiding TCP handshake overhead</li>
+<li>Preventing port exhaustion via too many TIME_WAIT sockets</li>
+<li>Enabling request pipelining</li>
+</ul>
+<p>How to segment messages in a persistent connection?</p>
+<h2 id="Request-Pipelining"><a href="#Request-Pipelining" class="headerlink" title="Request Pipelining"></a>Request Pipelining</h2><p>Before HTTP 1.1, each request had to wait for the prior response before being sent. This led to significant delays and underutilization of the TCP connection.</p>
+<p>Pipelining allows the client to make multiple requests over a single connection without waiting for each response. This results in much better utilization of available network bandwidth.</p>
+<p><img src="/images/2023-10/pipelining.png" alt="HTTP Pipelining"></p>
+<h2 id="Chunked-Transfer-Encoding"><a href="#Chunked-Transfer-Encoding" class="headerlink" title="Chunked Transfer Encoding"></a>Chunked Transfer Encoding</h2><p>Calculating the Content-Length header before sending response data introduces delays in first byte delivery. Chunked transfer encoding was introduced to avoid this.</p>
+<p>With chunked encoding, the server can begin sending data before knowing the total length. The body is sent in “chunks” with their own length:</p>
+<p><img src="/images/2023-10/trailer.png" alt="Chunked Transfer Encoding"></p>
+<p>This allows response streaming without a pre-calculated content length.</p>
+<h2 id="Powerful-Caching"><a href="#Powerful-Caching" class="headerlink" title="Powerful Caching"></a>Powerful Caching</h2><p>Caching improves performance by reducing redundant requests. HTTP 1.1 has rich caching capabilities through ETags, Cache-Control, and Conditional Requests.</p>
+<p>ETags uniquely identify versions of resources. Cache-Control headers tell proxies how to cache responses. Conditional GETs with If-None-Match headers check the ETag to validate caches.</p>
+<p>This enables robust caching of both static and dynamically generated content:</p>
+<p><img src="/http-caching.png" alt="HTTP Caching"></p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>HTTP 1.1 provides big performance wins over earlier versions through persistent connections, pipelining, chunked transfer encoding, and caching. Modern web developers should understand these features to optimize web and API performance.</p>
+<p>Let me know if you would like me to expand or modify anything in this initial draft! I’m happy to revise it based on your feedback.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/practice/" rel="tag"># Practice</a>
+              <a href="/tags/http-1-1/" rel="tag"># HTTP/1.1</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/practice/middleware-installation-in-practice/" rel="prev" title="Best Practices for Express Middleware Management">
+                  <i class="fa fa-angle-left"></i> Best Practices for Express Middleware Management
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/fundamental/algorithm/lc-trie-tree-template/" rel="next" title="Trie tree 解题模板">
+                  Trie tree 解题模板 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

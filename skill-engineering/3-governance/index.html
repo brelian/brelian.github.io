@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="This is Part 3 of a six-part series on Skill Engineering. Part 1 — Foundations covers what skills are. Part 2 — Creation covers how to forge them.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill Engineering, Part 3: Governance">
+<meta property="og:url" content="https://0x400.com/skill-engineering/3-governance/index.html">
+<meta property="og:site_name" content="Pylon PENG">
+<meta property="og:description" content="This is Part 3 of a six-part series on Skill Engineering. Part 1 — Foundations covers what skills are. Part 2 — Creation covers how to forge them.">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/09-foundation-layer.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/13-l2-calls-l15.png">
+<meta property="article:published_time" content="2026-07-10T02:03:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T06:58:00.889Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="dependency-graph">
+<meta property="article:tag" content="governance">
+<meta property="article:tag" content="skill-engineering">
+<meta property="article:tag" content="versioning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2026-07/skill-engineering/09-foundation-layer.png">
+
+
+<link rel="canonical" href="https://0x400.com/skill-engineering/3-governance/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/skill-engineering/3-governance/","path":"skill-engineering/3-governance/","title":"Skill Engineering, Part 3: Governance"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Skill Engineering, Part 3: Governance | Pylon PENG</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.3.1/pdfobject.min.js","integrity":"sha256-jI72I8ZLVflVOisZIOaLvRew3tyvzeu6aZXFm7P7dEo="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js" defer></script>
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-12-%E2%80%94-Versioning"><span class="nav-number">1.</span> <span class="nav-text">Chapter 12 — Versioning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-bump-rules"><span class="nav-number">1.1.</span> <span class="nav-text">The bump rules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#What-%E2%80%9Cbreaking%E2%80%9D-means-for-a-skill"><span class="nav-number">1.2.</span> <span class="nav-text">What “breaking” means for a skill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-worked-version-history"><span class="nav-number">1.3.</span> <span class="nav-text">A worked version history</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pre-release-suffixes"><span class="nav-number">1.4.</span> <span class="nav-text">Pre-release suffixes</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-13-%E2%80%94-The-Dependency-Graph"><span class="nav-number">2.</span> <span class="nav-text">Chapter 13 — The Dependency Graph</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Declaration"><span class="nav-number">2.1.</span> <span class="nav-text">Declaration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-resolver%E2%80%99s-four-checks"><span class="nav-number">2.2.</span> <span class="nav-text">The resolver’s four checks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Topological-sort"><span class="nav-number">2.3.</span> <span class="nav-text">Topological sort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Version-conflicts"><span class="nav-number">2.4.</span> <span class="nav-text">Version conflicts</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-14-%E2%80%94-Lifecycle"><span class="nav-number">3.</span> <span class="nav-text">Chapter 14 — Lifecycle</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-five-states"><span class="nav-number">3.1.</span> <span class="nav-text">The five states</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transitions"><span class="nav-number">3.2.</span> <span class="nav-text">Transitions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#make-doctor"><span class="nav-number">3.3.</span> <span class="nav-text">make doctor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lifecycle-and-evolution"><span class="nav-number">3.4.</span> <span class="nav-text">Lifecycle and evolution</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-15-%E2%80%94-Distribution"><span class="nav-number">4.</span> <span class="nav-text">Chapter 15 — Distribution</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Symlinks-the-reference-approach"><span class="nav-number">4.1.</span> <span class="nav-text">Symlinks: the reference approach</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-copy-is-worse"><span class="nav-number">4.2.</span> <span class="nav-text">Why copy is worse</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multi-project-installation"><span class="nav-number">4.3.</span> <span class="nav-text">Multi-project installation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-16-%E2%80%94-The-Manifest-Contract"><span class="nav-number">5.</span> <span class="nav-text">Chapter 16 — The Manifest Contract</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-CI-check"><span class="nav-number">5.1.</span> <span class="nav-text">The CI check</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Frontmatter-authoritative"><span class="nav-number">5.2.</span> <span class="nav-text">Frontmatter-authoritative</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/skill-engineering/3-governance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Skill Engineering, Part 3: Governance | Pylon PENG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Skill Engineering, Part 3: Governance
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-10 10:03:00" itemprop="dateCreated datePublished" datetime="2026-07-10T10:03:00+08:00">2026-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 14:58:00" itemprop="dateModified" datetime="2026-07-13T14:58:00+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill-engineering/" itemprop="url" rel="index"><span itemprop="name">Skill Engineering</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><em>This is Part 3 of a six-part series on Skill Engineering. <a href="../1-foundations/">Part 1 — Foundations</a> covers what skills are. <a href="../2-creation/">Part 2 — Creation</a> covers how to forge them.</em></p>
+<span id="more"></span>
+
+<hr>
+<h2 id="Chapter-12-—-Versioning"><a href="#Chapter-12-—-Versioning" class="headerlink" title="Chapter 12 — Versioning"></a>Chapter 12 — Versioning</h2><p>Skills change. The environments they describe change. The team’s understanding of the right procedure changes. Versioning is how the team tracks those changes, communicates their significance, and reasons about which version of a skill is installed where.</p>
+<p>The reference library uses semantic versioning: <code>MAJOR.MINOR.PATCH</code>.</p>
+<h3 id="The-bump-rules"><a href="#The-bump-rules" class="headerlink" title="The bump rules"></a>The bump rules</h3><p><strong>PATCH</strong> — a refinement that does not change the skill’s external behaviour. A clarification in the prose, a new troubleshooting entry for a known failure, a tighter assertion in the eval file. Users of the skill at version <code>2.3.0</code> can safely use <code>2.3.1</code> without adjusting anything.</p>
+<p><strong>MINOR</strong> — a new capability that is backwards-compatible. A new failure mode handled in the Instructions section, a new pitfall recorded and its <code>absent_regex</code> added, a new optional step. Users at <code>2.3.0</code> get improved behaviour from <code>2.4.0</code> without any breaking change.</p>
+<p><strong>MAJOR</strong> — a breaking change. A change to the routing signal (the description changes and the skill may now be invoked for different requests), a change to the required providers (a new <code>auth.providers</code> entry means the caller needs a new login), a fundamental change to the procedure that makes the old Instructions section wrong. A user at <code>2.x.y</code> may need to act before upgrading to <code>3.0.0</code>.</p>
+<h3 id="What-“breaking”-means-for-a-skill"><a href="#What-“breaking”-means-for-a-skill" class="headerlink" title="What “breaking” means for a skill"></a>What “breaking” means for a skill</h3><p>Breaking changes are different for skills than for APIs. An API breaks when callers can no longer send their existing requests and receive sensible responses. A skill breaks in several different senses:</p>
+<p><strong>Routing breaks</strong> if the description changes in a way that the harness no longer routes the same user requests to the skill. A user who relied on “the agent runs <code>diagnose-product-status</code> when I say the product is stuck” may find that a description change routes the same prompt to a different skill, or to no skill.</p>
+<p><strong>Environment breaks</strong> if a new required provider or CLI tool is added. The skill at the new version will fail for any caller who has not added the new provider or installed the new tool.</p>
+<p><strong>Behaviour breaks</strong> if the procedure changes in a way that callers have built expectations around. A workflow that other workflows depend on and that previously returned a specific output shape: if that shape changes, the dependent workflows may fail.</p>
+<p>All three are MAJOR bumps. The team should not use MINOR for changes that are “only a little breaking.” If there is any break, it is MAJOR.</p>
+<h3 id="A-worked-version-history"><a href="#A-worked-version-history" class="headerlink" title="A worked version history"></a>A worked version history</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">v0.1.0 — experimental; basic procedure, three evals</span><br><span class="line">v0.2.0 — added timing constraint (not breaking, additive)</span><br><span class="line">v1.0.0 — promoted to stable after two weeks of use</span><br><span class="line">v1.1.0 — new failure mode handled (additive)</span><br><span class="line">v1.2.0 — two new absent_regex assertions (additive)</span><br><span class="line">v2.0.0 — routing change: description now includes &quot;activating or deploying&quot;</span><br><span class="line">           (MAJOR: may now be invoked for deploying-state issues it did not</span><br><span class="line">           previously handle)</span><br><span class="line">v2.1.0 — new troubleshooting entry for landscape-specific timing</span><br><span class="line">v2.3.1 — clarification of constraint wording (PATCH)</span><br></pre></td></tr></table></figure>
+
+<p>The version history, read forward, is a condensed version of the history ledger. Each bump corresponds to a history entry; the bump size communicates the change’s significance without requiring the reader to read the full entry.</p>
+<h3 id="Pre-release-suffixes"><a href="#Pre-release-suffixes" class="headerlink" title="Pre-release suffixes"></a>Pre-release suffixes</h3><p>Skills in active development but not yet stable use pre-release suffixes: <code>1.0.0-alpha</code>, <code>1.0.0-rc.1</code>. The suffix signals “do not depend on this in production.” The resolver treats pre-release versions as satisfying only explicit pre-release constraints; a <code>depends_on: &quot;&gt;=1.0.0&quot;</code> will not resolve to <code>1.0.0-alpha</code>.</p>
+<hr>
+<h2 id="Chapter-13-—-The-Dependency-Graph"><a href="#Chapter-13-—-The-Dependency-Graph" class="headerlink" title="Chapter 13 — The Dependency Graph"></a>Chapter 13 — The Dependency Graph</h2><p>Twenty skills that depend on each other in undocumented ways are twenty skills that break in surprising ways. The dependency graph is the mechanism by which “what depends on what” becomes explicit, machine-readable, and enforceable.</p>
+<h3 id="Declaration"><a href="#Declaration" class="headerlink" title="Declaration"></a>Declaration</h3><p>Each skill declares its dependencies in the <code>depends_on</code> block of its frontmatter and manifest:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">depends_on:</span></span><br><span class="line">  <span class="attr">sap-loki:</span> <span class="string">&quot;&gt;=2.0&quot;</span></span><br><span class="line">  <span class="attr">sap-jira:</span> <span class="string">&quot;&gt;=1.4&quot;</span></span><br><span class="line">  <span class="attr">catalog-support-route:</span> <span class="string">&quot;&gt;=1.2&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>The key is the skill name (must match the directory name). The value is a semver range. The resolver reads this declaration and enforces it.</p>
+<h3 id="The-resolver’s-four-checks"><a href="#The-resolver’s-four-checks" class="headerlink" title="The resolver’s four checks"></a>The resolver’s four checks</h3><p>When a skill is installed or when the library is validated, the resolver runs four checks against every skill’s dependencies.</p>
+<p><strong>Existence check.</strong> Does the declared dependency exist in the library? A reference to <code>sap-loki</code> fails if there is no installed skill with that name. This catches typos and references to skills that have been renamed or removed.</p>
+<p><strong>Version check.</strong> Does the installed version satisfy the declared range? If <code>sap-loki</code> is at version <code>1.9.0</code> and the skill declares <code>sap-loki: &quot;&gt;=2.0&quot;</code>, the check fails. This catches cases where a skill was forged against a newer version of a dependency that the current environment has not yet installed.</p>
+<p><strong>Cycle check.</strong> Are there any circular dependencies? Skill A depends on skill B, skill B depends on skill A — this is a cycle and the resolver refuses to proceed. Cycles are architectural errors; they indicate that the skills in the cycle should be reorganised (usually by extracting the shared logic into a new primitive that neither depends on the other).</p>
+<p><strong>Composition check.</strong> Does the dependency violate the layer rules? A connector may not depend on a primitive. A primitive may not depend on a workflow. A workflow may depend on any lower layer. This is the machine-enforced version of the four-role hierarchy from Chapter 4.</p>
+<p><img src="/images/2026-07/skill-engineering/09-foundation-layer.png" alt="The foundation of the stack: L0 infrastructure (sig, gh, git, node, python3, curl) supporting L1 platform connectors (Jira, Wiki, Slack, Teams, Outlook, GitHub, Grafana)"></p>
+<h3 id="Topological-sort"><a href="#Topological-sort" class="headerlink" title="Topological sort"></a>Topological sort</h3><p>After the four checks pass, the resolver computes a topological sort of the dependency graph: an ordering in which each skill appears after all its dependencies. This ordering is used for installation (install dependencies before dependents) and for validation (validate dependencies before dependents).</p>
+<p>A topological sort is only possible if the graph is acyclic — which is why the cycle check runs first.</p>
+<p><img src="/images/2026-07/skill-engineering/13-l2-calls-l15.png" alt="A full dependency call chain: the diagnose-product-status L2 workflow calls L1.5 primitives (check-sync-layer, query-database, inspect-api-resource), which call L1 connectors (grafana, database, service connectors), which call L0 infrastructure (sig, curl)"></p>
+<h3 id="Version-conflicts"><a href="#Version-conflicts" class="headerlink" title="Version conflicts"></a>Version conflicts</h3><p>A conflict occurs when two skills in the graph declare incompatible version requirements for the same dependency. Skill A requires <code>sap-loki: &quot;&gt;=2.0 &lt;3.0&quot;</code> and skill B requires <code>sap-loki: &quot;&gt;=3.0&quot;</code>. There is no version of <code>sap-loki</code> that satisfies both.</p>
+<p>The resolver reports the conflict with the skills and ranges involved. The resolution is usually one of:</p>
+<ul>
+<li>Upgrade <code>sap-loki</code> to a version that satisfies both ranges, then update Skill A’s declared range.</li>
+<li>Relax Skill A’s upper bound (from <code>&lt;3.0</code> to <code>&lt;4.0</code>) if the change in <code>sap-loki 3.0</code> does not actually break Skill A.</li>
+<li>Accept that the two skills cannot be co-installed in the current library state and address the root cause (a breaking change in <code>sap-loki</code> that Skill A has not been updated to accommodate).</li>
+</ul>
+<p>Version conflicts are the dependency graph surfacing a problem that the team would otherwise discover at runtime. Surfacing it at install time is the correct behaviour.</p>
+<hr>
+<h2 id="Chapter-14-—-Lifecycle"><a href="#Chapter-14-—-Lifecycle" class="headerlink" title="Chapter 14 — Lifecycle"></a>Chapter 14 — Lifecycle</h2><p>A skill’s lifecycle is its trajectory from creation to retirement. Five states, with defined transitions.</p>
+<h3 id="The-five-states"><a href="#The-five-states" class="headerlink" title="The five states"></a>The five states</h3><p><strong><code>experimental</code></strong> — the default for new skills. The skill is in use but not guaranteed to be stable. APIs may change; the procedure may be revised; users who depend on it should expect breaking changes. Corresponds to pre-1.0.0 in semver terms.</p>
+<p><strong><code>stable</code></strong> — the skill is well-understood, its procedure has been validated through use, and the team has committed to maintaining it with the full versioning discipline. Breaking changes increment MAJOR; non-breaking additions increment MINOR; refinements increment PATCH.</p>
+<p><strong><code>deprecated</code></strong> — the skill still works but is no longer the recommended approach. Users should not build new dependencies on it. A deprecation notice in the frontmatter describes what to use instead (or explains why the task it served is no longer performed).</p>
+<p><strong><code>replaced</code></strong> — a specific successor skill has been identified. The <code>deprecated_by</code> field names the replacement. The harness can route calls that would have gone to the replaced skill to its replacement, provided the replacement’s routing signal is compatible.</p>
+<p><strong><code>archived</code></strong> — the skill is no longer maintained, installed, or invocable. The directory remains in the repository as a record; the skill is removed from the installation.</p>
+<h3 id="Transitions"><a href="#Transitions" class="headerlink" title="Transitions"></a>Transitions</h3><p>The forward path: <code>experimental → stable → (deprecated or replaced) → archived</code>.</p>
+<p>Reverse transitions (stable back to experimental, deprecated back to stable) require an evidence file explaining the reversal. They happen: a skill promoted too early, a deprecation that was reversed when the successor proved inadequate. They are not failures; they are decisions, and they deserve documentation.</p>
+<h3 id="make-doctor"><a href="#make-doctor" class="headerlink" title="make doctor"></a><code>make doctor</code></h3><p>The <code>make doctor</code> target scans the installed library and reports:</p>
+<ul>
+<li>Skills with no harness invocations in the past ninety days (candidates for deprecation or archival).</li>
+<li>Deprecated skills that still have active dependents (the dependents have not migrated to the replacement).</li>
+<li>Skills with outdated dependencies (an installed dependency is at an older version than the skill requires).</li>
+<li>Skills whose evals have not been run in the past thirty days.</li>
+</ul>
+<p><code>make doctor</code> is not an automated fix; it produces a report. The team responds to the report. A library where <code>make doctor</code> consistently produces no findings is a library that is being actively maintained.</p>
+<h3 id="Lifecycle-and-evolution"><a href="#Lifecycle-and-evolution" class="headerlink" title="Lifecycle and evolution"></a>Lifecycle and evolution</h3><p>The lifecycle and evolution loops are not independent. A skill in <code>deprecated</code> state does not enter the evolution loop; there is no point in evolving a skill that is being retired. A skill in <code>experimental</code> state is in the loop but with lighter guardrails (a single reviewer rather than two, looser auto-accept criteria) because the expectation of stability is lower.</p>
+<p>The lifecycle state is the team’s signal about how much trust to place in a skill. The evolution loop is the mechanism by which a skill earns the transition from experimental to stable, and by which it stays at stable rather than drifting into silent deprecated territory.</p>
+<hr>
+<h2 id="Chapter-15-—-Distribution"><a href="#Chapter-15-—-Distribution" class="headerlink" title="Chapter 15 — Distribution"></a>Chapter 15 — Distribution</h2><p>A skill in a git repository is not a skill in the agent’s context. Distribution is the mechanism by which the git-tracked file reaches the agent at runtime.</p>
+<h3 id="Symlinks-the-reference-approach"><a href="#Symlinks-the-reference-approach" class="headerlink" title="Symlinks: the reference approach"></a>Symlinks: the reference approach</h3><p>The reference deployment uses symlinks. The skill lives in its canonical location in the git repository (e.g. <code>~/playground/awesome-sap-skills/workflows/diagnose-product-status/</code>). A symlink in <code>~/.claude/skills/diagnose-product-status</code> points to that location.</p>
+<p>The agent, at skill-load time, reads from <code>~/.claude/skills/</code>. It reads the skill through the symlink, which transparently resolves to the git-tracked file. Changes to the skill in the repository are immediately available; there is no synchronisation step.</p>
+<p>Installation:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install SKILL=diagnose-product-status</span><br></pre></td></tr></table></figure>
+
+<p>Uninstallation:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make uninstall SKILL=diagnose-product-status</span><br></pre></td></tr></table></figure>
+
+<p>The <code>make install</code> and <code>make uninstall</code> targets read the manifest’s <code>distribution.symlink_target</code> to know where to create or remove the symlink.</p>
+<h3 id="Why-copy-is-worse"><a href="#Why-copy-is-worse" class="headerlink" title="Why copy is worse"></a>Why copy is worse</h3><p>The alternative — copying the skill file into <code>~/.claude/skills/</code> — introduces a synchronisation problem. The copy diverges from the source as the source evolves. The team member who last ran <code>make install</code> has an older version of the skill than a team member who ran it more recently. Two different team members may be using two different versions without either knowing.</p>
+<p>The only case where copy is preferable to symlink: a team member who wants to test a skill modification without committing it to the repository. Even then, the correct approach is usually to create a branch, make the change there, and symlink to the branch’s version — not to maintain a diverging copy.</p>
+<h3 id="Multi-project-installation"><a href="#Multi-project-installation" class="headerlink" title="Multi-project installation"></a>Multi-project installation</h3><p>A skill needed in multiple projects can be installed globally (symlinked into <code>~/.claude/skills/</code>, available in every project) or per-project (symlinked into <code>.claude/skills/</code> within each project, available only in that project).</p>
+<p>The manifest’s <code>distribution.scope</code> field governs the default:</p>
+<ul>
+<li><code>global</code>: the <code>make install</code> target symlinks to <code>~/.claude/skills/</code>.</li>
+<li><code>project</code>: the <code>make install</code> target requires a project path argument and symlinks to <code>.claude/skills/</code> within that project.</li>
+<li><code>private</code>: the skill is not distributed; the owner uses it locally without sharing.</li>
+</ul>
+<p>Most infrastructure and connector skills are <code>global</code> — every project benefits from them. Most workflow and primitive skills that are domain-specific are <code>project</code> — they are relevant only within the project that owns the domain.</p>
+<hr>
+<h2 id="Chapter-16-—-The-Manifest-Contract"><a href="#Chapter-16-—-The-Manifest-Contract" class="headerlink" title="Chapter 16 — The Manifest Contract"></a>Chapter 16 — The Manifest Contract</h2><p>The <code>manifest.yaml</code> file is the machine-readable contract of a skill. It has two readers.</p>
+<p><strong>The harness</strong> reads the manifest to determine which providers to authenticate before loading the skill (<code>auth.providers</code>) and which CLI tools to verify before running (<code>auth.cli</code>). A skill whose required providers are not authenticated fails with a helpful error before the agent has a chance to start an unauthenticated call.</p>
+<p><strong>Tooling</strong> reads the manifest for dependency resolution, lifecycle management, CI validation, and library visualisation (<code>make graph</code>, <code>make doctor</code>). Tooling parses the manifest rather than the SKILL.md because the manifest is pure YAML — fast to parse, easy to validate with a schema, readable without a Markdown parser.</p>
+<h3 id="The-CI-check"><a href="#The-CI-check" class="headerlink" title="The CI check"></a>The CI check</h3><p>The CI check (<code>scripts/validate-manifest.py</code>) runs on every commit that touches a skill and enforces:</p>
+<ul>
+<li><code>description</code> in the manifest matches <code>description</code> in the SKILL.md frontmatter byte-for-byte.</li>
+<li><code>version</code> in the manifest matches the version in the latest history entry.</li>
+<li><code>depends_on</code> references are resolvable and version-compatible.</li>
+<li><code>status=replaced</code> has a non-null <code>deprecated_by</code>.</li>
+<li><code>maintainer</code> is in <code>owners</code>.</li>
+<li><code>layer</code> satisfies the composition rule.</li>
+</ul>
+<p>The check fails the build if any of these conditions are violated. This makes it impossible to commit a manifest that has drifted from the skill it describes.</p>
+<h3 id="Frontmatter-authoritative"><a href="#Frontmatter-authoritative" class="headerlink" title="Frontmatter-authoritative"></a>Frontmatter-authoritative</h3><p>The frontmatter and the manifest may disagree. The rule in the reference repository: the frontmatter is the authoritative source for human authors; the manifest is generated from it. When they disagree, the CI check fails, and the author must resolve the disagreement before merging.</p>
+<p>The generation is one-directional: frontmatter → manifest. Not manifest → frontmatter. This preserves the author’s ability to edit the SKILL.md directly and have the change flow into the manifest through the CI cycle, without requiring the author to maintain both files manually.</p>
+<p>The <code>scripts/sync-manifest.py</code> script reads the frontmatter and regenerates the manifest. It is run locally before committing, or it can be run as part of a pre-commit hook.</p>
+<hr>
+<p><em>Series footer:</em></p>
+<p><strong>Part 3 of 6 — Skill Engineering</strong><br><a href="../1-foundations/">Part 1: Foundations</a> · <a href="../2-creation/">Part 2: Creation</a> · <a href="#">Part 3: Governance</a> · <a href="../4-evolution/">Part 4: Evolution</a> · <a href="../5-outlook/">Part 5: Outlook</a> · <a href="../6-appendices/">Part 6: Appendices</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/skill-engineering/" rel="tag"># skill-engineering</a>
+              <a href="/tags/ai/" rel="tag"># ai</a>
+              <a href="/tags/governance/" rel="tag"># governance</a>
+              <a href="/tags/versioning/" rel="tag"># versioning</a>
+              <a href="/tags/dependency-graph/" rel="tag"># dependency-graph</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/skill-engineering/4-evolution/" rel="prev" title="Skill Engineering, Part 4: Evolution">
+                  <i class="fa fa-angle-left"></i> Skill Engineering, Part 4: Evolution
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/skill-engineering/2-creation/" rel="next" title="Skill Engineering, Part 2: Creation">
+                  Skill Engineering, Part 2: Creation <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

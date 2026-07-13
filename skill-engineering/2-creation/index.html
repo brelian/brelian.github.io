@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="This is Part 2 of a six-part series on Skill Engineering. Part 1 — Foundations covers what skills are and how they are structured.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill Engineering, Part 2: Creation">
+<meta property="og:url" content="https://0x400.com/skill-engineering/2-creation/index.html">
+<meta property="og:site_name" content="Pylon PENG">
+<meta property="og:description" content="This is Part 2 of a six-part series on Skill Engineering. Part 1 — Foundations covers what skills are and how they are structured.">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/11a-before-manual.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/11b-after-agent.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/20b-forge-skill.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/12b-decision-tree.png">
+<meta property="article:published_time" content="2026-07-10T02:04:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T06:58:00.867Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="agents">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="evals">
+<meta property="article:tag" content="skill-engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2026-07/skill-engineering/11a-before-manual.png">
+
+
+<link rel="canonical" href="https://0x400.com/skill-engineering/2-creation/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/skill-engineering/2-creation/","path":"skill-engineering/2-creation/","title":"Skill Engineering, Part 2: Creation"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Skill Engineering, Part 2: Creation | Pylon PENG</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.3.1/pdfobject.min.js","integrity":"sha256-jI72I8ZLVflVOisZIOaLvRew3tyvzeu6aZXFm7P7dEo="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js" defer></script>
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-6-%E2%80%94-The-3x-Rule"><span class="nav-number">1.</span> <span class="nav-text">Chapter 6 — The 3x Rule</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-three"><span class="nav-number">1.1.</span> <span class="nav-text">Why three?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Estimating-cost"><span class="nav-number">1.2.</span> <span class="nav-text">Estimating cost</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-cost-of-not-writing-the-skill"><span class="nav-number">1.3.</span> <span class="nav-text">The cost of not writing the skill</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-7-%E2%80%94-Explore"><span class="nav-number">2.</span> <span class="nav-text">Chapter 7 — Explore</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#What-the-exploration-produces"><span class="nav-number">2.1.</span> <span class="nav-text">What the exploration produces</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-pitfall-ledger"><span class="nav-number">2.2.</span> <span class="nav-text">The pitfall ledger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Constraints-vs-anti-patterns"><span class="nav-number">2.3.</span> <span class="nav-text">Constraints vs. anti-patterns</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#What-to-do-with-open-questions"><span class="nav-number">2.4.</span> <span class="nav-text">What to do with open questions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-8-%E2%80%94-Crystallize"><span class="nav-number">3.</span> <span class="nav-text">Chapter 8 — Crystallize</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Write-frontmatter-first"><span class="nav-number">3.1.</span> <span class="nav-text">Write frontmatter first</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Read-sibling-skills-before-writing"><span class="nav-number">3.2.</span> <span class="nav-text">Read sibling skills before writing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Write-for-the-agent-reader"><span class="nav-number">3.3.</span> <span class="nav-text">Write for the agent reader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-scaffold-order"><span class="nav-number">3.4.</span> <span class="nav-text">The scaffold order</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Progressive-disclosure"><span class="nav-number">3.5.</span> <span class="nav-text">Progressive disclosure</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-9-%E2%80%94-Harden"><span class="nav-number">4.</span> <span class="nav-text">Chapter 9 — Harden</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-three-assertion-types"><span class="nav-number">4.1.</span> <span class="nav-text">The three assertion types</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-many-assertions"><span class="nav-number">4.2.</span> <span class="nav-text">How many assertions?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Self-Test"><span class="nav-number">4.3.</span> <span class="nav-text">The Self-Test</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-CI-gate"><span class="nav-number">4.4.</span> <span class="nav-text">The CI gate</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-10-%E2%80%94-Ship"><span class="nav-number">5.</span> <span class="nav-text">Chapter 10 — Ship</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Installation"><span class="nav-number">5.1.</span> <span class="nav-text">Installation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-first-history-entry"><span class="nav-number">5.2.</span> <span class="nav-text">The first history entry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-PR"><span class="nav-number">5.3.</span> <span class="nav-text">The PR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Announcing-the-skill"><span class="nav-number">5.4.</span> <span class="nav-text">Announcing the skill</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-11-%E2%80%94-Anti-Patterns"><span class="nav-number">6.</span> <span class="nav-text">Chapter 11 — Anti-Patterns</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/skill-engineering/2-creation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Skill Engineering, Part 2: Creation | Pylon PENG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Skill Engineering, Part 2: Creation
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-10 10:04:00" itemprop="dateCreated datePublished" datetime="2026-07-10T10:04:00+08:00">2026-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 14:58:00" itemprop="dateModified" datetime="2026-07-13T14:58:00+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill-engineering/" itemprop="url" rel="index"><span itemprop="name">Skill Engineering</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><em>This is Part 2 of a six-part series on Skill Engineering. <a href="../1-foundations/">Part 1 — Foundations</a> covers what skills are and how they are structured.</em></p>
+<span id="more"></span>
+
+<hr>
+<h2 id="Chapter-6-—-The-3x-Rule"><a href="#Chapter-6-—-The-3x-Rule" class="headerlink" title="Chapter 6 — The 3x Rule"></a>Chapter 6 — The 3x Rule</h2><p>Before writing any skill, ask whether the skill is worth writing. The answer depends on two numbers: how many times you have done the task, and how expensive each invocation is.</p>
+<p>The rule: if you have done the task at least three times, and the cumulative cost of the three invocations exceeds the cost of forging and maintaining the skill, the skill is worth writing.</p>
+<h3 id="Why-three"><a href="#Why-three" class="headerlink" title="Why three?"></a>Why three?</h3><p>One is insufficient evidence that the task is recurring. Two means you have done it twice — possibly a coincidence, possibly a recurring pattern. Three is the minimum that separates “this happened multiple times” from “this is the kind of thing that keeps happening.” Three also provides enough evidence to identify the pitfalls: by the third time, you have seen at least two different failure modes.</p>
+<p>The number is a heuristic, not a law. A task that is done twice but whose next recurrence is nearly certain (a weekly maintenance procedure, a standard diagnostic sequence) can justify a skill at two. A task that is done four times but whose next invocations are uncertain (a one-off migration that might need reversing, might not) might not.</p>
+<h3 id="Estimating-cost"><a href="#Estimating-cost" class="headerlink" title="Estimating cost"></a>Estimating cost</h3><p>The cost calculation has two sides.</p>
+<p><strong>Invocation cost.</strong> How long does one manual invocation take? Include the time to gather context, navigate to the right systems, remember the specific pitfalls, execute the procedure, and verify the result. A thirty-minute diagnostic procedure costs thirty minutes per invocation. Ten invocations cost five hours. The cost of a week’s worth of invocations is visible.</p>
+<p><strong>Skill cost.</strong> How long does it take to forge and maintain the skill? Exploration (one guided invocation, taking notes): sixty to ninety minutes. Crystallisation (writing the SKILL.md): sixty to ninety minutes. Hardening (writing the evals): thirty to sixty minutes. Shipping (registration, first history entry, PR): thirty minutes. Total: three to five hours for a typical skill.</p>
+<p>If ten invocations cost five hours and a skill costs four hours to forge, the skill pays for itself in invocation eight — the first two invocations after the forging cost is covered. Everything beyond that is pure leverage.</p>
+<h3 id="The-cost-of-not-writing-the-skill"><a href="#The-cost-of-not-writing-the-skill" class="headerlink" title="The cost of not writing the skill"></a>The cost of not writing the skill</h3><p>The calculation above counts the direct invocation cost. It does not count the indirect costs: the colleague who asks the same question and spends their own thirty minutes; the degraded result when the informal version of the procedure is applied without the pitfalls in mind; the institutional knowledge that stays in one person’s head and vanishes when that person is on leave or leaves the team.</p>
+<p>Skills are how teams make their members replaceable in the good sense: anyone on the team can run the procedure correctly, because the procedure is not in anyone’s head.</p>
+<p><img src="/images/2026-07/skill-engineering/11a-before-manual.png" alt="Before: a stressed engineer manually debugging a data product status issue across three systems"></p>
+<p><img src="/images/2026-07/skill-engineering/11b-after-agent.png" alt="After: the engineer delegates to the agent via a skill; the agent handles the diagnostic procedure end-to-end"></p>
+<hr>
+<h2 id="Chapter-7-—-Explore"><a href="#Chapter-7-—-Explore" class="headerlink" title="Chapter 7 — Explore"></a>Chapter 7 — Explore</h2><p>The Explore phase is the first of four phases in the forging pipeline. Its purpose is to produce the raw material for the skill: a documented procedure, a list of pitfalls, and a clear statement of what the skill must and must not do.</p>
+<p>The discipline: run the procedure once as an exploration. Not fast, not from memory. Run it slowly, note every decision point, document every pitfall, record every place where the first attempt was wrong and a second attempt was needed.</p>
+<p><img src="/images/2026-07/skill-engineering/20b-forge-skill.png" alt="The four-phase forging pipeline: Explore → Crystallize → Harden → Ship, with deliverables at each stage"></p>
+<h3 id="What-the-exploration-produces"><a href="#What-the-exploration-produces" class="headerlink" title="What the exploration produces"></a>What the exploration produces</h3><p>The exploration produces a <code>explore.md</code> file — not committed, not beautiful, not intended for anyone else — with:</p>
+<ul>
+<li>The procedure, as you actually ran it, step by step.</li>
+<li>Pitfalls: places where a naive agent would fail, clearly labeled.</li>
+<li>Constraints: non-negotiable rules (never do X; always verify Y before Z).</li>
+<li>Open questions: things you are not sure about that might matter.</li>
+</ul>
+<p>The pitfall ledger is the most important output. Each pitfall becomes an <code>absent_regex</code> assertion in the eval file (Chapter 9). Each one is a documented mistake that the agent must not repeat.</p>
+<h3 id="The-pitfall-ledger"><a href="#The-pitfall-ledger" class="headerlink" title="The pitfall ledger"></a>The pitfall ledger</h3><p>A pitfall is not a constraint. A constraint is a rule the skill imposes (“always wait thirty seconds after triggering a full-sync”). A pitfall is a mistake the environment traps you in if you are not careful (“the Loki query requires the internal tenant UUID, not the customer-visible tenant name — do not query with the name”).</p>
+<p>The distinction matters because the responses are different. A constraint goes in the Constraints section of the skill. A pitfall goes in the Constraints section <em>and</em> generates an <code>absent_regex</code> assertion. A pitfall without an assertion is an undocumented risk.</p>
+<h3 id="Constraints-vs-anti-patterns"><a href="#Constraints-vs-anti-patterns" class="headerlink" title="Constraints vs. anti-patterns"></a>Constraints vs. anti-patterns</h3><p>Not everything that belongs in the skill belongs in Explore. The things that belong in Explore are the things you discover empirically, by running the procedure: the edge cases, the failure modes, the environment-specific quirks.</p>
+<p>The things that do not belong in Explore are the things you know in advance: general best practices, generic error handling, agent-runtime concerns. Those go in the skill if they are relevant to this specific procedure; they do not come from the exploration.</p>
+<p>The question to ask for each item in the exploration notes: “would an agent following a generic, well-formed version of this procedure get this right?” If yes, it is a general practice and does not need special mention. If no — if the agent would fail without this specific guidance — it is a pitfall.</p>
+<h3 id="What-to-do-with-open-questions"><a href="#What-to-do-with-open-questions" class="headerlink" title="What to do with open questions"></a>What to do with open questions</h3><p>Open questions belong at the end of <code>explore.md</code> and are not resolved during the Explore phase. Some of them will be resolved during Crystallisation (when you write the skill and have to commit to a specific approach). Some will be left as notes in the Troubleshooting section. Some will become the first item in the skill’s <code>history/v0_evidence.md</code> under “open questions”.</p>
+<p>The discipline is not to delay the Explore phase by trying to resolve open questions. Run the procedure, take the notes, move forward. The open questions are feedback to the next phase, not blockers of this one.</p>
+<hr>
+<h2 id="Chapter-8-—-Crystallize"><a href="#Chapter-8-—-Crystallize" class="headerlink" title="Chapter 8 — Crystallize"></a>Chapter 8 — Crystallize</h2><p>Crystallisation is the writing phase. The exploration is done; the pitfall ledger is complete; now the skill is written. The discipline of this phase is specific: write for the agent reader, not for yourself.</p>
+<h3 id="Write-frontmatter-first"><a href="#Write-frontmatter-first" class="headerlink" title="Write frontmatter first"></a>Write frontmatter first</h3><p>Start with the frontmatter. The name, version, layer, status, owners, tags, description. Write the description last within the frontmatter, because the description is the hardest field to write well — it is the routing signal the harness uses to decide whether this skill applies to a given user request.</p>
+<p>A good description:</p>
+<ul>
+<li>Describes the task in terms the user would use (“diagnose why a data product is stuck in activating”), not in terms of the implementation (“query Loki and correlate with Grafana”).</li>
+<li>Covers the full range of triggers, not just the happy path (“including cases where the pipeline run has not started yet”).</li>
+<li>Is specific enough to distinguish this skill from related skills (“…in the <em>activating</em> state” distinguishes it from a skill about products in the <em>deploying</em> state).</li>
+</ul>
+<p>A bad description is one that either matches nothing (too specific) or matches everything (too general). The most common failure mode is the latter: descriptions that say “help with data products” will trigger the skill for any data product question, including ones the skill cannot handle.</p>
+<h3 id="Read-sibling-skills-before-writing"><a href="#Read-sibling-skills-before-writing" class="headerlink" title="Read sibling skills before writing"></a>Read sibling skills before writing</h3><p>Before writing the skill body, read two or three existing skills in the same library. Not to copy their content — to absorb their conventions. Every team’s library develops a house style: how Constraints sections are phrased, whether the Instructions section uses numbered steps or prose paragraphs, how the Self-Test is structured.</p>
+<p>A new skill that violates the house style is harder to maintain, because the team’s automated habits — the mental models for “how skills work here” — do not apply to it. Matching the style is not aesthetic conformism; it is consistency that reduces maintenance cost.</p>
+<h3 id="Write-for-the-agent-reader"><a href="#Write-for-the-agent-reader" class="headerlink" title="Write for the agent reader"></a>Write for the agent reader</h3><p>The agent reader is not a human. Several important differences:</p>
+<p><strong>The agent cannot ask questions.</strong> If the skill says “wait an appropriate amount of time,” the agent will wait for what it thinks is appropriate, which may be zero seconds or five minutes. Write “wait thirty seconds.” Be specific.</p>
+<p><strong>The agent reads everything.</strong> A human skims. The agent reads the entire skill prose before acting. This means that a skill body that buries the most important constraint at the end is a skill whose constraint will be read too late. Put constraints before instructions.</p>
+<p><strong>The agent cannot infer unstated context.</strong> A human reading “query the stage log” knows to use the tenant-specific endpoint and to filter by product ID. The agent does not know this unless you say it. Write the steps as if explaining to a competent but brand-new colleague who has never seen your system before.</p>
+<p><strong>Prose density matters.</strong> A dense, highly structured skill is harder for an agent to parse than a skill with clear section headings, numbered lists, and one idea per sentence. Write as you would write for a technical audience that is reading quickly.</p>
+<h3 id="The-scaffold-order"><a href="#The-scaffold-order" class="headerlink" title="The scaffold order"></a>The scaffold order</h3><p>For a workflow skill:</p>
+<ol>
+<li>Write the frontmatter (all fields).</li>
+<li>Write the Overview (what does this skill do, when should it be invoked, what are the primary dependencies).</li>
+<li>Write the Constraints (pitfalls from the exploration, non-negotiable rules).</li>
+<li>Write the Instructions (the procedure, numbered, one action per step).</li>
+<li>Write the Self-Test (prerequisite check + live test).</li>
+<li>Write the Troubleshooting section (known failure patterns and their responses).</li>
+</ol>
+<p>For a connector skill, the scaffold is simpler: Overview, then the API endpoints and how to call them, then the auth pattern, then common errors. The connector does not need elaborate Instructions because it does not direct the agent through a multi-step procedure; it exposes an API.</p>
+<h3 id="Progressive-disclosure"><a href="#Progressive-disclosure" class="headerlink" title="Progressive disclosure"></a>Progressive disclosure</h3><p>A skill body should be ≤ 500 lines. When detail threatens to push it past that, move the detail to <code>references/</code> files and instruct the agent to consult them when needed (“for the full list of stage-log error codes, see <code>references/stage-log-codes.md</code>“).</p>
+<p>This is progressive disclosure: the skill presents the essential flow, and the detail is available on demand. An agent that reads a 500-line skill is an agent that processes what it needs; an agent that reads a 2000-line skill is an agent that has loaded so much context that the signal is diluted by the noise.</p>
+<hr>
+<h2 id="Chapter-9-—-Harden"><a href="#Chapter-9-—-Harden" class="headerlink" title="Chapter 9 — Harden"></a>Chapter 9 — Harden</h2><p>A skill is not done when it is written. A skill is done when it is verified. Hardening is the phase that produces the verification: the eval suite, the Self-Test, the CI integration.</p>
+<h3 id="The-three-assertion-types"><a href="#The-three-assertion-types" class="headerlink" title="The three assertion types"></a>The three assertion types</h3><p>The reference eval framework supports three assertion types. Each has a distinct role.</p>
+<p><strong><code>substring</code></strong> — fires when a literal string appears in the agent’s trace. Use it to assert that the agent said or did something specific: “routing to bdc-team,” “querying stage log,” “found stale reference.”</p>
+<p><strong><code>regex</code></strong> — fires when a pattern matches the trace. Use it for assertions about shape rather than exact content: the agent produced a Jira key of the form <code>DC00-\d+</code>; the agent waited some positive number of seconds; the agent referenced an ISO-8601 date.</p>
+<p><strong><code>absent_regex</code></strong> — fires when a pattern does <em>not</em> appear in the trace. This is the highest-leverage assertion type. Use it to encode pitfalls: the agent must not query with a customer-visible tenant name; the agent must not route to the ops team for an application-layer failure; the agent must not produce a raw Bearer token in its output.</p>
+<p>The <code>absent_regex</code> is a scar: every entry corresponds to a mistake that was made once and must not be made again. A mature skill’s eval file reads like a history lesson.</p>
+<h3 id="How-many-assertions"><a href="#How-many-assertions" class="headerlink" title="How many assertions?"></a>How many assertions?</h3><p>The minimum gate for a Harden-ready skill: at least three cases, at least one <code>absent_regex</code> per case, evals passing on the current agent, CI configured to run them.</p>
+<p>Three cases is not many. The cases should cover:</p>
+<ol>
+<li>The happy path (the common successful invocation).</li>
+<li>A known failure mode (a case where the naive version would fail; the skill should succeed).</li>
+<li>A constraint case (a case that tests a specific constraint from the Constraints section).</li>
+</ol>
+<p>More cases are better, especially for skills that are invoked often or whose failures have downstream consequences. But three is the minimum that demonstrates that the skill has been tested beyond “I ran it once and it worked.”</p>
+<h3 id="The-Self-Test"><a href="#The-Self-Test" class="headerlink" title="The Self-Test"></a>The Self-Test</h3><p>The Self-Test is not an eval. It is a runnable check written in the skill’s prose body, intended to be run by the user or the agent when something feels wrong.</p>
+<p>It has two tiers. The first is a prerequisite check: does <code>sig login</code> succeed? is the required CLI tool installed? are the environment variables set? These checks run in under a second and fail fast if the environment is not ready.</p>
+<p>The second is a live test: given a known-good input (a specific tenant, a specific resource that is known to exist), does the skill return a sensible result? This check actually invokes the procedure against the live system; it takes longer but catches a different class of failure (the environment exists but the procedure is wrong).</p>
+<p>The Self-Test is the skill’s equivalent of a smoke test. It is not a substitute for the eval suite; it is a complement — the thing you run interactively when you need to confirm the skill is working <em>right now</em>, not in the CI environment an hour ago.</p>
+<h3 id="The-CI-gate"><a href="#The-CI-gate" class="headerlink" title="The CI gate"></a>The CI gate</h3><p>The eval suite is not useful if it is not run. Wire it into CI: on every commit that touches the skill’s directory, the CI system runs <code>scripts/run-evals.py</code> and reports the result. A skill that breaks its own evals cannot merge.</p>
+<p>This is the discipline made enforceable. Without the CI gate, the eval suite is documentation. With it, the eval suite is a contract.</p>
+<hr>
+<h2 id="Chapter-10-—-Ship"><a href="#Chapter-10-—-Ship" class="headerlink" title="Chapter 10 — Ship"></a>Chapter 10 — Ship</h2><p>The Harden phase is complete: the skill is written, the evals pass, the CI is wired. Ship is the phase that moves the skill from “a file I have on my machine” to “a skill the team uses.”</p>
+<h3 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h3><p>Install the skill by symlinking the source directory into <code>~/.claude/skills/</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install SKILL=diagnose-product-status</span><br></pre></td></tr></table></figure>
+
+<p>The <code>make install</code> target reads <code>manifest.yaml</code>‘s <code>distribution.symlink_target</code> field and creates the symlink. The source of truth stays in the git-tracked directory; the symlink points to it. Changes to the skill in git are immediately reflected in the installed version.</p>
+<p>If the skill is a <code>project</code>-scoped skill (Chapter 15), the symlink goes into <code>.claude/skills/</code> in the project directory rather than <code>~/.claude/skills/</code>.</p>
+<h3 id="The-first-history-entry"><a href="#The-first-history-entry" class="headerlink" title="The first history entry"></a>The first history entry</h3><p>Write <code>history/v0_evidence.md</code>. This is the skill’s creation rationale — a brief prose note explaining why the skill was created, what decisions were made during forging, and what open questions remain.</p>
+<p>The v0 evidence file is not elaborate. A few sentences on motivation (the 3x rule was satisfied), the significant design decisions (why this layer? why these dependencies?), and the open questions that will be revisited after the skill has been used. The discipline of Chapter 22 applies here: write it as a message to your future self, who will be reading this six months from now and wants to understand why the skill looks the way it does.</p>
+<h3 id="The-PR"><a href="#The-PR" class="headerlink" title="The PR"></a>The PR</h3><p>The PR for a new skill contains:</p>
+<ul>
+<li>The skill directory, complete with <code>SKILL.md</code>, <code>manifest.yaml</code>, <code>evals/</code>, and <code>history/v0_evidence.md</code>.</li>
+<li>The exploration file (<code>explore.md</code>), as a reference. It does not need to be a polished document; it is the record of the exploration work.</li>
+<li>A screenshot of the eval runner’s output (all cases passing).</li>
+<li>A note in the PR description about the 3x calculation: what task, how many times, what the cost estimate was.</li>
+</ul>
+<p>Two reviewers. The review is not a rubber stamp: the reviewers confirm that the skill’s description is correct (does it match or overlap existing skills?), that the layer assignment is right, that the dependencies are declared, and that the evals test the right things.</p>
+<h3 id="Announcing-the-skill"><a href="#Announcing-the-skill" class="headerlink" title="Announcing the skill"></a>Announcing the skill</h3><p>A short message to the team’s channel: “new skill: <code>diagnose-product-status</code>. Use it when a customer’s data product is stuck in activating. It handles the three most common failure modes automatically.” Include the skill’s name (the harness will route to it on that name), a one-sentence description of when to use it, and the most important thing it handles that users would otherwise do manually.</p>
+<p>The announcement is not optional. A skill that is installed but not known does not get used. The team’s awareness of what is in the library is the mechanism by which the library’s leverage is realised.</p>
+<hr>
+<h2 id="Chapter-11-—-Anti-Patterns"><a href="#Chapter-11-—-Anti-Patterns" class="headerlink" title="Chapter 11 — Anti-Patterns"></a>Chapter 11 — Anti-Patterns</h2><p>Eight patterns, observed in practice, that produce libraries that look active but accumulate debt.</p>
+<p><img src="/images/2026-07/skill-engineering/12b-decision-tree.png" alt="A domain-knowledge decision tree for data product diagnostics: the diamonds require expert judgment at each step"></p>
+<p><strong>Mixed-role skills.</strong> A skill that is part connector (exposes a system) and part workflow (makes business decisions) is two skills that have not been separated. The connector becomes hard to reuse because it carries workflow logic. The workflow becomes hard to test in isolation because it contains API-specific code. Separate them.</p>
+<p><strong>Credential-bearing skills.</strong> A skill that contains a credential — even a “test” credential, even a “low-privilege” credential — is a skill that will eventually leak the credential. The zero-trust proxy exists for this reason. If a skill cannot be written without an embedded credential, the fix is to add a sigcli provider for the system, not to embed the credential.</p>
+<p><strong>Prose-stuffed skills.</strong> A skill whose Instructions section contains 800 words of dense prose, no numbered steps, and no clear structure. The agent can read it; the agent cannot navigate it. Skills are navigational documents as much as they are informational ones. Structure helps the agent as much as content does.</p>
+<p><strong>The corrupting edit.</strong> A skill that already contains correct environment information (API endpoints, payload formats, required fields) is edited to remove that information because a session failed. The failure was an agent problem (the agent did not use the information), not a skill problem (the information was wrong). The edit removes the institutional memory and replaces it with nothing. The next agent will fail for the same reason.</p>
+<p><strong>The disappearing API.</strong> A skill that says “consult the API documentation for the current endpoint structure.” The documentation link is broken six months later. The skill is useless without the link. The correct move is to include the relevant API shape in the skill itself (or in <code>references/</code>) and to update it when the API changes. The skill is the documentation.</p>
+<p><strong>The eternal experimental.</strong> A skill that has been in <code>status: experimental</code> for eight months and has been used by the team for six of them. Experimental status is meant to signal “do not depend on this; it may change.” A skill that is depended on but still marked experimental is sending a false signal. Promote it.</p>
+<p><strong>Trigger-phrase scarcity.</strong> A skill whose description is so narrow that the harness routes to it only when the user uses an exact phrase. The user asks “why is the data product not activating?” and the skill is not invoked because the description says “diagnose <em>stuck-in-activating</em> data products.” Write the description to cover the range of ways a user might phrase the request.</p>
+<p><strong>The over-engineered first version.</strong> A skill written to handle every possible variant, edge case, and future requirement — on the first version, before any invocations have revealed which variants actually occur. The skill is long, the evals test hypothetical cases, and the maintenance cost is immediately high. Write the minimal correct version. Let evolution (Part IV) add what usage reveals is needed.</p>
+<hr>
+<p><em>Series footer:</em></p>
+<p><strong>Part 2 of 6 — Skill Engineering</strong><br><a href="../1-foundations/">Part 1: Foundations</a> · <a href="#">Part 2: Creation</a> · <a href="../3-governance/">Part 3: Governance</a> · <a href="../4-evolution/">Part 4: Evolution</a> · <a href="../5-outlook/">Part 5: Outlook</a> · <a href="../6-appendices/">Part 6: Appendices</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/skill-engineering/" rel="tag"># skill-engineering</a>
+              <a href="/tags/agents/" rel="tag"># agents</a>
+              <a href="/tags/ai/" rel="tag"># ai</a>
+              <a href="/tags/evals/" rel="tag"># evals</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/skill-engineering/3-governance/" rel="prev" title="Skill Engineering, Part 3: Governance">
+                  <i class="fa fa-angle-left"></i> Skill Engineering, Part 3: Governance
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/skill-engineering/1-foundations/" rel="next" title="Skill Engineering, Part 1: Foundations">
+                  Skill Engineering, Part 1: Foundations <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

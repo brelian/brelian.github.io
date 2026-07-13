@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="This is Part 6 of a six-part series on Skill Engineering. This final part contains the reference material: the manifest schema, eval assertion semantics, a worked end-to-end example, the migration pla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill Engineering, Part 6: Appendices">
+<meta property="og:url" content="https://0x400.com/skill-engineering/6-appendices/index.html">
+<meta property="og:site_name" content="Pylon PENG">
+<meta property="og:description" content="This is Part 6 of a six-part series on Skill Engineering. This final part contains the reference material: the manifest schema, eval assertion semantics, a worked end-to-end example, the migration pla">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/21d-evals-example.png">
+<meta property="article:published_time" content="2026-07-10T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T06:58:00.982Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="evals">
+<meta property="article:tag" content="manifest">
+<meta property="article:tag" content="migration">
+<meta property="article:tag" content="reference">
+<meta property="article:tag" content="skill-engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2026-07/skill-engineering/21d-evals-example.png">
+
+
+<link rel="canonical" href="https://0x400.com/skill-engineering/6-appendices/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/skill-engineering/6-appendices/","path":"skill-engineering/6-appendices/","title":"Skill Engineering, Part 6: Appendices"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Skill Engineering, Part 6: Appendices | Pylon PENG</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.3.1/pdfobject.min.js","integrity":"sha256-jI72I8ZLVflVOisZIOaLvRew3tyvzeu6aZXFm7P7dEo="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js" defer></script>
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Appendix-A-%E2%80%94-Manifest-Schema-Reference"><span class="nav-number">1.</span> <span class="nav-text">Appendix A — Manifest Schema Reference</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Full-schema-YAML-abbreviated"><span class="nav-number">1.1.</span> <span class="nav-text">Full schema (YAML, abbreviated)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-field-notes"><span class="nav-number">1.2.</span> <span class="nav-text">Key field notes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Worked-example-%E2%80%94-a-workflow-skill"><span class="nav-number">1.3.</span> <span class="nav-text">Worked example — a workflow skill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consistency-check"><span class="nav-number">1.4.</span> <span class="nav-text">Consistency check</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Appendix-B-%E2%80%94-Eval-Assertion-Reference"><span class="nav-number">2.</span> <span class="nav-text">Appendix B — Eval Assertion Reference</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-eval-file-format"><span class="nav-number">2.1.</span> <span class="nav-text">The eval file format</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#substring"><span class="nav-number">2.2.</span> <span class="nav-text">substring</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#regex"><span class="nav-number">2.3.</span> <span class="nav-text">regex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#absent-regex"><span class="nav-number">2.4.</span> <span class="nav-text">absent_regex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-gate"><span class="nav-number">2.5.</span> <span class="nav-text">The gate</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Appendix-C-%E2%80%94-Worked-Example-diagnose-product-status"><span class="nav-number">3.</span> <span class="nav-text">Appendix C — Worked Example: diagnose-product-status</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-precipitating-incident"><span class="nav-number">3.1.</span> <span class="nav-text">The precipitating incident</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-1-%E2%80%94-Explore"><span class="nav-number">3.2.</span> <span class="nav-text">Phase 1 — Explore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-2-%E2%80%94-Crystallize"><span class="nav-number">3.3.</span> <span class="nav-text">Phase 2 — Crystallize</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-3-%E2%80%94-Harden"><span class="nav-number">3.4.</span> <span class="nav-text">Phase 3 — Harden</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase-4-%E2%80%94-Ship"><span class="nav-number">3.5.</span> <span class="nav-text">Phase 4 — Ship</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#First-evolution-round"><span class="nav-number">3.6.</span> <span class="nav-text">First evolution round</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Appendix-D-%E2%80%94-Migration-Playbook"><span class="nav-number">4.</span> <span class="nav-text">Appendix D — Migration Playbook</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-1-%E2%80%94-Inventory-day-1"><span class="nav-number">4.1.</span> <span class="nav-text">Step 1 — Inventory (day 1)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-2-%E2%80%94-Adopt-the-frontmatter-schema-week-1"><span class="nav-number">4.2.</span> <span class="nav-text">Step 2 — Adopt the frontmatter schema (week 1)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-3-%E2%80%94-Adopt-the-manifest-week-2"><span class="nav-number">4.3.</span> <span class="nav-text">Step 3 — Adopt the manifest (week 2)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-4-%E2%80%94-Declare-dependencies-weeks-3-4"><span class="nav-number">4.4.</span> <span class="nav-text">Step 4 — Declare dependencies (weeks 3-4)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-5-%E2%80%94-Write-evals-for-the-top-quartile-skills-weeks-5-8"><span class="nav-number">4.5.</span> <span class="nav-text">Step 5 — Write evals for the top-quartile skills (weeks 5-8)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-6-%E2%80%94-Establish-the-history-ledger-week-9"><span class="nav-number">4.6.</span> <span class="nav-text">Step 6 — Establish the history ledger (week 9)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-7-%E2%80%94-Run-the-evolution-loop-for-one-skill-weeks-10-12"><span class="nav-number">4.7.</span> <span class="nav-text">Step 7 — Run the evolution loop for one skill (weeks 10-12)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step-8-%E2%80%94-Widen-the-loop-month-4-onwards"><span class="nav-number">4.8.</span> <span class="nav-text">Step 8 — Widen the loop (month 4 onwards)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Anti-patterns-to-avoid-during-migration"><span class="nav-number">4.9.</span> <span class="nav-text">Anti-patterns to avoid during migration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Realistic-timing"><span class="nav-number">4.10.</span> <span class="nav-text">Realistic timing</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Glossary-Selected-Terms"><span class="nav-number">5.</span> <span class="nav-text">Glossary (Selected Terms)</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/skill-engineering/6-appendices/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Skill Engineering, Part 6: Appendices | Pylon PENG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Skill Engineering, Part 6: Appendices
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-10 10:00:00" itemprop="dateCreated datePublished" datetime="2026-07-10T10:00:00+08:00">2026-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 14:58:00" itemprop="dateModified" datetime="2026-07-13T14:58:00+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill-engineering/" itemprop="url" rel="index"><span itemprop="name">Skill Engineering</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><em>This is Part 6 of a six-part series on Skill Engineering. This final part contains the reference material: the manifest schema, eval assertion semantics, a worked end-to-end example, the migration playbook, and the glossary.</em></p>
+<span id="more"></span>
+
+<hr>
+<h2 id="Appendix-A-—-Manifest-Schema-Reference"><a href="#Appendix-A-—-Manifest-Schema-Reference" class="headerlink" title="Appendix A — Manifest Schema Reference"></a>Appendix A — Manifest Schema Reference</h2><p>Chapter 16 introduced <code>manifest.yaml</code> as the machine-readable mirror of a skill’s frontmatter. This appendix documents the schema in full.</p>
+<h3 id="Full-schema-YAML-abbreviated"><a href="#Full-schema-YAML-abbreviated" class="headerlink" title="Full schema (YAML, abbreviated)"></a>Full schema (YAML, abbreviated)</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">$schema:</span> <span class="string">&quot;https://awesome-sap-skills.dev/schemas/manifest.v1.json&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">name:</span> <span class="string">string</span>                    <span class="comment"># kebab-case, must match directory name</span></span><br><span class="line"><span class="attr">version:</span> <span class="string">string</span>                 <span class="comment"># semver, e.g. &quot;2.3.0&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">layer:</span> <span class="string">enum</span>                     <span class="comment"># infrastructure | connector | primitive | workflow</span></span><br><span class="line"><span class="attr">status:</span> <span class="string">enum</span>                    <span class="comment"># experimental | stable | deprecated | replaced | archived</span></span><br><span class="line"><span class="attr">tags:</span> [<span class="string">string</span>]</span><br><span class="line"></span><br><span class="line"><span class="attr">owners:</span> [<span class="string">string</span>]</span><br><span class="line"><span class="attr">maintainer:</span> <span class="string">string</span></span><br><span class="line"></span><br><span class="line"><span class="attr">auth:</span></span><br><span class="line">  <span class="attr">providers:</span> [<span class="string">string</span>]           <span class="comment"># sigcli provider names required</span></span><br><span class="line">  <span class="attr">cli:</span> [<span class="string">string</span>]                 <span class="comment"># external CLI binaries required</span></span><br><span class="line">  <span class="attr">env:</span> [<span class="string">string</span>]                 <span class="comment"># environment variables required</span></span><br><span class="line"></span><br><span class="line"><span class="attr">depends_on:</span></span><br><span class="line">  <span class="string">&lt;skill-name&gt;:</span> <span class="string">&lt;semver-range&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">deprecated_by:</span> <span class="string">string</span> <span class="string">|</span> <span class="literal">null</span></span><br><span class="line"><span class="attr">deprecated_reason:</span> <span class="string">string</span> <span class="string">|</span> <span class="literal">null</span></span><br><span class="line"></span><br><span class="line"><span class="attr">distribution:</span></span><br><span class="line">  <span class="attr">scope:</span> <span class="string">enum</span>                   <span class="comment"># global | project | private</span></span><br><span class="line">  <span class="attr">symlink_target:</span> <span class="string">string</span></span><br><span class="line"></span><br><span class="line"><span class="attr">description:</span> <span class="string">string</span>             <span class="comment"># matches frontmatter; ≤ 500 words</span></span><br><span class="line"></span><br><span class="line"><span class="attr">created_at:</span> <span class="string">string</span>              <span class="comment"># ISO 8601</span></span><br><span class="line"><span class="attr">last_evolved_at:</span> <span class="string">string</span>         <span class="comment"># ISO 8601</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Key-field-notes"><a href="#Key-field-notes" class="headerlink" title="Key field notes"></a>Key field notes</h3><p><strong><code>name</code></strong> — kebab-case, ASCII lowercase letters, digits, hyphens only, ≤ 40 characters, must equal the containing directory name. Rename requires a migration playbook (Appendix D) — never rename in place.</p>
+<p><strong><code>version</code></strong> — semver 2.0.0 (<code>MAJOR.MINOR.PATCH</code>); pre-release suffixes allowed (<code>-alpha</code>, <code>-rc.1</code>); <code>+</code> build metadata not used. Bump rules covered in Chapter 12.</p>
+<p><strong><code>layer</code></strong> — enforced by the resolver’s composition check: a skill of layer <code>L</code> may only depend on skills of the same or lower layer.</p>
+<p><strong><code>status</code></strong> — state transitions: <code>experimental → stable → (deprecated or replaced) → archived</code>. Reverse transitions require an evidence file.</p>
+<p><strong><code>auth.providers</code></strong> — each entry is a sigcli provider name. The resolver runs a pre-flight auth check before invoking the skill; a skill missing a required provider fails fast with a helpful error.</p>
+<p><strong><code>depends_on</code></strong> — keys must resolve to installed skills; values are semver ranges (<code>&gt;=1.4</code>, <code>^2.0</code>, <code>&gt;=1.4 &lt;3.0</code>).</p>
+<p><strong><code>deprecated_by</code></strong> — set only when <code>status=replaced</code>; must resolve to an installed skill; may not be self.</p>
+<p><strong><code>description</code></strong> — must match the SKILL.md frontmatter <code>description</code> byte-for-byte. The CI check enforces this.</p>
+<p><strong>Timestamps</strong> — managed by the forge-skill script (creation) and the record-history script (evolution). Do not hand-edit.</p>
+<h3 id="Worked-example-—-a-workflow-skill"><a href="#Worked-example-—-a-workflow-skill" class="headerlink" title="Worked example — a workflow skill"></a>Worked example — a workflow skill</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">diagnose-product-status</span></span><br><span class="line"><span class="attr">version:</span> <span class="number">2.3</span><span class="number">.1</span></span><br><span class="line"><span class="attr">layer:</span> <span class="string">workflow</span></span><br><span class="line"><span class="attr">status:</span> <span class="string">stable</span></span><br><span class="line"><span class="attr">tags:</span> [<span class="string">catalog</span>, <span class="string">bdc</span>, <span class="string">debugging</span>, <span class="string">data-products</span>]</span><br><span class="line"></span><br><span class="line"><span class="attr">owners:</span> [<span class="string">pylon-peng</span>, <span class="string">&quot;@bdc-team&quot;</span>]</span><br><span class="line"><span class="attr">maintainer:</span> <span class="string">pylon-peng</span></span><br><span class="line"></span><br><span class="line"><span class="attr">auth:</span></span><br><span class="line">  <span class="attr">providers:</span> [<span class="string">cic-stabi</span>, <span class="string">sap-jira</span>]</span><br><span class="line">  <span class="attr">cli:</span> [<span class="string">python3</span>, <span class="string">jq</span>]</span><br><span class="line">  <span class="attr">env:</span> []</span><br><span class="line"></span><br><span class="line"><span class="attr">depends_on:</span></span><br><span class="line">  <span class="attr">sap-loki:</span> <span class="string">&quot;&gt;=2.0&quot;</span></span><br><span class="line">  <span class="attr">sap-jira:</span> <span class="string">&quot;&gt;=1.4&quot;</span></span><br><span class="line">  <span class="attr">catalog-support-route:</span> <span class="string">&quot;&gt;=1.2&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">deprecated_by:</span> <span class="literal">null</span></span><br><span class="line"><span class="attr">deprecated_reason:</span> <span class="literal">null</span></span><br><span class="line"></span><br><span class="line"><span class="attr">distribution:</span></span><br><span class="line">  <span class="attr">scope:</span> <span class="string">project</span></span><br><span class="line">  <span class="attr">symlink_target:</span> <span class="string">&quot;~/.claude/skills/diagnose-product-status&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">description:</span> <span class="string">|</span></span><br><span class="line"><span class="string">  Diagnose why a data product is stuck in the activating state. Queries</span></span><br><span class="line"><span class="string">  the stage log, correlates with the pipeline run, checks known-failure</span></span><br><span class="line"><span class="string">  patterns from history, and routes to the responsible team if the</span></span><br><span class="line"><span class="string">  pattern is not covered by an existing recovery skill.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="attr">created_at:</span> <span class="string">&quot;2026-04-12T10:14:22Z&quot;</span></span><br><span class="line"><span class="attr">last_evolved_at:</span> <span class="string">&quot;2026-06-28T15:47:03Z&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Consistency-check"><a href="#Consistency-check" class="headerlink" title="Consistency check"></a>Consistency check</h3><p>The CI runs <code>scripts/validate-manifest.py</code> on every commit. Failures include: <code>description</code> mismatch, <code>version</code> behind the latest history entry, unresolvable <code>depends_on</code> references, <code>status=replaced</code> with null <code>deprecated_by</code>, <code>maintainer</code> not in <code>owners</code>, and layer composition violations.</p>
+<hr>
+<h2 id="Appendix-B-—-Eval-Assertion-Reference"><a href="#Appendix-B-—-Eval-Assertion-Reference" class="headerlink" title="Appendix B — Eval Assertion Reference"></a>Appendix B — Eval Assertion Reference</h2><p>Chapter 9 introduced the three assertion types the reference framework supports. This appendix documents the semantics of each, common patterns, and the file format the eval runner consumes.</p>
+<h3 id="The-eval-file-format"><a href="#The-eval-file-format" class="headerlink" title="The eval file format"></a>The eval file format</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">cases:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">happy-path</span></span><br><span class="line">    <span class="attr">fixture:</span> <span class="string">fixtures/happy-input.json</span></span><br><span class="line">    <span class="attr">assertions:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">substring</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">&quot;product status is activating&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">regex</span></span><br><span class="line">        <span class="attr">pattern:</span> <span class="string">&quot;waited \\d+ seconds&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">        <span class="attr">pattern:</span> <span class="string">&quot;TODO|FIXME|placeholder&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">timing-constraint</span></span><br><span class="line">    <span class="attr">fixture:</span> <span class="string">fixtures/quick-check.json</span></span><br><span class="line">    <span class="attr">assertions:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">substring</span></span><br><span class="line">        <span class="attr">value:</span> <span class="string">&quot;wait at least 10 seconds&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">        <span class="attr">pattern:</span> <span class="string">&quot;verifying.*immediately&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/2026-07/skill-engineering/21d-evals-example.png" alt="A concrete evals.json example for sap-jira: three assertion types applied to a real eval case"></p>
+<h3 id="substring"><a href="#substring" class="headerlink" title="substring"></a><code>substring</code></h3><p>Fires when the assertion’s <code>value</code> string appears literally in the trace. Case-sensitive by default; add <code>case_insensitive: true</code> to relax.</p>
+<p>Use <code>substring</code> when the correct behaviour of the skill produces a distinctive literal phrase that a wrong behaviour would not produce: a specific tool call, a specific instruction being honoured, a specific error message being surfaced.</p>
+<p>Avoid <code>substring</code> when the phrase you want to check for is common English that could appear by coincidence. Assert on the <em>distinctive</em> part, not the generic part.</p>
+<h3 id="regex"><a href="#regex" class="headerlink" title="regex"></a><code>regex</code></h3><p>Fires when the assertion’s <code>pattern</code> matches somewhere in the trace (Python’s <code>re.search</code>). Backslashes must be doubled in YAML (<code>\\d</code> for <code>\d</code>).</p>
+<p>Use <code>regex</code> when the correct behaviour produces a <em>shape</em> rather than a literal: a positive integer number of seconds, a Jira key of the form <code>DC00-\d+</code>, an ISO-8601 timestamp.</p>
+<p>Common patterns:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">regex</span></span><br><span class="line">  <span class="attr">pattern:</span> <span class="string">&quot;waited \\d+ seconds?&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">regex</span></span><br><span class="line">  <span class="attr">pattern:</span> <span class="string">&quot;\\b(DC00|DW101|DS00)-\\d+\\b&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">regex</span></span><br><span class="line">  <span class="attr">pattern:</span> <span class="string">&quot;\\d&#123;4&#125;-\\d&#123;2&#125;-\\d&#123;2&#125;T\\d&#123;2&#125;:\\d&#123;2&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Avoid <code>regex</code> when a <code>substring</code> assertion would do the job. Regexes are more expressive but harder to read.</p>
+<h3 id="absent-regex"><a href="#absent-regex" class="headerlink" title="absent_regex"></a><code>absent_regex</code></h3><p>Fires when the assertion’s <code>pattern</code> does <em>not</em> match anywhere in the trace. The assertion passes when the pattern is absent; it fails when the pattern is present.</p>
+<p>Use <code>absent_regex</code> when you want to check that the skill does <em>not</em> do something it used to do or that a naive implementation might do:</p>
+<ul>
+<li>A prior version verified immediately without waiting: <code>absent_regex: &quot;verifying.*immediately&quot;</code>.</li>
+<li>The skill should route to <code>bdc-team</code>, not <code>ops-team</code>: <code>absent_regex: &quot;routing to ops-team&quot;</code>.</li>
+<li>Credentials must never surface: <code>absent_regex: &quot;Bearer \\w+&quot;</code>.</li>
+</ul>
+<p>The <code>absent_regex</code> file in a mature skill reads like a history lesson. Each entry corresponds to a mistake that was made once and must not be made again:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">  <span class="attr">pattern:</span> <span class="string">&quot;verifying.*immediately&quot;</span>     <span class="comment"># v1.2 timing bug</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">  <span class="attr">pattern:</span> <span class="string">&quot;routing to ops-team&quot;</span>        <span class="comment"># v2.0 mis-routing bug</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">  <span class="attr">pattern:</span> <span class="string">&quot;TODO|FIXME&quot;</span>                 <span class="comment"># never let placeholders ship</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">  <span class="attr">pattern:</span> <span class="string">&quot;Bearer [A-Za-z0-9\\-_]+&quot;</span>    <span class="comment"># never surface tokens</span></span><br></pre></td></tr></table></figure>
+
+<p>Each line is a scar. The scars are the discipline made visible.</p>
+<h3 id="The-gate"><a href="#The-gate" class="headerlink" title="The gate"></a>The gate</h3><p>For a Harden-ready skill: at least three cases, at least one <code>absent_regex</code> per case, evals passing on the current agent, CI configured to run them.</p>
+<hr>
+<h2 id="Appendix-C-—-Worked-Example-diagnose-product-status"><a href="#Appendix-C-—-Worked-Example-diagnose-product-status" class="headerlink" title="Appendix C — Worked Example: diagnose-product-status"></a>Appendix C — Worked Example: <code>diagnose-product-status</code></h2><p>This appendix walks the skill that the book has used as its running example end-to-end: from the incident that motivated its creation, through the four forging phases, into its first evolution round.</p>
+<h3 id="The-precipitating-incident"><a href="#The-precipitating-incident" class="headerlink" title="The precipitating incident"></a>The precipitating incident</h3><p>A colleague pings: “customer’s data product has been stuck in activating for two hours, they’re escalating, what do you check first?” I know the general shape of the answer — the stage log, then the pipeline run, then the specific transform that is stalling — but I have not written the sequence down. I open the customer’s tenant in the DWC console, tail the Loki logs, cross-reference the pipeline run in Grafana, and forty minutes later the customer’s product is activating.</p>
+<p>An hour later, another colleague asks the same question about a different customer.</p>
+<p>The 3x rule has been satisfied. The workflow is repeatable, I have run it three times in a week, and each run is expensive enough that the cost of writing the skill is repaid in fewer than three future runs.</p>
+<h3 id="Phase-1-—-Explore"><a href="#Phase-1-—-Explore" class="headerlink" title="Phase 1 — Explore"></a>Phase 1 — Explore</h3><p>I run the procedure a fourth time, this time as a deliberate exploration. Notes in <code>explore.md</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">## Attempt 1: check the stage log first</span><br><span class="line"></span><br><span class="line">- Loki query: &#123;service=&quot;stage-manager&quot;&#125; | json |</span><br><span class="line">  tenant_id=&quot;acme-prod&quot; | product_id=&quot;pd_abc123&quot;</span><br><span class="line">- Expected: a chain of stage transitions ending in &quot;activating&quot;.</span><br><span class="line">- Actual: no results. Query returned empty.</span><br><span class="line"></span><br><span class="line">Cause: the tenant_id label is not &quot;acme-prod&quot; — it&#x27;s the internal</span><br><span class="line">UUID. The customer-visible tenant name only appears in the Jira</span><br><span class="line">ticket, not the logs.</span><br><span class="line"></span><br><span class="line">Pitfall: never assume customer-visible IDs match log labels.</span><br><span class="line">The mapping is a separate lookup.</span><br></pre></td></tr></table></figure>
+
+<p>The exploration produces six such pitfalls. Each becomes an <code>absent_regex</code> in the eval file.</p>
+<h3 id="Phase-2-—-Crystallize"><a href="#Phase-2-—-Crystallize" class="headerlink" title="Phase 2 — Crystallize"></a>Phase 2 — Crystallize</h3><p>I read three sibling skills first: <code>sap-loki</code>, <code>catalog-support-route</code>, and an existing workflow whose shape I want to match. I write the skill’s frontmatter first, then the Overview, Constraints, Instructions, Self-Test, and Troubleshooting. Two hours of focused writing. The skill is at v0.1.0, <code>experimental</code>.</p>
+<h3 id="Phase-3-—-Harden"><a href="#Phase-3-—-Harden" class="headerlink" title="Phase 3 — Harden"></a>Phase 3 — Harden</h3><p>Three eval cases derived from real incidents:</p>
+<ol>
+<li><strong><code>happy-path</code></strong>: straightforward activation failure caused by a missing source connection.</li>
+<li><strong><code>timing-constraint</code></strong>: the most recent sync was under 30 seconds ago; the agent must wait.</li>
+<li><strong><code>ambiguous-input</code></strong>: the customer name maps to two tenant UUIDs; the agent must ask the user to disambiguate.</li>
+</ol>
+<p>A representative sample from <code>happy-path</code>:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">assertions:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">substring</span></span><br><span class="line">    <span class="attr">value:</span> <span class="string">&quot;resolve customer name to tenant UUID&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">substring</span></span><br><span class="line">    <span class="attr">value:</span> <span class="string">&quot;querying stage log&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">regex</span></span><br><span class="line">    <span class="attr">pattern:</span> <span class="string">&quot;missing source connection: [a-z0-9\\-]+&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">substring</span></span><br><span class="line">    <span class="attr">value:</span> <span class="string">&quot;routing to bdc-team&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">    <span class="attr">pattern:</span> <span class="string">&quot;routing to ops-team&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">    <span class="attr">pattern:</span> <span class="string">&quot;acme-prod|customer_name&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">type:</span> <span class="string">absent_regex</span></span><br><span class="line">    <span class="attr">pattern:</span> <span class="string">&quot;TODO|FIXME|placeholder&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>I run <code>scripts/run-evals.py</code>. Two cases pass; <code>timing-constraint</code> fails. The agent is not waiting before verification. I add an explicit “wait 30 seconds after a full-sync” line to the Constraints section, re-run: all three cases pass.</p>
+<h3 id="Phase-4-—-Ship"><a href="#Phase-4-—-Ship" class="headerlink" title="Phase 4 — Ship"></a>Phase 4 — Ship</h3><p>Symlinked into <code>~/.claude/skills/</code> via <code>make install</code>. First history entry: <code>history/v0_evidence.md</code>. PR opened with exploration file, v0 evidence, and eval screenshot. Two reviewers approve; the PR merges.</p>
+<h3 id="First-evolution-round"><a href="#First-evolution-round" class="headerlink" title="First evolution round"></a>First evolution round</h3><p>Six weeks pass. Forty-seven invocations. Twelve failures. I run <code>make evolve SKILL=diagnose-product-status WINDOW=6w</code>.</p>
+<p>The pipeline produces four evidence groups:</p>
+<ol>
+<li><strong>Group A (5 sessions):</strong> routes to <code>bdc-team</code> for failures that are actually upstream <code>ops-team</code> outages (distinguishing symptom: entire pipeline stalled, not just this product).</li>
+<li><strong>Group B (3 sessions):</strong> the 30-second timing constraint is too aggressive for new-landscape tenants, where sync completes in 8-12s.</li>
+<li><strong>Group C (2 sessions):</strong> the ambiguous-tenant case is now handleable autonomously — the tenant directory API has added a <code>last_active_at</code> field.</li>
+<li><strong>Group D (2 sessions):</strong> flaky, no coherent pattern. Evolver ignores by design.</li>
+</ol>
+<p>The evolver proposes three edits, one per actionable group. The validator runs both tracks and returns <em>accept</em>. I review — five minutes, because the evidence file is clear. I merge.</p>
+<p>The history ledger records: <code>history/v1.md</code> (snapshot of the pre-edit skill), <code>history/v1_evidence.md</code> (the structured evidence file). The skill is now at v2.0.0 (MAJOR bump because Group A’s routing change is a behaviour change users can observe). Three new eval assertions added, one per proposal group.</p>
+<hr>
+<h2 id="Appendix-D-—-Migration-Playbook"><a href="#Appendix-D-—-Migration-Playbook" class="headerlink" title="Appendix D — Migration Playbook"></a>Appendix D — Migration Playbook</h2><p>A team with an existing collection of skills cannot adopt the full framework in a single afternoon. The migration is deliberate, staged, and reversible.</p>
+<p>This playbook assumes the existing library is around ten to fifty skills, in git, with per-skill directories but no manifest, no evals, no version fields, and no history ledger.</p>
+<p>The playbook is ordered by increasing invasiveness. Steps 1-3 are safe and produce immediate value; steps 4-6 change how the team works; steps 7-8 open the evolution loop and depend on trust that has to accumulate.</p>
+<h3 id="Step-1-—-Inventory-day-1"><a href="#Step-1-—-Inventory-day-1" class="headerlink" title="Step 1 — Inventory (day 1)"></a>Step 1 — Inventory (day 1)</h3><p>Before changing anything, produce a list of every skill in the library, its owner, its rough purpose in one sentence, and its state (active, deprecated-but-not-marked, abandoned). Resolve ambiguities — skills no one remembers writing, duplicate skills — before proceeding.</p>
+<p>Deliverable: <code>docs/library-inventory.md</code>, checked in.</p>
+<h3 id="Step-2-—-Adopt-the-frontmatter-schema-week-1"><a href="#Step-2-—-Adopt-the-frontmatter-schema-week-1" class="headerlink" title="Step 2 — Adopt the frontmatter schema (week 1)"></a>Step 2 — Adopt the frontmatter schema (week 1)</h3><p>For each active skill, add the extended frontmatter with: <code>name</code> (from directory name), <code>version</code> (<code>1.0.0</code> for every skill on adoption day — a convention, not a claim about maturity), <code>layer</code> (read each skill briefly; use Chapter 4’s definitions), <code>status</code> (<code>stable</code> for active, <code>deprecated</code> for abandoned), <code>owners</code> (from the inventory), <code>description</code> (reuse existing; do not rewrite yet).</p>
+<p>Skip fields that require thought: <code>depends_on</code>, <code>auth.providers</code>, <code>deprecated_by</code>. Fill them lazily.</p>
+<p>Deliverable: every active skill has frontmatter with the minimum fields.</p>
+<h3 id="Step-3-—-Adopt-the-manifest-week-2"><a href="#Step-3-—-Adopt-the-manifest-week-2" class="headerlink" title="Step 3 — Adopt the manifest (week 2)"></a>Step 3 — Adopt the manifest (week 2)</h3><p>Generate <code>manifest.yaml</code> alongside each <code>SKILL.md</code> using <code>scripts/backfill-manifests.py</code>. Enable the CI check that enforces manifest-frontmatter consistency. This is the first step that gates commits.</p>
+<p>Deliverable: every active skill has a manifest; CI enforces consistency.</p>
+<h3 id="Step-4-—-Declare-dependencies-weeks-3-4"><a href="#Step-4-—-Declare-dependencies-weeks-3-4" class="headerlink" title="Step 4 — Declare dependencies (weeks 3-4)"></a>Step 4 — Declare dependencies (weeks 3-4)</h3><p>Read every skill and populate <code>depends_on</code>. This is manual work and it is where the team’s implicit knowledge becomes explicit. The exercise surfaces surprises: skills that were thought to be independent turn out to share a connector; “connectors” that turn out to be primitives because they compose two systems.</p>
+<p>Enable the resolver’s composition check at the end of this step. From this point forward, a commit that introduces a cycle or a layer violation cannot merge.</p>
+<p>Deliverable: the dependency graph is complete and machine-checkable; <code>make graph</code> produces a Mermaid diagram.</p>
+<h3 id="Step-5-—-Write-evals-for-the-top-quartile-skills-weeks-5-8"><a href="#Step-5-—-Write-evals-for-the-top-quartile-skills-weeks-5-8" class="headerlink" title="Step 5 — Write evals for the top-quartile skills (weeks 5-8)"></a>Step 5 — Write evals for the top-quartile skills (weeks 5-8)</h3><p>Start with the skills the team invokes most often. For each, follow the Chapter 9 discipline: collect three to five historical failure cases, each becoming an <code>absent_regex</code>; write two to three positive cases with <code>substring</code> and <code>regex</code>; add a Self-Test section; wire evals into CI.</p>
+<p>Skills below the top quartile can wait. The pattern is to add evals as failures occur.</p>
+<p>Deliverable: the top quartile has eval coverage; CI runs evals on every commit.</p>
+<h3 id="Step-6-—-Establish-the-history-ledger-week-9"><a href="#Step-6-—-Establish-the-history-ledger-week-9" class="headerlink" title="Step 6 — Establish the history ledger (week 9)"></a>Step 6 — Establish the history ledger (week 9)</h3><p>Add <code>history/v0_evidence.md</code> to every active skill, retrospectively. The content is minimal — a few sentences summarising why the skill exists. Add <code>scripts/record-history.py</code> to the repository.</p>
+<p>Deliverable: every skill has a <code>history/</code> directory with at least <code>v0_evidence.md</code>.</p>
+<h3 id="Step-7-—-Run-the-evolution-loop-for-one-skill-weeks-10-12"><a href="#Step-7-—-Run-the-evolution-loop-for-one-skill-weeks-10-12" class="headerlink" title="Step 7 — Run the evolution loop for one skill (weeks 10-12)"></a>Step 7 — Run the evolution loop for one skill (weeks 10-12)</h3><p>Pick one high-value, high-activity skill. Enable trace capture. Let two weeks of usage accumulate. Run <code>make evolve SKILL=&lt;pick&gt; WINDOW=2w</code>. Review the proposal and either accept or reject. Do this for two or three iterations on the same skill.</p>
+<p>Deliverable: at least one skill has gone through the evolution loop end-to-end; the team knows the shape of the process.</p>
+<h3 id="Step-8-—-Widen-the-loop-month-4-onwards"><a href="#Step-8-—-Widen-the-loop-month-4-onwards" class="headerlink" title="Step 8 — Widen the loop (month 4 onwards)"></a>Step 8 — Widen the loop (month 4 onwards)</h3><p>Adopt evolution for more skills, one or two at a time. Move well-understood skills to auto-accept as trust accumulates. Enable fleet-wide runs (<code>make evolve-all</code>) once the team is comfortable reviewing aggregate output.</p>
+<h3 id="Anti-patterns-to-avoid-during-migration"><a href="#Anti-patterns-to-avoid-during-migration" class="headerlink" title="Anti-patterns to avoid during migration"></a>Anti-patterns to avoid during migration</h3><p><strong>Big-bang adoption.</strong> The team’s attention runs out before the discipline is internalised, and the shortcuts taken during rush-adoption become debt. Ship one step at a time.</p>
+<p><strong>Skipping the inventory.</strong> The inventory step surfaces surprises that change the plan in every migration. Do not skip.</p>
+<p><strong>Retro-writing elaborate v0 evidence files.</strong> Write them short. The effort is better spent on step-5 evals and step-7 loop runs.</p>
+<p><strong>Enforcing every check at once.</strong> The CI checks land incrementally. Enforcing everything on day 1 blocks every commit.</p>
+<p><strong>Migrating deprecated skills.</strong> Delete them, not migrate them. If they turn out to be needed, un-delete from git history.</p>
+<h3 id="Realistic-timing"><a href="#Realistic-timing" class="headerlink" title="Realistic timing"></a>Realistic timing</h3><p>For a ten-person team with fifty skills: Steps 1-3 take three to four weeks. Step 4 (dependency declaration) takes another three to four weeks — it is the hardest step because it forces classification decisions. Step 5 takes six to eight weeks. Steps 6-7 take four to five weeks combined. Step 8 is ongoing.</p>
+<p>Total: roughly four to five months from start to end-of-playbook.</p>
+<hr>
+<h2 id="Glossary-Selected-Terms"><a href="#Glossary-Selected-Terms" class="headerlink" title="Glossary (Selected Terms)"></a>Glossary (Selected Terms)</h2><p><strong>Absent regex.</strong> An eval assertion that fires when a given pattern does <em>not</em> appear in the trace. Encodes pitfalls: each entry is a mistake that was made once and must not be made again.</p>
+<p><strong>Connector.</strong> A skill whose role is to expose a single external system in a form the agent can compose. Depends on the substrate; depended on by primitives and workflows.</p>
+<p><strong>Dependency graph.</strong> The directed graph whose nodes are skills and whose edges are declared <code>depends_on</code> relationships. Enforced by the resolver.</p>
+<p><strong>Description.</strong> The routing signal the harness uses to decide which skill applies to a user’s request. A skill’s most important frontmatter field.</p>
+<p><strong>Evolver.</strong> The agent (usually another Claude Code invocation with a specialised system prompt) that reads evidence groups, proposes edits to a skill, and hands the proposals to the validator.</p>
+<p><strong>Forge, forging.</strong> The four-phase process by which a skill comes into being: Explore, Crystallize, Harden, Ship.</p>
+<p><strong>History ledger.</strong> The sequence of <code>history/vN.md</code> and <code>history/vN_evidence.md</code> files that record a skill’s evolution over time. The library’s institutional memory.</p>
+<p><strong>Invariant track.</strong> The half of dual-track validation that checks a proposed change against the skill’s existing eval suite.</p>
+<p><strong>Pitfall.</strong> A documented failure mode that a skill must avoid. Recorded during Explore, encoded as an <code>absent_regex</code> assertion in Harden.</p>
+<p><strong>Primitive.</strong> A skill whose role is to encapsulate a reusable domain operation. Composes connectors; consumed by workflows.</p>
+<p><strong>Rot.</strong> The tendency of a skill to become less correct over time as its environment changes.</p>
+<p><strong>Skill.</strong> A versioned, executable description of how an agent should accomplish a recurring task in a specific environment.</p>
+<p><strong>Substrate.</strong> A synonym for infrastructure layer, used when emphasising the “everything rests on this” property. <code>sigcli</code> is the substrate for authentication.</p>
+<p><strong>Target track.</strong> The half of dual-track validation that checks a proposed change against synthetic cases derived from the evidence that motivated the change.</p>
+<p><strong>Workflow.</strong> A skill whose role is to compose primitives to solve a specific user-facing problem. The top tier of the four-role hierarchy.</p>
+<hr>
+<p><em>Series footer:</em></p>
+<p><strong>Part 6 of 6 — Skill Engineering</strong><br><a href="../1-foundations/">Part 1: Foundations</a> · <a href="../2-creation/">Part 2: Creation</a> · <a href="../3-governance/">Part 3: Governance</a> · <a href="../4-evolution/">Part 4: Evolution</a> · <a href="../5-outlook/">Part 5: Outlook</a> · <a href="#">Part 6: Appendices</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/skill-engineering/" rel="tag"># skill-engineering</a>
+              <a href="/tags/ai/" rel="tag"># ai</a>
+              <a href="/tags/evals/" rel="tag"># evals</a>
+              <a href="/tags/reference/" rel="tag"># reference</a>
+              <a href="/tags/manifest/" rel="tag"># manifest</a>
+              <a href="/tags/migration/" rel="tag"># migration</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/experience/practice/demysifying-advanced-http/" rel="prev" title="Demystifying Advanced HTTP 1.1">
+                  <i class="fa fa-angle-left"></i> Demystifying Advanced HTTP 1.1
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/skill-engineering/5-outlook/" rel="next" title="Skill Engineering, Part 5: Outlook">
+                  Skill Engineering, Part 5: Outlook <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

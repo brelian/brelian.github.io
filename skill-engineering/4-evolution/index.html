@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="This is Part 4 of a six-part series on Skill Engineering. Part 1 — Foundations, Part 2 — Creation, Part 3 — Governance.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill Engineering, Part 4: Evolution">
+<meta property="og:url" content="https://0x400.com/skill-engineering/4-evolution/index.html">
+<meta property="og:site_name" content="Pylon PENG">
+<meta property="og:description" content="This is Part 4 of a six-part series on Skill Engineering. Part 1 — Foundations, Part 2 — Creation, Part 3 — Governance.">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/20-skill-decay.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/21c-trace-analysis.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/21-curation-loop.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/21e-evals-framework.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/21f-verification-rollout.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/22-effective-evolution.png">
+<meta property="article:published_time" content="2026-07-10T02:02:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T06:58:00.918Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="evals">
+<meta property="article:tag" content="evolution">
+<meta property="article:tag" content="skill-engineering">
+<meta property="article:tag" content="trace-analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2026-07/skill-engineering/20-skill-decay.png">
+
+
+<link rel="canonical" href="https://0x400.com/skill-engineering/4-evolution/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/skill-engineering/4-evolution/","path":"skill-engineering/4-evolution/","title":"Skill Engineering, Part 4: Evolution"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Skill Engineering, Part 4: Evolution | Pylon PENG</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.3.1/pdfobject.min.js","integrity":"sha256-jI72I8ZLVflVOisZIOaLvRew3tyvzeu6aZXFm7P7dEo="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js" defer></script>
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-17-%E2%80%94-Skill-Rot"><span class="nav-number">1.</span> <span class="nav-text">Chapter 17 — Skill Rot</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-three-causes-of-rot"><span class="nav-number">1.1.</span> <span class="nav-text">The three causes of rot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-silent-failure-mode"><span class="nav-number">1.2.</span> <span class="nav-text">The silent failure mode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-%E2%80%9Cwait-for-the-user-to-complain%E2%80%9D-anti-pattern"><span class="nav-number">1.3.</span> <span class="nav-text">The “wait for the user to complain” anti-pattern</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-18-%E2%80%94-Trace-Capture"><span class="nav-number">2.</span> <span class="nav-text">Chapter 18 — Trace Capture</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#What-a-trace-contains"><span class="nav-number">2.1.</span> <span class="nav-text">What a trace contains</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-traces-are-safe-to-record"><span class="nav-number">2.2.</span> <span class="nav-text">Why traces are safe to record</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-recording-mechanism"><span class="nav-number">2.3.</span> <span class="nav-text">The recording mechanism</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-19-%E2%80%94-The-Three-Layer-Trace-Pipeline"><span class="nav-number">3.</span> <span class="nav-text">Chapter 19 — The Three-Layer Trace Pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-20-%E2%80%94-The-Evolver-Agent"><span class="nav-number">4.</span> <span class="nav-text">Chapter 20 — The Evolver Agent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-four-actions"><span class="nav-number">4.1.</span> <span class="nav-text">The four actions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-conservative-editing-constraints"><span class="nav-number">4.2.</span> <span class="nav-text">The conservative-editing constraints</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Distinguishing-skill-problems-from-agent-problems"><span class="nav-number">4.3.</span> <span class="nav-text">Distinguishing skill problems from agent problems</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-21-%E2%80%94-Dual-Track-Validation"><span class="nav-number">5.</span> <span class="nav-text">Chapter 21 — Dual-Track Validation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-invariant-track"><span class="nav-number">5.1.</span> <span class="nav-text">The invariant track</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-target-track"><span class="nav-number">5.2.</span> <span class="nav-text">The target track</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-decision-rule"><span class="nav-number">5.3.</span> <span class="nav-text">The decision rule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#What-happens-to-rejected-candidates"><span class="nav-number">5.4.</span> <span class="nav-text">What happens to rejected candidates</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-role-of-the-eval-suite"><span class="nav-number">5.5.</span> <span class="nav-text">The role of the eval suite</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-22-%E2%80%94-The-History-Ledger"><span class="nav-number">6.</span> <span class="nav-text">Chapter 22 — The History Ledger</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#What-the-ledger-records"><span class="nav-number">6.1.</span> <span class="nav-text">What the ledger records</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-versions-not-dates"><span class="nav-number">6.2.</span> <span class="nav-text">Why versions, not dates</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reading-history-before-editing"><span class="nav-number">6.3.</span> <span class="nav-text">Reading history before editing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reverting"><span class="nav-number">6.4.</span> <span class="nav-text">Reverting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-23-%E2%80%94-Running-the-Loop"><span class="nav-number">7.</span> <span class="nav-text">Chapter 23 — Running the Loop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-cadence-question"><span class="nav-number">7.1.</span> <span class="nav-text">The cadence question</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-human-in-the-loop"><span class="nav-number">7.2.</span> <span class="nav-text">The human in the loop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Failure-modes-of-the-loop-itself"><span class="nav-number">7.3.</span> <span class="nav-text">Failure modes of the loop itself</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/skill-engineering/4-evolution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Skill Engineering, Part 4: Evolution | Pylon PENG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Skill Engineering, Part 4: Evolution
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-10 10:02:00" itemprop="dateCreated datePublished" datetime="2026-07-10T10:02:00+08:00">2026-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 14:58:00" itemprop="dateModified" datetime="2026-07-13T14:58:00+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill-engineering/" itemprop="url" rel="index"><span itemprop="name">Skill Engineering</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><em>This is Part 4 of a six-part series on Skill Engineering. <a href="../1-foundations/">Part 1 — Foundations</a>, <a href="../2-creation/">Part 2 — Creation</a>, <a href="../3-governance/">Part 3 — Governance</a>.</em></p>
+<span id="more"></span>
+
+<hr>
+<h2 id="Chapter-17-—-Skill-Rot"><a href="#Chapter-17-—-Skill-Rot" class="headerlink" title="Chapter 17 — Skill Rot"></a>Chapter 17 — Skill Rot</h2><p>A skill that worked yesterday will fail next month.</p>
+<p>This is the central observation of Part IV, and it is worth stating plainly before any of the machinery that responds to it. A skill is prose that describes a procedure against a system. The system changes. The procedure changes with it. The prose, unless something keeps it current, does not.</p>
+<p>The decay has a name in this book: <em>skill rot</em>. The name is borrowed from “bit rot”, the slow corruption of stored data through environmental degradation. Bit rot is a misnomer in modern storage — the actual mechanism is more often filesystem corruption or hardware failure — but the term captures the right intuition: things that look static decay if nothing tends them. Skill rot is the same intuition, applied to skills that describe systems.</p>
+<p><img src="/images/2026-07/skill-engineering/20-skill-decay.png" alt="Skill decay over time: Skill v1 works, environment changes, skill rots. The gap between &#39;skill written&#39; and &#39;skill still working&#39; widens."></p>
+<h3 id="The-three-causes-of-rot"><a href="#The-three-causes-of-rot" class="headerlink" title="The three causes of rot"></a>The three causes of rot</h3><p>Skill rot has three distinct causes. The team that confuses them ends up fixing the wrong thing.</p>
+<p><strong>API drift.</strong> The system the skill describes changes its API. An endpoint moves; a field is renamed; a response format gains a new wrapper; an authentication mechanism is replaced. The skill’s instructions reference the old shape and produce wrong actions against the new shape.</p>
+<p>API drift is the most mechanical and the most attributable cause of rot. The change is concrete; the agent’s error is concrete; the fix is concrete. A skill that fails because the API moved is a skill the team can repair in a single editing session, once they know what changed.</p>
+<p>The challenge is that API drift often happens silently. A vendor upgrades the system; nobody on the team is paying attention to the upgrade notes; the skill quietly breaks. The skill’s first failure may be days or weeks after the upgrade, during a routine invocation by a user who has no idea that anything has changed. The user blames the agent; the team investigates and discovers that the system, not the agent, changed.</p>
+<p><strong>Environment drift.</strong> The skill works correctly against the system, but the user’s environment has changed in a way that breaks the skill’s assumptions. A CLI tool has been upgraded and its flags have changed. A configuration file has been moved. A required network path is now firewalled. A dependency that the skill assumed would be present has been replaced.</p>
+<p>Environment drift is harder to attribute than API drift, because the system being addressed is correct. The user’s environment is the problem, and environments are heterogeneous: a skill may work on one user’s machine and fail on another’s, depending on which CLI versions each has installed.</p>
+<p><strong>Domain drift.</strong> The team’s processes, vocabulary, and judgement criteria change. The system has not changed; the environment has not changed; what has changed is what the team considers the right answer to the user’s question.</p>
+<p>A skill that filed bugs against project DC00 last year may need to file them against project DC01 this year, because the team has restructured. A skill that diagnosed data product issues by checking three layers may now need to check four, because a new layer has been added to the architecture. A skill that recommended emergency access for incidents may now need to refuse such recommendations, because the team’s incident-response process has changed.</p>
+<p>Domain drift is the slowest of the three causes and the most consequential. It moves at the pace of organisational change, which is slow but irreversible. A skill that was forged against last year’s processes and never updated against this year’s processes is producing actions that the team no longer endorses. The agent is still doing what the skill says; the skill is just no longer right.</p>
+<h3 id="The-silent-failure-mode"><a href="#The-silent-failure-mode" class="headerlink" title="The silent failure mode"></a>The silent failure mode</h3><p>The most insidious property of skill rot is that it often fails silently. The agent loads the skill, follows the instructions, makes the API calls the skill said to make, and produces a response that looks plausible. The user sees the response, does not have the context to know it is wrong, and moves on.</p>
+<p>The wrong response propagates. The user takes action based on it, the action affects something downstream, the downstream failure shows up days later in an unrelated context. By the time the team traces the failure back to its source, the original skill invocation is long forgotten, and the connection between the rot and the eventual harm is hard to establish.</p>
+<p>Silent failure is what makes skill rot dangerous in a way that crashing failure is not. A skill that crashes is a skill the team can fix; a skill that quietly produces wrong answers is a skill that erodes trust in the entire library, because users start to second-guess every response.</p>
+<p>The machinery in the remaining chapters of Part IV is, in large part, about catching silent failures before they become eroding events. The trace capture (Chapter 18) records what the agent did so that wrong actions are visible. The trace analysis (Chapter 19) distils traces into evidence so that patterns become legible. The evolver (Chapter 20) responds to evidence with proposed changes. The dual-track validation (Chapter 21) ensures that the changes do not introduce new silent failures while fixing existing ones.</p>
+<h3 id="The-“wait-for-the-user-to-complain”-anti-pattern"><a href="#The-“wait-for-the-user-to-complain”-anti-pattern" class="headerlink" title="The “wait for the user to complain” anti-pattern"></a>The “wait for the user to complain” anti-pattern</h3><p>The default response to skill rot, in teams that have not built any machinery, is to wait for a user to complain. The user says “this skill stopped working”; the team investigates; the team fixes the skill; the cycle repeats.</p>
+<p>This pattern produces a library that is reactively maintained, in a state of permanent partial decay. At any given moment, some non-trivial number of skills have rotted; the team is unaware of the rot because no user has noticed yet; the rot is silently producing wrong answers until somebody complains.</p>
+<p>The pattern has two specific failure modes worth naming.</p>
+<p>The first is <strong>detection lag</strong>. The time between the rot occurring and the team learning about it is the time during which the skill is silently producing wrong actions. Detection lag is determined by the frequency of skill use and the alertness of users. A skill used twice a week, by users who do not have the context to notice subtle wrongness, may have a detection lag measured in months.</p>
+<p>The second is <strong>attribution error</strong>. When a user complains about a skill, the user often does not know which skill was responsible for the wrong action. They know the agent gave them a wrong answer; they do not know which skill the agent loaded to produce it. The team has to reverse-engineer the attribution from the trace, if a trace exists. If no trace exists — and most teams do not capture them — the team has to ask the user to reproduce the failure, hope that the failure is reproducible, and watch the agent’s behaviour to identify the skill.</p>
+<p>Both failure modes compound the cost of reactive maintenance. The team spends much more time on each user-reported failure than they would spend on a proactively-caught failure, and the team’s library quality is bounded by the patience of its most vigilant users.</p>
+<hr>
+<h2 id="Chapter-18-—-Trace-Capture"><a href="#Chapter-18-—-Trace-Capture" class="headerlink" title="Chapter 18 — Trace Capture"></a>Chapter 18 — Trace Capture</h2><p>The evolution loop runs on evidence. The evidence is the record of what the agent actually did, in the form of session traces — the structured logs of every prompt, every action, every tool call, every response — that the harness produces during normal operation. Without traces, the loop has nothing to reason over.</p>
+<h3 id="What-a-trace-contains"><a href="#What-a-trace-contains" class="headerlink" title="What a trace contains"></a>What a trace contains</h3><p>A session trace, in the form this book recommends, is a JSON-Lines file in which each line is one event in the agent’s session. The events include:</p>
+<ul>
+<li><strong>User messages.</strong> What the user typed.</li>
+<li><strong>Assistant messages.</strong> What the agent said in response.</li>
+<li><strong>Tool calls.</strong> Each invocation of a tool: the tool’s name, the arguments, the result.</li>
+<li><strong>Skill references.</strong> Markers indicating which skills were loaded during the turn.</li>
+<li><strong>Errors.</strong> Tool failures, parsing errors, agent self-correction events.</li>
+</ul>
+<p>A reasonably long session — twenty user turns, fifty tool calls — produces a trace of a few hundred kilobytes. Across a team of half a dozen users, a month of normal use produces a few hundred megabytes of trace data, which is small by modern standards but large enough that the next chapter’s distillation matters.</p>
+<p>The trace is the closest the team can get to a video recording of the agent’s behaviour. Reading a trace tells you what the agent saw, what it decided, and what it did. Aggregating traces across many sessions tells you how the agent behaves in the wild.</p>
+<h3 id="Why-traces-are-safe-to-record"><a href="#Why-traces-are-safe-to-record" class="headerlink" title="Why traces are safe to record"></a>Why traces are safe to record</h3><p>Trace data, in most systems that record agent behaviour, is dangerous. The agent’s context window contains every credential, every personal identifier, every piece of sensitive content that came up during the session. A trace that captures the context window captures all of it, and storing the trace then means storing the credentials.</p>
+<p>The zero-trust proxy of Chapter 3 changes this calculus. With the proxy in place, credentials never enter the agent’s context window. They live in the proxy; the agent sees only “make a request to this URL”, and the proxy injects the credential at the moment of the actual HTTP call. The trace captures the agent’s view, which is the credential-free view. Recording the trace is therefore safe by construction.</p>
+<p>This is the property that makes Part IV viable. Without it, every team building agents would face a choice between recording everything (and accepting the credential leakage) or recording nothing (and giving up the evolution loop). With it, the choice is moot: traces are recorded, and they contain nothing that would be dangerous to inspect.</p>
+<h3 id="The-recording-mechanism"><a href="#The-recording-mechanism" class="headerlink" title="The recording mechanism"></a>The recording mechanism</h3><p>The harness produces traces as a side effect of normal operation. In Claude Code, the mechanism is a hook that fires after each turn and writes a line to the session’s trace file. The reference repository includes a hook configuration that enables this; teams using the repository inherit the configuration on installation.</p>
+<p>The hook writes traces to <code>~/.claude/traces/&lt;session_id&gt;.jsonl</code>. The directory is gitignored by default; traces stay on the user’s machine and are not committed to the repository. The reference repository defaults to the local-only mode. The evolution loop runs against the user’s own traces. The user’s library improves through the user’s own usage patterns.</p>
+<hr>
+<h2 id="Chapter-19-—-The-Three-Layer-Trace-Pipeline"><a href="#Chapter-19-—-The-Three-Layer-Trace-Pipeline" class="headerlink" title="Chapter 19 — The Three-Layer Trace Pipeline"></a>Chapter 19 — The Three-Layer Trace Pipeline</h2><p>A month of traces from a single user contains thousands of events. No analyst — and certainly no LLM operating within a context window — is going to read all of them and produce useful conclusions. The data has to be distilled before it can be reasoned over.</p>
+<p>The pipeline has three layers. Each layer takes the output of the previous layer and produces something smaller and more focused. By the end of the pipeline, the team has a per-skill view of what happened, ready to feed into the evolver of the next chapter.</p>
+<p><img src="/images/2026-07/skill-engineering/21c-trace-analysis.png" alt="The three-layer distillation pipeline: raw trajectories (Layer 1) → causal extraction (Layer 2) → evidence grouping by skill (Layer 3)"></p>
+<p><strong>Layer 1 — Raw trajectories.</strong> The bottom layer is the raw trace data. The pipeline filters on time range, skill references, and sanity. The filtered set is the input to the next layer. A typical analysis window contains a few hundred traces.</p>
+<p><strong>Layer 2 — Causal extraction.</strong> The second layer extracts, from each raw trace, the <em>causal chain</em> of actions and feedback. For each session, the pipeline produces a list of steps, each with the shape: the step index, the active skill, a compact action summary (tool name + key arguments + key result, ≤ 400 characters), a compact feedback summary, and a causal link indicating whether this step’s outcome influenced subsequent steps.</p>
+<p>The extraction is mechanical. The pipeline does not need an LLM to do it; a few hundred lines of Python with the right summarisation rules suffice. The four-hundred-character budget per field is a deliberate choice: small enough that a hundred-step session fits in roughly eighty kilobytes of text, well within the context window of any modern LLM, but large enough to capture the essential outcome of any action.</p>
+<p><strong>Layer 3 — Evidence grouping.</strong> The third layer groups sessions by the skill they referenced. For each skill in the library, the pipeline produces an <em>evidence group</em>: the set of sessions that loaded the skill, with aggregate statistics and recurring patterns extracted.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">G(diagnose-data-product-status):</span></span><br><span class="line">  <span class="attr">total_sessions:</span> <span class="number">47</span></span><br><span class="line">  <span class="attr">outcomes:</span></span><br><span class="line">    <span class="attr">success:</span> <span class="number">41</span></span><br><span class="line">    <span class="attr">partial:</span> <span class="number">4</span></span><br><span class="line">    <span class="attr">failure:</span> <span class="number">2</span></span><br><span class="line">  <span class="attr">average_prm:</span> <span class="number">0.86</span></span><br><span class="line">  <span class="attr">recurring_patterns:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;stale reference triggers full sync (38 sessions)&quot;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;source-system unavailable (3 sessions)&quot;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;catalog INNER JOIN failure (4 sessions)&quot;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;user followup negative without obvious cause (2 sessions)&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>The evidence group is the unit the evolver reasons over. For each skill, it answers: how often was this skill invoked, what fraction of invocations succeeded, what patterns recurred, and what cases failed.</p>
+<p>The empty group, <code>G(∅)</code>, collects sessions where the agent answered without invoking any skill. This is the gaps view: patterns in <code>G(∅)</code> are the things the agent has been doing without skill support. The evolver reasons over <code>G(∅)</code> to propose new skills.</p>
+<hr>
+<h2 id="Chapter-20-—-The-Evolver-Agent"><a href="#Chapter-20-—-The-Evolver-Agent" class="headerlink" title="Chapter 20 — The Evolver Agent"></a>Chapter 20 — The Evolver Agent</h2><p>The evidence groups from the previous chapter are the input. Proposed skill changes are the output. The agent that performs this translation is the <em>evolver</em>: an LLM-driven subagent that reasons over a skill’s evidence and produces one of four actions for that skill.</p>
+<p><img src="/images/2026-07/skill-engineering/21-curation-loop.png" alt="The fully autonomous curation loop: Skill → Agent runs → Trace analysis → Evolve Agent → Verification → back to Skill"></p>
+<h3 id="The-four-actions"><a href="#The-four-actions" class="headerlink" title="The four actions"></a>The four actions</h3><p><strong><code>refine</code></strong> — edit the skill’s prose to address an observed failure or to incorporate a learned constraint. The edit is targeted: a specific section is changed, the rest is left alone. This is the most common action and the safest.</p>
+<p><strong><code>create</code></strong> — propose a new skill. This action applies to the <code>G(∅)</code> group, where the evidence shows the agent doing something that no skill currently covers. The evolver drafts a new skill following the forging pipeline of Part II.</p>
+<p><strong><code>optimize_description</code></strong> — modify only the description field. The skill’s prose is fine, but its description is causing it to trigger for prompts it should not, or to fail to trigger for prompts it should. Description-only changes are cheaper than body changes and often resolve mismatched-routing problems.</p>
+<p><strong><code>skip</code></strong> — do nothing. The evidence is insufficient to justify a change. The skill is working well enough; or the failures observed are not the skill’s fault; or the patterns are not clear enough to act on.</p>
+<p>The four-action menu is the SkillClaw paper’s contribution, with the names lightly adapted. The discipline of <em>choosing</em> among them — rather than always editing — is what prevents the evolver from accumulating churn. An evolver that defaults to refinement on every group will produce a library that drifts unpredictably; an evolver that respects <code>skip</code> will produce a library that improves only where improvement is warranted.</p>
+<p>A library that goes through an evolution cycle with most skills receiving <code>skip</code> is a library that is operating well. The cycles where most skills receive <code>refine</code> are early-stage cycles; the cycles where most skills receive <code>skip</code> are mature-stage cycles. The transition is a sign of progress.</p>
+<h3 id="The-conservative-editing-constraints"><a href="#The-conservative-editing-constraints" class="headerlink" title="The conservative-editing constraints"></a>The conservative-editing constraints</h3><p>The evolver is an LLM, and LLMs left to their own devices will rewrite more than they need to, replace correct content with adjacent content that sounds plausible, and generally produce changes that fix the local problem while introducing global ones. The constraints below prevent this.</p>
+<ul>
+<li><strong>Treat the current skill as the source of truth, not a draft.</strong> The skill was forged carefully and has been working for some users; the evolver’s job is to extend or refine it, not to rewrite it.</li>
+<li><strong>Preserve sections that successful sessions support.</strong> If an evidence-group session succeeded and the success used a particular section of the skill, that section is doing its job.</li>
+<li><strong>Edit narrowly when failures are corner cases.</strong> A failure that occurred in two of fifty sessions is a corner case. Add the constraint or the troubleshooting note; do not restructure the skill around the corner case.</li>
+<li><strong>Do not casually change API contracts, ports, endpoints, output paths, payload formats, or required filenames.</strong> These are environment-specific facts that the skill should preserve by default. Replacing the team’s memory with the evolver’s guess is a regression.</li>
+<li><strong>Do not remove core capabilities, API references, command patterns, or tool-usage examples unrelated to the observed failures.</strong> Keep what worked.</li>
+<li><strong>Do not rewrite the whole skill from scratch.</strong> Targeted edits only.</li>
+</ul>
+<h3 id="Distinguishing-skill-problems-from-agent-problems"><a href="#Distinguishing-skill-problems-from-agent-problems" class="headerlink" title="Distinguishing skill problems from agent problems"></a>Distinguishing skill problems from agent problems</h3><p>The most important judgement the evolver has to make is whether a failure is <em>the skill’s fault</em>. The taxonomy:</p>
+<p><strong>Skill problem.</strong> The skill is wrong, incomplete, or misleading. Fix: edit the skill.</p>
+<p><strong>Agent problem.</strong> The skill is correct, but the agent did not follow it. Fix: do not edit the skill. The skill is fine; the agent’s misbehaviour is addressed by improving the harness or the model, not the skill.</p>
+<p><strong>Environment problem.</strong> The skill and the agent both did the right thing, but the environment failed. Fix: usually nothing in the skill; possibly a brief note about how the environment is known to behave.</p>
+<p>The critical anti-pattern: when the skill <em>already contains correct environment information</em> (API endpoints, ports, payload formats) and the agent failed because it did not use that information, the failure is an agent problem, not a skill problem. The evolver must not delete the correct information and replace it with instructions like “consult the source code for the correct API”. This is the most damaging edit an evolver can make: it removes the institutional memory and replaces it with a deferral that will fail the next time someone tries to use the skill.</p>
+<hr>
+<h2 id="Chapter-21-—-Dual-Track-Validation"><a href="#Chapter-21-—-Dual-Track-Validation" class="headerlink" title="Chapter 21 — Dual-Track Validation"></a>Chapter 21 — Dual-Track Validation</h2><p>The evolver has proposed a change. The remaining question is whether the change is <em>correct</em>: does it fix the failures it was meant to fix, and does it leave intact the successes that were already working?</p>
+<p>The validation mechanism has a name: <em>dual-track validation</em>. The two tracks are <em>invariant</em> and <em>target</em>. The invariant track verifies that previously-working behaviour still works. The target track verifies that previously-failing behaviour now works. A proposal that passes both tracks is accepted; a proposal that fails either is rejected.</p>
+<p><img src="/images/2026-07/skill-engineering/21e-evals-framework.png" alt="The eval framework structure: three assertion types (substring&#x2F;regex&#x2F;absent_regex), three-tier ablation (L0&#x2F;L1&#x2F;L2), deterministic vs. LLM-judge checks"></p>
+<h3 id="The-invariant-track"><a href="#The-invariant-track" class="headerlink" title="The invariant track"></a>The invariant track</h3><p>The invariant track is the set of sessions that succeeded with the previous version of the skill. Any candidate new version must continue to produce correct results for them.</p>
+<p>The track’s name reflects its purpose: it captures the invariants that the skill must preserve. A successful evolution adds capability; it does not remove capability. The invariant track is the mechanism by which “does not remove capability” becomes a check rather than a hope.</p>
+<h3 id="The-target-track"><a href="#The-target-track" class="headerlink" title="The target track"></a>The target track</h3><p>The target track is the set of sessions that failed with the previous version. The candidate skill should now produce correct results for them.</p>
+<p>For each failing session, the target track requires: the agent’s response indicates the correct outcome; the actions the agent takes are consistent with what the corrected skill prescribes; any specific failure mode observed in the original session does not recur.</p>
+<p>The third point is where <code>absent_regex</code> assertions earn their keep. The original failure was a specific pattern in the trace; the corrected skill should prevent the pattern from appearing in the new trace.</p>
+<h3 id="The-decision-rule"><a href="#The-decision-rule" class="headerlink" title="The decision rule"></a>The decision rule</h3><p>The decision rule for accepting a candidate is simple: <strong>both tracks must pass</strong>.</p>
+<ul>
+<li>Invariant pass + target pass → <strong>accept</strong>. The candidate fixes the bug without breaking anything. The evolution is sound.</li>
+<li>Invariant pass + target fail → <strong>reject</strong>. The candidate does not actually fix the bug. The proposed change was off-target.</li>
+<li>Invariant fail + target pass → <strong>reject</strong>. The candidate fixes the bug but breaks something else. The proposed change introduced a regression.</li>
+<li>Invariant fail + target fail → <strong>reject</strong>. The candidate is worse than the original on multiple dimensions.</li>
+</ul>
+<p>The strict rule is what makes the loop monotonic. A library that only accepts changes that pass both tracks cannot regress: every accepted change is, by construction, at least as good as the previous version. Over many cycles, the library accumulates improvements without accumulating bugs.</p>
+<p><img src="/images/2026-07/skill-engineering/21f-verification-rollout.png" alt="The verification recipe: schema → assertions → ablation → feedback loop. Applies to all skills."></p>
+<p><img src="/images/2026-07/skill-engineering/22-effective-evolution.png" alt="Valid vs. invalid evolution: valid evolution preserves the invariant track while fixing the target track; invalid evolution introduces regressions."></p>
+<h3 id="What-happens-to-rejected-candidates"><a href="#What-happens-to-rejected-candidates" class="headerlink" title="What happens to rejected candidates"></a>What happens to rejected candidates</h3><p>A rejected candidate is not deleted. It is preserved in a <code>rejected/</code> directory alongside the skill’s history. The rejection is recorded, with the candidate’s prose, the rationale the evolver gave, and the validator’s report explaining why the candidate failed. This preserves three pieces of information: the failure mode the evolver was trying to address, the specific attempt that failed, and the validation evidence.</p>
+<p>The rejected directory is not loaded by the harness; it does not affect the library’s runtime behaviour. It is purely an evolutionary archive, for the team’s own use when reasoning about the skill’s history.</p>
+<h3 id="The-role-of-the-eval-suite"><a href="#The-role-of-the-eval-suite" class="headerlink" title="The role of the eval suite"></a>The role of the eval suite</h3><p>The skill’s eval suite (Chapter 9) provides assertions that the validator uses for both tracks. Evolutions that add new <code>absent_regex</code> assertions are an example of the evolution loop closing on itself: the failure that drove the evolution becomes a permanent regression test for the skill. The next evolver that proposes a similar mistake will see the assertion fail and the proposal rejected.</p>
+<p>This is the property the SkillClaw paper calls “monotonic deployment”. The library’s quality only goes up over time, because every accepted change is verified to preserve what was working, and every new test added in response to a failure prevents the same failure from recurring.</p>
+<hr>
+<h2 id="Chapter-22-—-The-History-Ledger"><a href="#Chapter-22-—-The-History-Ledger" class="headerlink" title="Chapter 22 — The History Ledger"></a>Chapter 22 — The History Ledger</h2><p>Every accepted change leaves a trail. The trail must be precise enough that a reader can answer, six months later, “why does this skill look like this?” and find the answer in the file system rather than in someone’s memory.</p>
+<h3 id="What-the-ledger-records"><a href="#What-the-ledger-records" class="headerlink" title="What the ledger records"></a>What the ledger records</h3><p>The history ledger lives in each skill’s <code>history/</code> directory. Every accepted evolution produces two files there:</p>
+<ul>
+<li><code>history/v&lt;N&gt;.md</code>: a verbatim copy of the skill’s <code>SKILL.md</code> content at version N, before the change that produced version N+1.</li>
+<li><code>history/v&lt;N&gt;_evidence.md</code>: a structured note explaining what changed between version N and version N+1, why, and based on what evidence.</li>
+</ul>
+<p>A well-formed evidence file has sections for: decision summary (action, target, why), session evidence (specific sessions and their outcomes), historical comparison (what the previous version did and why that is no longer sufficient), the edit plan (what was changed, what was preserved), new eval assertions added, and open questions.</p>
+<h3 id="Why-versions-not-dates"><a href="#Why-versions-not-dates" class="headerlink" title="Why versions, not dates"></a>Why versions, not dates</h3><p>The reference repository uses version-based filenames (<code>v1.md</code>, <code>v2.md</code>) rather than date-based ones (<code>2026-06-15.md</code>). The choice is deliberate.</p>
+<p>Evolutions can happen multiple times per day. Date-based filenames would have to add timestamps to disambiguate, producing names like <code>2026-06-15T09:32.md</code>. The names become long, the lexicographic order becomes confusing, and the reader has to mentally translate timestamps to version numbers anyway, because the version number is what appears in the manifest and the frontmatter.</p>
+<p>Version-based filenames are short, unambiguous, and align with the rest of the ledger. A team that wants the date for human readability can include it inside the file.</p>
+<h3 id="Reading-history-before-editing"><a href="#Reading-history-before-editing" class="headerlink" title="Reading history before editing"></a>Reading history before editing</h3><p>A discipline that the evolver should observe, and that human authors should observe equally: read the history before editing.</p>
+<p>Before making a substantive change to a skill, read every prior <code>v*_evidence.md</code> file. Understand what changed in each prior version and why, what evidence drove each change, which assertions were added at each step, whether any prior change is being reverted or contradicted by the proposed change.</p>
+<p>A change that contradicts a prior change is not necessarily wrong — circumstances change, prior decisions get superseded — but it should be made deliberately, with the contradiction acknowledged. A change made in ignorance of a prior decision is likely to re-introduce a problem the prior decision was solving.</p>
+<h3 id="Reverting"><a href="#Reverting" class="headerlink" title="Reverting"></a>Reverting</h3><p>Sometimes a change, after merging, turns out to be wrong. The repository can revert. The revert is itself an evolution, and it produces a new history entry: the bad state is preserved as <code>v&lt;N+1&gt;.md</code>; the <code>v&lt;N+1&gt;_evidence.md</code> explains why the revert was performed. The version number does not go backwards.</p>
+<p>This is a subtle convention but important. Reverts are forward motion in the version sequence; the history ledger preserves the bad state as evidence of what went wrong, and the team can read forward through the ledger and understand the full trajectory.</p>
+<hr>
+<h2 id="Chapter-23-—-Running-the-Loop"><a href="#Chapter-23-—-Running-the-Loop" class="headerlink" title="Chapter 23 — Running the Loop"></a>Chapter 23 — Running the Loop</h2><p>The command is <code>make evolve</code>. What that command should do, when the team should invoke it, what should happen when it produces a result, and what should happen when the team stops trusting it — those are the subjects of this chapter.</p>
+<figure class="highlight make"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">evolve:</span></span><br><span class="line">    @scripts/capture-traces.sh    <span class="variable">$(SKILL)</span> <span class="variable">$(WINDOW)</span>   <span class="comment"># Chapter 18</span></span><br><span class="line">    @scripts/build-pipeline.py    <span class="variable">$(SKILL)</span> <span class="variable">$(WINDOW)</span>   <span class="comment"># Chapter 19</span></span><br><span class="line">    @scripts/run-evolver.py       <span class="variable">$(SKILL)</span>             <span class="comment"># Chapter 20</span></span><br><span class="line">    @scripts/validate.py          <span class="variable">$(SKILL)</span>             <span class="comment"># Chapter 21</span></span><br><span class="line">    @scripts/record-history.py    <span class="variable">$(SKILL)</span>             <span class="comment"># Chapter 22</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="The-cadence-question"><a href="#The-cadence-question" class="headerlink" title="The cadence question"></a>The cadence question</h3><p><em>Too often</em>: the team runs <code>make evolve</code> after every session. Most sessions produced no useful evidence — the skill worked, the evolver has nothing to change. The evolver dutifully proposes nothing, or worse, proposes cosmetic changes to fill the silence. The ritual stops being run.</p>
+<p><em>Too rarely</em>: the team runs <code>make evolve</code> once a quarter. The evidence has accumulated across dozens of sessions, and the evolver is asked to produce a single change that fixes everything. The proposal is large, the validator’s verdict is uncertain, and the human reviewer cannot untangle which piece of evidence motivated which piece of the edit.</p>
+<p>The interval that produces good evolution is usually <strong>weekly to bi-weekly</strong>, keyed to the team’s release cadence for the skill. The heuristic to watch: if the average evidence group in the pipeline has three or more sessions and covers a coherent failure pattern, the interval is right.</p>
+<h3 id="The-human-in-the-loop"><a href="#The-human-in-the-loop" class="headerlink" title="The human in the loop"></a>The human in the loop</h3><p>Three postures are possible.</p>
+<p><strong>Auto-accept.</strong> The validator says accept, the change is applied, no human is consulted. Appropriate for well-understood skills with mature eval suites and a long track record of successful evolution.</p>
+<p><strong>Reviewed-accept.</strong> The validator says accept, and the change is opened as a pull request. A human reviews the proposal, the evidence, and the eval delta, then merges. The reviewer’s job is not to re-do the validator’s work; it is to check whether the change fits the team’s evolving intent for the skill, and whether the evidence is being interpreted charitably. The review is usually five to ten minutes.</p>
+<p><strong>Escalate-accept.</strong> The validator says accept, but the reviewer disagrees or wants a second opinion. This posture should be rare; if it becomes common, either the evolver’s proposals are systematically wrong or the team’s intent for the skill is drifting.</p>
+<p>A team new to the loop should start in reviewed-accept for every skill, then move individual skills to auto-accept as trust accumulates.</p>
+<h3 id="Failure-modes-of-the-loop-itself"><a href="#Failure-modes-of-the-loop-itself" class="headerlink" title="Failure modes of the loop itself"></a>Failure modes of the loop itself</h3><p>The loop can <em>hallucinate progress</em>. The evolver produces proposals, the validator accepts most of them, the history ledger fills up — and the skills are not measurably better. The symptom is that user-reported issues do not decline even as the ledger grows. The response is to look at the traces, not at the evolver.</p>
+<p>The loop can <em>stagnate</em>. The evolver proposes small changes, the validator accepts them, the skill drifts toward local optima. The proposals get smaller over time and never touch the skill’s structural assumptions. The response is periodic redrafting — an occasional deliberate rewrite from scratch, informed by everything in the history but not constrained by it.</p>
+<p>The loop can <em>outpace the team</em>. The evolver runs faster than the team can review, proposals queue up, and the team stops reading evidence files. The response is to slow the cadence, not speed the review.</p>
+<p>The evolution loop is running well when: <code>make evolve</code> runs to completion without manual intervention on more than half of runs; the evidence files, read a month later, still make sense to their author; the team’s reported friction with skills declines over quarters; the history ledger for each skill tells a coherent story.</p>
+<hr>
+<p><em>Series footer:</em></p>
+<p><strong>Part 4 of 6 — Skill Engineering</strong><br><a href="../1-foundations/">Part 1: Foundations</a> · <a href="../2-creation/">Part 2: Creation</a> · <a href="../3-governance/">Part 3: Governance</a> · <a href="#">Part 4: Evolution</a> · <a href="../5-outlook/">Part 5: Outlook</a> · <a href="../6-appendices/">Part 6: Appendices</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/skill-engineering/" rel="tag"># skill-engineering</a>
+              <a href="/tags/ai/" rel="tag"># ai</a>
+              <a href="/tags/evals/" rel="tag"># evals</a>
+              <a href="/tags/evolution/" rel="tag"># evolution</a>
+              <a href="/tags/trace-analysis/" rel="tag"># trace-analysis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/skill-engineering/5-outlook/" rel="prev" title="Skill Engineering, Part 5: Outlook">
+                  <i class="fa fa-angle-left"></i> Skill Engineering, Part 5: Outlook
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/skill-engineering/3-governance/" rel="next" title="Skill Engineering, Part 3: Governance">
+                  Skill Engineering, Part 3: Governance <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

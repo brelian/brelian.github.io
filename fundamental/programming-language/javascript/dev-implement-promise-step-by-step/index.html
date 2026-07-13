@@ -183,18 +183,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">87</span>
+          <span class="site-state-item-count">93</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">103</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -330,9 +330,9 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Promise</span> = <span class="keyword">function</span>(<span class="params">excutor</span>) &#123;</span><br><span class="line">	<span class="keyword">function</span> <span class="title function_">resolve</span>(<span class="params">value</span>) &#123;&#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">reject</span>(<span class="params">reason</span>) &#123;&#125;</span><br><span class="line">    <span class="title function_">excutor</span>(reject, resolve);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>Promise 的初始状态为pending，它可以由此转为 fulfilled（一致称之为 resolved）或 rejected</p>
-<pre class="mermaid">graph TB
-0((pending)) --> |done| 1((resolved))
-0 -->|failed| -1((rejected))</pre>
+<pre><code class="highlight mermaid">graph TB
+0((pending)) --&gt; |done| 1((resolved))
+0 --&gt;|failed| -1((rejected))</code></pre>
 
 <p>因此还需要一个 status 属性表示 Promise 的状态：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Promise</span> = <span class="keyword">function</span>(<span class="params">excutor</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> self = <span class="variable language_">this</span>;</span><br><span class="line">    self.<span class="property">status</span> = <span class="string">&#x27;pending&#x27;</span>;</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">function</span> <span class="title function_">resolve</span>(<span class="params">value</span>) &#123;&#125;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">reject</span>(<span class="params">reason</span>) &#123;&#125;</span><br><span class="line">    <span class="title function_">excutor</span>(reject, resolve);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -429,7 +429,7 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2025</span>
+    <span itemprop="copyrightYear">2026</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>

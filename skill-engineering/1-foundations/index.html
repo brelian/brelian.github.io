@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"0x400.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="This is Part 1 of a six-part series on Skill Engineering — the discipline of writing, governing, and evolving skills for agentic AI systems.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill Engineering, Part 1: Foundations">
+<meta property="og:url" content="https://0x400.com/skill-engineering/1-foundations/index.html">
+<meta property="og:site_name" content="Pylon PENG">
+<meta property="og:description" content="This is Part 1 of a six-part series on Skill Engineering — the discipline of writing, governing, and evolving skills for agentic AI systems.">
+<meta property="og:locale">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/02-agent-server.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/03-hybrid.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/04-friendly-vs-not.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/05-auth-common-pain.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/07c-four-ways-consume.png">
+<meta property="og:image" content="https://0x400.com/images/2026-07/skill-engineering/14-four-layer-stack.png">
+<meta property="article:published_time" content="2026-07-10T02:05:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T06:58:00.785Z">
+<meta property="article:author" content="Pylon, PENG">
+<meta property="article:tag" content="agents">
+<meta property="article:tag" content="ai">
+<meta property="article:tag" content="sigcli">
+<meta property="article:tag" content="skill-engineering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://0x400.com/images/2026-07/skill-engineering/02-agent-server.png">
+
+
+<link rel="canonical" href="https://0x400.com/skill-engineering/1-foundations/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://0x400.com/skill-engineering/1-foundations/","path":"skill-engineering/1-foundations/","title":"Skill Engineering, Part 1: Foundations"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Skill Engineering, Part 1: Foundations | Pylon PENG</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+  <script class="next-config" data-name="pdf" type="application/json">{"object_url":{"url":"https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.3.1/pdfobject.min.js","integrity":"sha256-jI72I8ZLVflVOisZIOaLvRew3tyvzeu6aZXFm7P7dEo="},"url":"/lib/pdf/web/viewer.html"}</script>
+  <script src="/js/third-party/tags/pdf.js" defer></script>
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Pylon PENG</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-1-%E2%80%94-The-Agent-Native-Transition"><span class="nav-number">1.</span> <span class="nav-text">Chapter 1 — The Agent-Native Transition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-old-world"><span class="nav-number">1.1.</span> <span class="nav-text">The old world</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-new-world"><span class="nav-number">1.2.</span> <span class="nav-text">The new world</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-awkward-middle"><span class="nav-number">1.3.</span> <span class="nav-text">The awkward middle</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-2-%E2%80%94-What-Is-a-Skill"><span class="nav-number">2.</span> <span class="nav-text">Chapter 2 — What Is a Skill?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Versioned"><span class="nav-number">2.1.</span> <span class="nav-text">Versioned</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Executable"><span class="nav-number">2.2.</span> <span class="nav-text">Executable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Description-of-how"><span class="nav-number">2.3.</span> <span class="nav-text">Description of how</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Recurring"><span class="nav-number">2.4.</span> <span class="nav-text">Recurring</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#In-a-specific-environment"><span class="nav-number">2.5.</span> <span class="nav-text">In a specific environment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-3-%E2%80%94-The-Authentication-Wall"><span class="nav-number">3.</span> <span class="nav-text">Chapter 3 — The Authentication Wall</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-shape-of-the-wall"><span class="nav-number">3.1.</span> <span class="nav-text">The shape of the wall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-wrong-response"><span class="nav-number">3.2.</span> <span class="nav-text">The wrong response</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-right-response-the-zero-trust-proxy"><span class="nav-number">3.3.</span> <span class="nav-text">The right response: the zero-trust proxy</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-4-%E2%80%94-The-Four-Roles"><span class="nav-number">4.</span> <span class="nav-text">Chapter 4 — The Four Roles</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Infrastructure-L0"><span class="nav-number">4.1.</span> <span class="nav-text">Infrastructure (L0)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connector-L1"><span class="nav-number">4.2.</span> <span class="nav-text">Connector (L1)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Primitive-L1-5"><span class="nav-number">4.3.</span> <span class="nav-text">Primitive (L1.5)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Workflow-L2"><span class="nav-number">4.4.</span> <span class="nav-text">Workflow (L2)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-composition-rule"><span class="nav-number">4.5.</span> <span class="nav-text">The composition rule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-worked-example"><span class="nav-number">4.6.</span> <span class="nav-text">A worked example</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chapter-5-%E2%80%94-The-Anatomy-of-a-Skill"><span class="nav-number">5.</span> <span class="nav-text">Chapter 5 — The Anatomy of a Skill</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SKILL-md"><span class="nav-number">5.1.</span> <span class="nav-text">SKILL.md</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#manifest-yaml"><span class="nav-number">5.2.</span> <span class="nav-text">manifest.yaml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scripts"><span class="nav-number">5.3.</span> <span class="nav-text">scripts&#x2F;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#references"><span class="nav-number">5.4.</span> <span class="nav-text">references&#x2F;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#evals"><span class="nav-number">5.5.</span> <span class="nav-text">evals&#x2F;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#history"><span class="nav-number">5.6.</span> <span class="nav-text">history&#x2F;</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pylon, PENG</p>
+  <div class="site-description" itemprop="description">这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://0x400.com/skill-engineering/1-foundations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pylon, PENG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Pylon PENG">
+      <meta itemprop="description" content="这是 Pylon PENG 的个人博客，记录一些技术文章和生活琐事。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Skill Engineering, Part 1: Foundations | Pylon PENG">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Skill Engineering, Part 1: Foundations
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-07-10 10:05:00" itemprop="dateCreated datePublished" datetime="2026-07-10T10:05:00+08:00">2026-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-07-13 14:58:00" itemprop="dateModified" datetime="2026-07-13T14:58:00+08:00">2026-07-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill-engineering/" itemprop="url" rel="index"><span itemprop="name">Skill Engineering</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><em>This is Part 1 of a six-part series on Skill Engineering — the discipline of writing, governing, and evolving skills for agentic AI systems.</em></p>
+<span id="more"></span>
+
+<hr>
+<h2 id="Chapter-1-—-The-Agent-Native-Transition"><a href="#Chapter-1-—-The-Agent-Native-Transition" class="headerlink" title="Chapter 1 — The Agent-Native Transition"></a>Chapter 1 — The Agent-Native Transition</h2><p>Something changed. Not the moment a language model first answered a question, or the moment the first chatbot launched. The change that matters for this book is subtler: the moment when software engineers began routinely asking an agent to <em>do things in their environment</em> rather than just answer questions about the world.</p>
+<p>That shift — from question-answering to action-taking — is what “agent-native” means. And it has an awkward middle phase that every team building on top of language models is currently living through.</p>
+<h3 id="The-old-world"><a href="#The-old-world" class="headerlink" title="The old world"></a>The old world</h3><p>In the old world, software tools were deterministic. You ran <code>git status</code>; you got a status. You called an API; you got a response. The interface was a formal contract: input types, output types, error codes. A broken tool failed loudly. An incorrect invocation returned a well-defined error.</p>
+<p>The humans in this world were the ones holding the knowledge. You knew how to diagnose a failing data product: check the stage log, correlate with the pipeline run, look at the specific transform that was stalling. That knowledge lived in your head, or in a runbook someone had written for other humans.</p>
+<h3 id="The-new-world"><a href="#The-new-world" class="headerlink" title="The new world"></a>The new world</h3><p>In the new world, you ask the agent to do the diagnosis for you. The agent has language. It can navigate ambiguity, follow instructions that are slightly wrong, and recover from unexpected states. It can hold a forty-step procedure and execute it against a real system.</p>
+<p>What it cannot do reliably — without help — is know how <em>your</em> system works. It does not know that your Loki queries require the internal tenant UUID, not the customer-visible name. It does not know that your deployment API returns stale data for thirty seconds after a full-sync. It does not know which team to route a failure to when the failure looks like a platform bug but is actually an application-layer misconfiguration.</p>
+<p><img src="/images/2026-07/skill-engineering/02-agent-server.png" alt="The agent-server model: the agent acts on behalf of the user against real external systems"></p>
+<h3 id="The-awkward-middle"><a href="#The-awkward-middle" class="headerlink" title="The awkward middle"></a>The awkward middle</h3><p>The awkward middle is where most teams are now. They have a powerful agent. They know it can help. They keep discovering — through failed automations, wasted time, and eroded trust — that the agent needs to know things it does not know.</p>
+<p>The two naive responses: tell it everything in the system prompt (the system prompt balloons, latency climbs, costs rise), or write special prompts for each specific use case (the special prompts proliferate and go stale). Neither scales.</p>
+<p><img src="/images/2026-07/skill-engineering/03-hybrid.png" alt="The hybrid reality: real enterprise systems require an AI Adapter layer to bridge the authentication and API gap"></p>
+<p><img src="/images/2026-07/skill-engineering/04-friendly-vs-not.png" alt="Agent-friendly vs. agent-hostile systems: public API services vs. enterprise systems with SSO, cookie auth, and MFA"></p>
+<p>The discipline this book describes — skill engineering — is the third response: encode the knowledge in structured, versioned, executable artefacts that the agent loads when it needs them and that the team can maintain as the world changes.</p>
+<hr>
+<h2 id="Chapter-2-—-What-Is-a-Skill"><a href="#Chapter-2-—-What-Is-a-Skill" class="headerlink" title="Chapter 2 — What Is a Skill?"></a>Chapter 2 — What Is a Skill?</h2><p>A skill is a versioned, executable description of how an agent should accomplish a recurring task in a specific environment.</p>
+<p>That definition has five moving parts, and every one of them is load-bearing.</p>
+<h3 id="Versioned"><a href="#Versioned" class="headerlink" title="Versioned"></a>Versioned</h3><p>A skill is a document. Documents can be wrong. The team updates them when they discover they are wrong, and the version number tracks the history of those updates. Versioning is how the team knows which skills are current and which need attention.</p>
+<p>A prompt that was written once and never updated is not a skill. A system prompt that is edited in place and whose history is not tracked is not a skill. An instruction in a README that “everyone knows to follow” is not a skill. A skill is versioned because the world changes and the artefact must change with it.</p>
+<h3 id="Executable"><a href="#Executable" class="headerlink" title="Executable"></a>Executable</h3><p>A skill is not just documentation. It is loaded by the agent — typically as a Claude Code skill, placed in <code>~/.claude/skills/</code> — and the agent reads it and acts on it. The test of whether a skill works is not whether a human finds it helpful to read; it is whether an agent following it accomplishes the task correctly.</p>
+<p>Executability disciplines the writing. You cannot write vaguely and then explain yourself verbally when a colleague is confused. The agent does not ask. The agent reads, interprets, and acts. Prose that works for human runbooks often fails for agent skills because it relies on context the agent does not have.</p>
+<h3 id="Description-of-how"><a href="#Description-of-how" class="headerlink" title="Description of how"></a>Description of <em>how</em></h3><p>A skill describes a procedure, not a fact. This is the distinction from a knowledge base entry or a FAQ. “The deployment API is at <code>https://api.example.com/deploy</code>“ is a fact. “When you need to trigger a full-sync, call the deployment API with <code>fullMode: true</code> and wait thirty seconds before verifying the result” is a procedure.</p>
+<p>The skill is the procedure. Facts appear in the skill where the procedure requires them, not as standalone entries.</p>
+<h3 id="Recurring"><a href="#Recurring" class="headerlink" title="Recurring"></a>Recurring</h3><p>The forging cost of a skill is not trivial. You explore, crystallise, harden, and ship. That investment is repaid by reuse. A task that is done once does not justify a skill. The 3x Rule (Chapter 6) gives the threshold: if you have done the task three times and each invocation was expensive enough that a working skill would pay for itself in fewer than three more invocations, the skill is worth forging.</p>
+<p>One-off tasks should stay as one-off prompts.</p>
+<h3 id="In-a-specific-environment"><a href="#In-a-specific-environment" class="headerlink" title="In a specific environment"></a>In a specific environment</h3><p>A skill that says “query the Jira API” is not a skill. It is a vague gesture. A skill that says “query the Jira API at <code>https://jira.example.com</code> using the <code>sap-jira</code> sigcli provider, with the project key <code>DC00</code> for catalog issues” — and specifies the field mappings, the rate limits, the pagination behaviour, the error cases — is a skill.</p>
+<p>Specificity is what makes the skill executable. The specific environment is where all the things that differ from the defaults live, and those are the things that the agent needs to know.</p>
+<hr>
+<h2 id="Chapter-3-—-The-Authentication-Wall"><a href="#Chapter-3-—-The-Authentication-Wall" class="headerlink" title="Chapter 3 — The Authentication Wall"></a>Chapter 3 — The Authentication Wall</h2><p>Every enterprise agent hits the authentication wall. The agent needs to call a system. The system requires a credential — a cookie, a token, a session that was established through a browser-based SSO flow, an API key that must not appear in any log. The agent, operating in a language model, has a context window. The context window is observable. Anything that enters it can, in principle, be leaked.</p>
+<p><img src="/images/2026-07/skill-engineering/05-auth-common-pain.png" alt="The authentication wall: a robot agent blocked by SSO, OAuth, MFA, and cookie auth across every enterprise system"></p>
+<h3 id="The-shape-of-the-wall"><a href="#The-shape-of-the-wall" class="headerlink" title="The shape of the wall"></a>The shape of the wall</h3><p>The wall is not one thing. It is a cluster of problems:</p>
+<ul>
+<li><strong>SSO-only access.</strong> Many enterprise systems do not issue API keys. You get in through the browser, authenticate via your corporate identity provider, and receive a session cookie that is valid for eight hours. There is no machine-readable credential; there is only the cookie.</li>
+<li><strong>MFA barriers.</strong> Systems that require a second factor for every session cannot be automated through normal credential injection; the MFA step requires a human.</li>
+<li><strong>Short-lived tokens.</strong> OAuth tokens expire. A skill that worked at 9am may not work at 6pm, and the expiry handling is system-specific.</li>
+<li><strong>Credential injection at call time.</strong> Many systems require the credential to be injected differently depending on whether the call is a GET or a POST, or depending on the API version, or depending on which endpoint is being called.</li>
+</ul>
+<h3 id="The-wrong-response"><a href="#The-wrong-response" class="headerlink" title="The wrong response"></a>The wrong response</h3><p>The wrong response is to put the credential in the context window. This is the response most teams reach for first, because it is easy: you paste the API key into the system prompt, or you tell the agent to use a specific token you have already generated.</p>
+<p>The credential is now in the context window. It can appear in:</p>
+<ul>
+<li>The agent’s trace logs.</li>
+<li>The skill’s history file, if someone logs a session.</li>
+<li>A bug report, if the session is shared for debugging.</li>
+<li>The model provider’s logs, if the provider uses inputs for training.</li>
+<li>An accidentally-committed skill file, if someone copies the session’s context.</li>
+</ul>
+<p>None of these is theoretical. All of them have happened.</p>
+<h3 id="The-right-response-the-zero-trust-proxy"><a href="#The-right-response-the-zero-trust-proxy" class="headerlink" title="The right response: the zero-trust proxy"></a>The right response: the zero-trust proxy</h3><p>The right response is to put a proxy between the agent and the system. The proxy holds the credentials. The agent tells the proxy “make a GET request to this URL” and the proxy injects the credential at the moment of the HTTP call. The agent’s context window contains only the intent; the credential never enters.</p>
+<p>This is the zero-trust principle applied to agentic systems: every component trusts the minimum it needs to trust. The agent trusts the proxy to make authenticated calls. The proxy trusts the identity store. No component holds credentials it does not need.</p>
+<p><code>sigcli</code> is the reference implementation of this proxy for the library this book is written about. Its commands follow a simple grammar:</p>
+<p><img src="/images/2026-07/skill-engineering/07c-four-ways-consume.png" alt="The four sigcli operations: sig get, sig request, sig run, and sig proxy"></p>
+<ul>
+<li><code>sig login &lt;provider&gt;</code> — establish a session for a named provider (runs the browser-based SSO flow once; stores the credential in the system keychain).</li>
+<li><code>sig get &lt;provider&gt; &lt;field&gt;</code> — retrieve a stored credential value for use outside an agent context (for scripts and ad-hoc calls).</li>
+<li><code>sig request &lt;provider&gt; &lt;method&gt; &lt;url&gt; [body]</code> — make an authenticated HTTP request through the proxy; returns the response. This is the primary command the agent uses.</li>
+<li><code>sig run &lt;provider&gt; &lt;script&gt;</code> — run a script with the provider’s credentials injected as environment variables.</li>
+<li><code>sig proxy &lt;provider&gt; &lt;port&gt;</code> — start a local proxy server that forwards requests with the provider’s credentials injected; for tools that need a standard HTTP proxy rather than a custom command.</li>
+</ul>
+<p>The skill declares which providers it needs in its frontmatter (<code>auth.providers</code>). The harness checks that the required providers are authenticated before loading the skill. The agent issues <code>sig request</code> calls; the credentials never appear in the context window.</p>
+<hr>
+<h2 id="Chapter-4-—-The-Four-Roles"><a href="#Chapter-4-—-The-Four-Roles" class="headerlink" title="Chapter 4 — The Four Roles"></a>Chapter 4 — The Four Roles</h2><p>Twenty skills interlink differently than two. A library without structure becomes a flat collection of artefacts that the team cannot reason about: which one do I depend on? which one wraps which? which one is the foundation everything else rests on?</p>
+<p>The four roles are a structural vocabulary for this reasoning. Every skill in a well-organised library occupies one of four positions.</p>
+<h3 id="Infrastructure-L0"><a href="#Infrastructure-L0" class="headerlink" title="Infrastructure (L0)"></a>Infrastructure (L0)</h3><p>The infrastructure layer is the substrate. These are the skills and components that every other skill depends on, directly or indirectly. They change rarely, and when they change, the impact is felt across the library.</p>
+<p>In the reference library, <code>sigcli</code> is the infrastructure layer. Every skill that makes an authenticated call depends on it. It is not “just another skill”; it is the foundation, and its health determines the health of every skill above it.</p>
+<p>Infrastructure skills have no <code>depends_on</code> in their manifests. They are the bottom of the graph.</p>
+<h3 id="Connector-L1"><a href="#Connector-L1" class="headerlink" title="Connector (L1)"></a>Connector (L1)</h3><p>Connectors are the adapters. Each connector exposes one external system in a form that primitives and workflows can compose without needing to know the system’s API details. <code>sap-jira</code>, <code>sap-loki</code>, <code>sap-github</code>, <code>sap-slack</code>: one connector per external system.</p>
+<p>A good connector is thin. It knows the API, the authentication pattern, the pagination behaviour, the error codes. It does not make business decisions. It does not compose with other systems. It exposes the system and gets out of the way.</p>
+<p>Connectors depend on the infrastructure (they need <code>sigcli</code> to authenticate) and on nothing else. They are the first layer above the substrate.</p>
+<h3 id="Primitive-L1-5"><a href="#Primitive-L1-5" class="headerlink" title="Primitive (L1.5)"></a>Primitive (L1.5)</h3><p>Primitives are the reusable domain operations. They compose connectors — they use <code>sap-jira</code> to open tickets, <code>sap-loki</code> to tail logs, <code>sap-github</code> to post comments — into operations that have meaning in the team’s domain.</p>
+<p><code>catalog-support-route</code>: given a failure pattern, decide which team to route the support ticket to and open the ticket. That is a primitive: it composes <code>sap-jira</code> (to create the ticket) with domain knowledge (which pattern maps to which team) into a single reusable operation.</p>
+<p>Primitives depend on connectors. Workflows depend on primitives.</p>
+<h3 id="Workflow-L2"><a href="#Workflow-L2" class="headerlink" title="Workflow (L2)"></a>Workflow (L2)</h3><p>Workflows are the top of the stack. They compose primitives to solve a specific user-facing problem. The user asks “why is this data product stuck in activating?” and the workflow skill runs: query the stage log, correlate with the pipeline run, check the known-failure patterns, route to the responsible team.</p>
+<p>Workflows are the skills users invoke most often and understand least structurally. They are also the most fragile: they depend on everything below them, and if any layer changes, the workflow may need updating.</p>
+<p><img src="/images/2026-07/skill-engineering/14-four-layer-stack.png" alt="The four-layer skill stack: L0 infrastructure (sig&#x2F;gh&#x2F;git&#x2F;node&#x2F;python&#x2F;curl), L1 connectors (one per enterprise system), L1.5 primitives (domain operations), L2 workflows (user-facing compositions)"></p>
+<h3 id="The-composition-rule"><a href="#The-composition-rule" class="headerlink" title="The composition rule"></a>The composition rule</h3><p>The composition rule is simple and machine-enforced: a skill of layer L may only depend on skills at the same layer or below. Workflows may depend on primitives and connectors; primitives may depend on connectors; connectors may depend on infrastructure; infrastructure depends on nothing.</p>
+<p>The rule prevents upward dependencies: a connector must not depend on a workflow. This would introduce a cycle (the workflow depends on the connector, the connector depends on the workflow) and violate the structural clarity the four roles provide.</p>
+<p>The resolver (Chapter 13) enforces the rule at install time. A skill that violates it cannot be installed.</p>
+<h3 id="A-worked-example"><a href="#A-worked-example" class="headerlink" title="A worked example"></a>A worked example</h3><p>The <code>diagnose-product-status</code> workflow:</p>
+<ul>
+<li>Depends on <code>sap-loki</code> (connector): to query the stage log.</li>
+<li>Depends on <code>sap-jira</code> (connector): to look up relevant support history.</li>
+<li>Depends on <code>catalog-support-route</code> (primitive): to route the result to the correct team.</li>
+</ul>
+<p>None of those dependencies know about each other. The workflow composes them; the connectors and primitives are unaware of the composition. This is the intended structure.</p>
+<hr>
+<h2 id="Chapter-5-—-The-Anatomy-of-a-Skill"><a href="#Chapter-5-—-The-Anatomy-of-a-Skill" class="headerlink" title="Chapter 5 — The Anatomy of a Skill"></a>Chapter 5 — The Anatomy of a Skill</h2><p>A skill is a directory. The directory has a canonical layout, and every file in it has a purpose.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">diagnose-product-status/</span><br><span class="line">├── SKILL.md           # the skill itself: frontmatter + prose body</span><br><span class="line">├── manifest.yaml      # machine-readable metadata</span><br><span class="line">├── scripts/           # helper scripts the skill references</span><br><span class="line">├── references/        # supplementary material for progressive disclosure</span><br><span class="line">├── evals/             # the eval suite</span><br><span class="line">│   ├── basic.yaml</span><br><span class="line">│   └── fixtures/</span><br><span class="line">├── history/           # the evolution ledger</span><br><span class="line">│   ├── v0_evidence.md</span><br><span class="line">│   └── v1.md</span><br><span class="line">└── history/rejected/  # rejected proposals (gitignored)</span><br></pre></td></tr></table></figure>
+
+<h3 id="SKILL-md"><a href="#SKILL-md" class="headerlink" title="SKILL.md"></a><code>SKILL.md</code></h3><p>The core of the directory. A Claude Code skill file with a YAML frontmatter block at the top and a prose body below.</p>
+<p>The extended frontmatter this book recommends:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">diagnose-product-status</span></span><br><span class="line"><span class="attr">version:</span> <span class="number">2.3</span><span class="number">.1</span></span><br><span class="line"><span class="attr">layer:</span> <span class="string">workflow</span></span><br><span class="line"><span class="attr">status:</span> <span class="string">stable</span></span><br><span class="line"><span class="attr">owners:</span> [<span class="string">pylon-peng</span>, <span class="string">&quot;@bdc-team&quot;</span>]</span><br><span class="line"><span class="attr">tags:</span> [<span class="string">catalog</span>, <span class="string">bdc</span>, <span class="string">debugging</span>, <span class="string">data-products</span>]</span><br><span class="line"><span class="attr">auth:</span></span><br><span class="line">  <span class="attr">providers:</span> [<span class="string">cic-stabi</span>, <span class="string">sap-jira</span>]</span><br><span class="line">  <span class="attr">cli:</span> [<span class="string">python3</span>, <span class="string">jq</span>]</span><br><span class="line"><span class="attr">depends_on:</span></span><br><span class="line">  <span class="attr">sap-loki:</span> <span class="string">&quot;&gt;=2.0&quot;</span></span><br><span class="line">  <span class="attr">sap-jira:</span> <span class="string">&quot;&gt;=1.4&quot;</span></span><br><span class="line">  <span class="attr">catalog-support-route:</span> <span class="string">&quot;&gt;=1.2&quot;</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">|</span></span><br><span class="line"><span class="string">  Diagnose why a data product is stuck in the activating state.</span></span><br><span class="line"><span class="string">  Queries the stage log, correlates with the pipeline run, checks</span></span><br><span class="line"><span class="string">  known-failure patterns from history, and routes to the responsible</span></span><br><span class="line"><span class="string">  team if the pattern is not covered by an existing recovery skill.</span></span><br><span class="line"><span class="string"></span><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+
+<p>The fields Claude Code reads natively: <code>name</code>, <code>description</code>. Everything else is consumed by the library’s tooling: the resolver reads <code>depends_on</code> and <code>layer</code>; the lifecycle system reads <code>status</code>; the CI check enforces consistency between <code>manifest.yaml</code> and the frontmatter.</p>
+<p>The prose body has a canonical structure:</p>
+<ol>
+<li><strong>Overview</strong> — one to three sentences. What the skill does, when to use it, what it depends on.</li>
+<li><strong>Constraints</strong> — a short list of things the agent must not do or must be careful about. The pitfall ledger (Chapter 7) feeds directly into this section.</li>
+<li><strong>Instructions</strong> — the procedure, numbered and sequential. This is the skill’s core.</li>
+<li><strong>Self-Test</strong> — a runnable check: a prerequisite test (does <code>sig login</code> succeed?) and a live test (does the skill return a result for a known-good input?).</li>
+<li><strong>Troubleshooting</strong> — patterns the skill has encountered in the past and how to address them.</li>
+</ol>
+<h3 id="manifest-yaml"><a href="#manifest-yaml" class="headerlink" title="manifest.yaml"></a><code>manifest.yaml</code></h3><p>The machine-readable mirror of the frontmatter. The harness and the resolver read the manifest for performance (parsing YAML is faster than parsing Markdown + YAML front matter) and for CI validation. The canonical schema is in Appendix A.</p>
+<h3 id="scripts"><a href="#scripts" class="headerlink" title="scripts/"></a><code>scripts/</code></h3><p>Helper scripts the skill’s prose body calls. Python one-liners that query an API, format a response, or transform data. Kept here rather than inlined in the skill prose for readability and testability.</p>
+<h3 id="references"><a href="#references" class="headerlink" title="references/"></a><code>references/</code></h3><p>Supplementary material for progressive disclosure. The skill prose stays short (the discipline is ≤ 500 lines); detailed API documentation, historical context, and reference tables live here and are consulted only when the prose instructs the agent to look.</p>
+<h3 id="evals"><a href="#evals" class="headerlink" title="evals/"></a><code>evals/</code></h3><p>The test suite. <code>evals/basic.yaml</code> contains the cases; <code>evals/fixtures/</code> contains the input JSON for each case. The eval runner (Appendix B) reads this directory and verifies the skill against a real agent. Chapter 9 covers evals in detail.</p>
+<h3 id="history"><a href="#history" class="headerlink" title="history/"></a><code>history/</code></h3><p>The evolution ledger. <code>v0_evidence.md</code> is the creation rationale. Subsequent entries (<code>v1.md</code>, <code>v1_evidence.md</code>, etc.) record each accepted evolution. Chapter 22 covers the ledger in detail.</p>
+<hr>
+<p><em>Series footer:</em></p>
+<p><strong>Part 1 of 6 — Skill Engineering</strong><br><a href="#">Part 1: Foundations</a> · <a href="../2-creation/">Part 2: Creation</a> · <a href="../3-governance/">Part 3: Governance</a> · <a href="../4-evolution/">Part 4: Evolution</a> · <a href="../5-outlook/">Part 5: Outlook</a> · <a href="../6-appendices/">Part 6: Appendices</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/skill-engineering/" rel="tag"># skill-engineering</a>
+              <a href="/tags/agents/" rel="tag"># agents</a>
+              <a href="/tags/sigcli/" rel="tag"># sigcli</a>
+              <a href="/tags/ai/" rel="tag"># ai</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/skill-engineering/2-creation/" rel="prev" title="Skill Engineering, Part 2: Creation">
+                  <i class="fa fa-angle-left"></i> Skill Engineering, Part 2: Creation
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pylon, PENG</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
